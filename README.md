@@ -35,3 +35,19 @@
 [(Creative Commons BY-SA 4.0) 知识共享署名 - 相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)
 
 - 资料仅供参考，请自己判断其适用性。
+
+## 相关工作
+
+- [浙江大学课程攻略共享计划](https://github.com/QSCTech/zju-icicles)
+- [北京大学课程资料民间整理](https://github.com/lib-pku/libpku)
+- [北大计算机课程大作业](https://github.com/tongtzeho/PKUCourse)
+- [清华大学计算机系课程攻略](https://github.com/PKUanonym/REKCARC-TSC-UHT)
+- [东南大学课程共享计划](https://github.com/zjdx1998/seucourseshare)
+- [中国科学技术大学计算机学院课程资源](https://github.com/USTC-Resource/USTC-Course)
+- [西安交通大学课程资料共享计划](https://github.com/cantjie/XJTU-Share)
+- [上海交通大学课程资料分享](https://github.com/CoolPhilChen/SJTU-Courses/)
+- [中山大学课程资料分享](https://github.com/sysuexam/SYSU-Exam)
+- [南京大学课程复习资料](https://github.com/idealclover/NJU-Review-Materials)
+- [郑州大学课程复习资料](https://github.com/CooperNiu/ZZU-Courses-Resource)
+- [东北大学机器人课程攻略 共享计划](https://github.com/mywisdomfly/NEU-RSE-Courses) | [目录索引网站](https://mywisdomfly.github.io/NEU-RSE-Courses/)
+- [西安交通大学课程分享计划](https://github.com/cantjie/XJTU-Share)
