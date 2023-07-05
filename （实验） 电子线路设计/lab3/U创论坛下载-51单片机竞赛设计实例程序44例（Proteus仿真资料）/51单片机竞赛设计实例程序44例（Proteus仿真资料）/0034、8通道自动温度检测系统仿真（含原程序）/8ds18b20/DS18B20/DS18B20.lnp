@@ -1,4 +1,0 @@
-"STARTUP.obj",
-"18b20.obj" 
-TO "DS18B20" 
-RAMSIZE(256) 

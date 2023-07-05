@@ -1,4 +1,0 @@
-"STARTUP.obj",
-"LCD.obj" 
-TO "LCD" 
-RAMSIZE(256) 

@@ -1,3 +1,0 @@
-"mcu1.obj" 
-TO "mcu1" 
-CODE( 0X0000-0X0FFF )

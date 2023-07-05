@@ -1,4 +1,0 @@
-"..\..\..\..\电子设计实验练习\cmmm1029xin\STARTUP.obj",
-"..\..\..\..\电子设计实验练习\cmmm1029xin\main.obj" 
-TO "..\..\..\..\电子设计实验练习\cmmm1029xin\lcd" 
-PRINT(".\lcd.m51")
