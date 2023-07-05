@@ -1,0 +1,125 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        08/26/2019  21:06:19  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL1\C51\BIN\BL51.EXE STARTUP.obj, led.obj TO LED
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  led.obj (LED)
+
+
+LINK MAP OF MODULE:  LED (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0015H     UNIT         ?PR?_DELAY?LED
+            CODE    0018H     0010H     UNIT         ?PR?MAIN?LED
+            CODE    0028H     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   LED (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?LED
+
+?PR?MAIN?LED
+  +--> ?PR?_DELAY?LED
+
+
+
+SYMBOL TABLE OF MODULE:  LED (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0028H         SEGMENT       ?C_C51STARTUP
+  I:0008H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/26/2019  21:06:19  PAGE 2
+
+
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:002BH         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0028H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0028H         LINE#         133
+  C:002AH         LINE#         134
+  C:002BH         LINE#         135
+  C:002CH         LINE#         136
+  C:002EH         LINE#         185
+  C:0031H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        LED
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  B:0090H.0       PUBLIC        P1_0
+  C:0003H         PUBLIC        _delay
+  C:0018H         PUBLIC        main
+  -------         PROC          _DELAY
+  D:0007H         SYMBOL        time
+  -------         DO            
+  D:0006H         SYMBOL        j
+  -------         ENDDO         
+  C:0003H         LINE#         3
+  C:0003H         LINE#         4
+  C:0003H         LINE#         5
+  C:0005H         LINE#         6
+  C:000BH         LINE#         7
+  C:0017H         LINE#         8
+  -------         ENDPROC       _DELAY
+  -------         PROC          MAIN
+  C:0018H         LINE#         10
+  C:0018H         LINE#         11
+  C:0018H         LINE#         12
+  C:0018H         LINE#         13
+  C:0018H         LINE#         14
+  C:001AH         LINE#         15
+  C:001FH         LINE#         16
+  C:0021H         LINE#         17
+  C:0026H         LINE#         18
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        LED
+
+Program Size: data=9.0 xdata=0 code=52
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/26/2019  21:06:19  PAGE 3
+
+
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

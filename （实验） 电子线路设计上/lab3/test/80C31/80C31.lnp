@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"test.obj" 
+TO "80C31" 
+RAMSIZE(256) 

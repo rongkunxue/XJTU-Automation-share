@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"music.obj" 
+TO "lml1" 
+RAMSIZE(256) 

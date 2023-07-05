@@ -1,0 +1,104 @@
+C51 COMPILER V9.52.0.0   LCD1602                                                           07/20/2019 16:28:47 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LCD1602
+OBJECT MODULE PLACED IN LCD1602.OBJ
+COMPILER INVOKED BY: d:\Keil1\C51\BIN\C51.EXE LCD1602.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #include<intrins.h>
+   3          #define uint unsigned int
+   4          #define uchar unsigned char
+   5          sbit RS=P2^0;
+   6          sbit RW=P2^1;
+   7          sbit EN=P2^2;
+   8          void DelayMS(uint ms)//—” ±
+   9          {
+  10   1       uchar i;
+  11   1       while(ms--)
+  12   1       {
+  13   2        for(i=0;i<120;i++); 
+  14   2        }
+  15   1      }
+  16           uchar Busy_Check()   //√¶ºÏ≤È£¨øÿ÷∆∆˜√ø¥ŒΩ¯––∂¡–¥≤Ÿ◊˜÷Æ«∞£¨∂º±ÿ–ÎΩ¯––∂¡–¥ºÏ≤‚£¨
+  17                                //»∑±£STA7Œ™0
+  18          {
+  19   1        uchar LCD_Status;//∏˘æ›–æ∆¨≤Ÿ◊˜ ±–Ú£¨∂¡≤Ÿ◊˜ ±RS=0£¨RW=1£¨EN∏ﬂ¬ˆ≥Â£®150ns£©
+  20   1        RS=0;  //RS=0 —°‘Ò√¸¡Ó£¨RS=1—°‘Ò ˝æ›
+  21   1        RW=1;  // RW=1—°‘Ò∂¡£¨ RW=0—°‘Ò–¥
+  22   1        EN=1;  //ø™ º∂¡
+  23   1        DelayMS(1);
+  24   1        LCD_Status=P0; //∂¡≥ˆSTA7µƒ◊¥Ã¨£¨“≤æÕ «P0µƒ◊Ó∏ﬂŒª
+  25   1        EN=0;
+  26   1        return LCD_Status;//ÕÀªÿ◊¥Ã¨÷µ
+  27   1      }
+  28          void Write_LCD_Conmmand(uchar cmd)   //–¥LCD√¸¡Ó£¨RS=0£¨RW=0£¨EN∏ﬂ¬ˆ≥Â
+  29          {
+  30   1       while((Busy_Check()&0x80)==0x80);//√¶µ»¥˝£¨◊Ó∏ﬂŒªŒ™0 ±£¨LCDø’œ–£¨ºÃ–¯
+  31   1        RS=0;  //√¸¡Ó
+  32   1        RW=0;  //–¥
+  33   1        EN=0;
+  34   1        DelayMS(1);
+  35   1        P0=cmd;
+  36   1        EN=1;
+  37   1        //DelayMS(1);
+  38   1        EN=0;
+  39   1      }
+  40          void Write_LCD_Data(uchar dat)//∑¢ÀÕ ˝æ›
+  41          {
+  42   1       while((Busy_Check()&0x80)==0x80);//√¶µ»¥˝
+  43   1        RS=1;  // ˝æ›
+  44   1        RW=0;  //–¥
+  45   1        EN=0;
+  46   1        DelayMS(1);
+  47   1        P0=dat;
+  48   1        EN=1;
+  49   1        //DelayMS(1);
+  50   1        EN=0;
+  51   1      }
+  52          void Initiallize_LCD() //LCD≥ı ºªØ
+  53          {
+  54   1        Write_LCD_Conmmand(0x38);  //÷∏¡Ó0x38¥˙±Ì…Ë÷√16*2“∫æßœ‘ æ£¨5*7µ„’Û£¨8Œª
+  55   1        DelayMS(1);
+C51 COMPILER V9.52.0.0   LCD1602                                                           07/20/2019 16:28:47 PAGE 2   
+
+  56   1        Write_LCD_Conmmand(0x01);  //«Â∆¡
+  57   1        DelayMS(1);
+  58   1        Write_LCD_Conmmand(0x06);
+  59   1        DelayMS(1);
+  60   1        Write_LCD_Conmmand(0x0C);
+  61   1        DelayMS(1);
+  62   1      }
+  63          void ShowString(uchar x,uchar y,uchar *str) //œ‘ æ◊÷∑˚¥Æ£¨x»°÷µ0~15£¨y»°÷µ0~1£®1602“∫æß√ø––œ‘ æ16∏ˆ◊÷∑˚£¨π
+             -≤¡Ω––£©
+  64          {
+  65   1        uchar i=0;  //…Ë÷√œ‘ æ∆ ºŒª÷√
+  66   1        if(y==0) //µ⁄“ª––
+  67   1        {
+  68   2         Write_LCD_Conmmand(0x80|x);// 0x80µ⁄“ª––µƒ ˝æ›÷∏’Î÷∏¡Ó¬Î
+  69   2         }
+  70   1         if(y==1) //µ⁄∂˛––
+  71   1         {
+  72   2          Write_LCD_Conmmand(0xC0|x);
+  73   2              }
+  74   1         for(i=0;i<16;i++)  //√ø––16∏ˆ◊÷∑˚
+  75   1         {
+  76   2               Write_LCD_Data(str[i]);
+  77   2              }
+  78   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    190    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

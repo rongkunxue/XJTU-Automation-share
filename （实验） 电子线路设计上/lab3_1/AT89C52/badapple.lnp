@@ -1,0 +1,5 @@
+"STARTUP.obj",
+"main.obj",
+"SD.obj" 
+TO "badapple" 
+RAMSIZE(256) 

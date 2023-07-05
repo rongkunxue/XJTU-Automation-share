@@ -1,0 +1,132 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        07/17/2019  17:21:31  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL1\C51\BIN\BL51.EXE STARTUP.obj, LML.obj TO LML
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  LML.obj (LML)
+
+
+LINK MAP OF MODULE:  LML (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0013H     UNIT         ?PR?MAIN?LML
+            CODE    0016H     000CH     UNIT         ?C_C51STARTUP
+            CODE    0022H     0009H     UNIT         ?PR?DELAY?LML
+
+
+
+OVERLAY MAP OF MODULE:   LML (?C_STARTUP)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?LML
+
+?PR?MAIN?LML
+  +--> ?PR?DELAY?LML
+
+
+
+SYMBOL TABLE OF MODULE:  LML (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:0016H         SEGMENT       ?C_C51STARTUP
+  I:0008H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/17/2019  17:21:31  PAGE 2
+
+
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0019H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:0016H         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:0016H         LINE#         133
+  C:0018H         LINE#         134
+  C:0019H         LINE#         135
+  C:001AH         LINE#         136
+  C:001CH         LINE#         185
+  C:001FH         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        LML
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  C:0022H         PUBLIC        delay
+  C:0003H         PUBLIC        main
+  -------         PROC          DELAY
+  -------         DO            
+  D:0007H         SYMBOL        a
+  D:0006H         SYMBOL        b
+  -------         ENDDO         
+  C:0022H         LINE#         3
+  C:0022H         LINE#         4
+  C:0022H         LINE#         6
+  C:0024H         LINE#         7
+  C:0024H         LINE#         8
+  C:0028H         LINE#         9
+  C:002AH         LINE#         10
+  -------         ENDPROC       DELAY
+  -------         PROC          MAIN
+  -------         DO            
+  D:0005H         SYMBOL        tmp
+  -------         ENDDO         
+  C:0003H         LINE#         11
+  C:0003H         LINE#         12
+  C:0003H         LINE#         13
+  C:0005H         LINE#         14
+  C:0005H         LINE#         15
+  C:0005H         LINE#         16
+  C:0009H         LINE#         17
+  C:000CH         LINE#         18
+  C:0010H         LINE#         19
+  C:0012H         LINE#         20
+BL51 BANKED LINKER/LOCATER V6.22                                                      07/17/2019  17:21:31  PAGE 3
+
+
+  C:0012H         LINE#         21
+  C:0014H         LINE#         22
+  C:0014H         LINE#         23
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        LML
+
+Program Size: data=9.0 xdata=0 code=43
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

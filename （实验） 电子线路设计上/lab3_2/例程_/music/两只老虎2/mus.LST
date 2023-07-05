@@ -1,0 +1,127 @@
+C51 COMPILER V9.52.0.0   MUS                                                               10/22/2019 19:34:33 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MUS
+OBJECT MODULE PLACED IN mus.OBJ
+COMPILER INVOKED BY: d:\Keil1\C51\BIN\C51.EXE mus.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg52.h>
+   2          #define uint unsigned int
+   3          #define uchar unsigned char
+   4          #define HALFF  6000000  //12M晶振半频
+   5          #define MAX 65536   //16位计数器最大计数次数
+   6          sbit sound = P1^0;
+   7          uint C;
+   8          uchar STH0;
+   9          uchar STL0;
+  10          //C调音频
+  11          //#define soo 392 //低音'5'
+  12          //#define dao 523       //宏定义中音‘1’频率为523Hz
+  13          //#define re 587
+  14          //#define mi 659
+  15          //#define fa 698
+  16          //#define so 784
+  17          //#define la 880
+  18          //#define xi 987
+  19          
+  20          #define soo 784 //中音'5'
+  21          #define dao 1047        //宏定义高音‘1’频率为1047Hz
+  22          #define re 1175
+  23          #define mi 1319
+  24          #define fa 1397
+  25          #define so 1568
+  26          #define la 1760
+  27          #define xi 1967
+  28          
+  29          /******
+  30           1个延时单位，1000ms
+  31           歌曲为C调4/4拍，简谱中一个音符（最小拍）为1/4拍，现以1/4拍为1个延时单位
+  32           关于for执行时间：
+  33           当i定义为int(或unsign int)时，为8个时钟周期；
+  34           当i定义为char或unsign char时，为3个时钟周期。
+  35          */
+  36          void delay()
+  37          {
+  38   1              uint i,j;
+  39   1              for(i=0; i<110; i++)
+  40   1                      for(j=0; j<110; j++);   //1ms
+  41   1      }
+  42          
+  43          void main()
+  44          {
+  45   1              uchar i,j;
+  46   1              //《两只老虎》编曲
+  47   1              uint code song[] = {dao,re,mi,dao,
+  48   1                                                      dao,re,mi,dao,
+  49   1                                                      mi,fa,so,
+  50   1                                                      mi,fa,so,
+  51   1                                                      so,la,so,fa,mi,dao,
+  52   1                                                      so,la,so,fa,mi,dao,
+  53   1                                                      re,soo,dao,
+  54   1                                                      re,soo,dao,
+  55   1                                                      0xff};  //以0xff为音符结束标志
+C51 COMPILER V9.52.0.0   MUS                                                               10/22/2019 19:34:33 PAGE 2   
+
+  56   1              //以下为每个音符节拍,4个延时单位为1拍
+  57   1              //'4'对应4个延时单位，'2'对应2个延时单位，'1'对应1个
+  58   1              uchar code JP[] = {4,4,4,4,
+  59   1                                                 4,4,4,4,
+  60   1                                                 4,4,8,
+  61   1                                                 4,4,8,
+  62   1                                                 3,1,3,1,4,4,
+  63   1                                                 3,1,3,1,4,4,
+  64   1                                                 4,4,8,
+  65   1                                                 4,4,8};
+  66   1              EA = 1;         //开总中断
+  67   1              ET0 = 1;        //开定时器T0中断
+  68   1              TMOD = 0x01;    //定时器T0用工作方式1(16位计数器)
+  69   1              while(1)
+  70   1              {
+  71   2                      i = 0;
+  72   2                      while(song[i] != 0xff)
+  73   2                      {
+  74   3                              C = HALFF/song[i];
+  75   3                              STH0 = (MAX - C) / 256; // 高8位
+  76   3                              STL0 = (MAX - C) % 256; // 低8位
+  77   3                              TR0 = 1;                           //启动定时器
+  78   3      
+  79   3                              for(j=0; j<JP[i]; j++) //控制节拍
+  80   3                               delay();                  //延时1个延时单位
+  81   3                              TR0 = 0;                           //关闭定时器
+  82   3                              i++;                               //播放下一个音符
+  83   3                      }
+  84   2              }
+  85   1      }
+  86          
+  87          /************
+  88            定时器T0的中断服务子程序，使P1.0输出音频所要的方波
+  89          */
+  90          /**********
+  91            要产生音频脉冲，只要算出某一音频的周期（1/频率），
+  92            然后将此周期除以2，即为半周期的时间。
+  93            利用定时器计时这个半周期时间，每当计时到后就将输出脉冲的I/O反相，
+  94            然后重复计时此半周期时间再对I/O反相，就可在I/O脚上得到此频率的脉冲
+  95          ********/
+  96          void t0() interrupt 1 using 1
+  97          {
+  98   1              TH0 = STH0;
+  99   1              TL0 = STL0;
+ 100   1          sound = ~sound; 
+ 101   1               
+ 102   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    207    ----
+   CONSTANT SIZE    =     98    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

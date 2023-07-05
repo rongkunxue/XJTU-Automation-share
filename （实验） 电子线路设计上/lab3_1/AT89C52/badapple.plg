@@ -1,0 +1,21 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\大三上\（实验） 电子线路设计\lab3_1\AT89C52\badapple.uvproj
+Project File Date:  10/23/2019
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling main.c...
+compiling SD.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD_READ?MAIN
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SDWRITEBLOCK?SD
+Program Size: data=44.0 xdata=512 code=1240
+creating hex file from "badapple"...
+"badapple" - 0 Error(s), 2 Warning(s).

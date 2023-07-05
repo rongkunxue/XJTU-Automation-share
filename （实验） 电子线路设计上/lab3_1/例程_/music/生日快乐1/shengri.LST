@@ -1,0 +1,75 @@
+C51 COMPILER V9.52.0.0   SHENGRI                                                           10/22/2019 20:00:22 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE SHENGRI
+OBJECT MODULE PLACED IN shengri.OBJ
+COMPILER INVOKED BY: d:\Keil1\C51\BIN\C51.EXE shengri.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg51.h>
+   2          typedef unsigned char uint8;
+   3          typedef unsigned int uint16;
+   4          
+   5          sbit K1 = P1^0;
+   6          sbit BUZZER = P3^0;
+   7          
+   8          code uint8 SONG_TONE[]=
+   9          {
+  10          212,212,190,212,159,169,212,212,190,212,142,159,212,212,106,126,129,169,190,119,119,126,159,142,159,0
+  11          };
+  12          code uint8 SONG_LONG[]=
+  13          {
+  14          9,3,12,12,12,24,9,3,12,12,12,24,9,3,12,12,12,12,12,9,3,12,12,12,24,0
+  15          };
+  16          
+  17          void delay(uint16 x)
+  18          {
+  19   1      uint16 i,j;
+  20   1      for(i = x; i > 0; i --)
+  21   1      for(j = 114; j > 0; j --);      
+  22   1      }
+  23          
+  24          void PlayMusic()
+  25          {
+  26   1      uint16 i =0,j,k;
+  27   1      while(SONG_LONG[i]!=0||SONG_TONE[i]!=0)
+  28   1      {
+  29   2      for(j=0;j<SONG_LONG[i]*20;j++)
+  30   2      {
+  31   3      BUZZER = ~BUZZER;
+  32   3      for(k=0;k<SONG_TONE[i]/3;k++);
+  33   3      }
+  34   2      delay(10);
+  35   2      i++;
+  36   2      }
+  37   1      }
+  38          
+  39          void main()
+  40          {
+  41   1      P1 = 0xFF;
+  42   1      while(1)
+  43   1      {
+  44   2      if(K1==1)
+  45   2      {
+  46   3      PlayMusic();
+  47   3      delay(100);
+  48   3      }
+  49   2      }
+  50   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    173    ----
+   CONSTANT SIZE    =     52    ----
+C51 COMPILER V9.52.0.0   SHENGRI                                                           10/22/2019 20:00:22 PAGE 2   
+
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
