@@ -1,0 +1,45 @@
+C51 COMPILER V9.52.0.0   DAC                                                               04/20/2022 22:04:10 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE DAC
+OBJECT MODULE PLACED IN DAC.obj
+COMPILER INVOKED BY: C:\Keil_v51\C51\BIN\C51.EXE source\DAC.c LARGE RTX51 BROWSE DEBUG OBJECTEXTEND PRINT(.\DAC.lst) TAB
+                    -S(2) OBJECT(DAC.obj)
+
+line level    source
+
+   1          #include "DAC.h"
+   2          
+   3          void DAC0_Init(void) {
+   4   1          // REF0CN = 0x03;  // 使用内部VREF发生器
+   5   1          DAC0_Ctr_Set;  // 打开 DAC0，右对齐模式，输出更新发生在写 DAC0H 时
+   6   1      }
+   7          
+   8          // void DAC1_Init(void) {
+   9          //     // REF0CN = 0x03;  // 使用内部VREF发生器
+  10          //     DAC1_Ctr_Set;  // 打开 DAC1，右对齐模式，输出更新发生在写 DAC1H 时
+  11          // }
+  12          
+  13          void DAC0_Output(unsigned int val) {
+  14   1          DAC0L = (unsigned char)val;         //送DA值低2位
+  15   1          DAC0H = (unsigned char)(val >> 8);  //送DA值高8位
+  16   1      }
+  17          
+  18          // void DAC1_Output(unsigned int val) {
+  19          //     DAC1L = (unsigned char)val;         //送DA值低2位
+  20          //     DAC1H = (unsigned char)(val >> 8);  //送DA值高8位
+  21          // }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     10    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

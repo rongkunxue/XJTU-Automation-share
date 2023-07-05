@@ -1,0 +1,266 @@
+C51 COMPILER V9.52.0.0   LCD                                                               04/20/2022 22:04:10 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LCD
+OBJECT MODULE PLACED IN lcd.obj
+COMPILER INVOKED BY: C:\Keil_v51\C51\BIN\C51.EXE source\lcd.c LARGE RTX51 BROWSE DEBUG OBJECTEXTEND PRINT(.\lcd.lst) TAB
+                    -S(2) OBJECT(lcd.obj)
+
+line level    source
+
+   1          #include "lcd.h"
+   2          #include <intrins.h>
+   3          //constant definition
+   4          uchar code AC_TABLE[]=
+   5          {
+   6              0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,      //第一行汉字位置
+   7              0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,      //第二行汉字位置
+   8              0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,      //第三行汉字位置
+   9              0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,      //第四行汉字位置
+  10          };
+  11          
+  12          sbit SCLK=P1^3;
+  13          sbit SID=P1^4;
+  14          sbit CS=P1^5;
+  15          
+  16          
+  17          void Lcd_Port_Init(void)
+  18          {
+  19   1        //set P1[5:3] to push_pull model
+  20   1          P1MDOUT |= 0x38;
+  21   1        
+  22   1        //enable crossbar
+  23   1          XBR2 |= 0x40;
+  24   1      }
+  25          
+  26          
+  27          void LcdInit( void )
+  28          {
+  29   1          Lcd_Port_Init();
+  30   1      
+  31   1          WriteCommand(0x30);      //8BitMCU
+  32   1          WriteCommand(0x03);      //AC?0,不改变DDRAM值
+  33   1          WriteCommand(0x0C);      //显示ON,游标OFF,游标位反白OFF
+  34   1          WriteCommand(0x01);      //清屏,AC归0
+  35   1          WriteCommand(0x06);      //写入时,游标右移动
+  36   1      
+  37   1          LcdClear();
+  38   1      }
+  39          
+  40          
+  41          
+  42          void SendByte(uchar Dbyte)
+  43          {
+  44   1          uchar i;
+  45   1          for(i=0; i<8; i++)
+  46   1          {
+  47   2              SCLK = 0;
+  48   2              Dbyte=Dbyte<<1;      //左移一位
+  49   2              SID = CY;            //移出的位给SID
+  50   2              SCLK = 1;
+  51   2              SCLK = 0;
+  52   2          }
+  53   1      }
+  54          
+C51 COMPILER V9.52.0.0   LCD                                                               04/20/2022 22:04:10 PAGE 2   
+
+  55          uchar ReceiveByte(void)
+  56          {
+  57   1          uchar i, temp1, temp2, temp3;
+  58   1          temp1 = 0;
+  59   1          temp2 = 0;
+  60   1          for(i=0; i<8; i++)
+  61   1          {
+  62   2              temp1=temp1<<1;
+  63   2              SCLK = 0;
+  64   2              SCLK = 1;
+  65   2              SCLK = 0;
+  66   2              if(SID) temp1++;
+  67   2          }
+  68   1          for(i=0; i<8; i++)
+  69   1          {
+  70   2              temp2=temp2<<1;
+  71   2              SCLK = 0;
+  72   2              SCLK = 1;
+  73   2              SCLK = 0;
+  74   2              if(SID) temp2++;
+  75   2          }
+  76   1        temp3 = (0xf0&temp1)+(0x0f&temp2);
+  77   1          return (temp3);
+  78   1      }
+  79          
+  80          void CheckBusy( void )
+  81          {
+  82   1          do   SendByte(0xfc);      //11111,RW(1),RS(0),0
+  83   1          while(0x80&ReceiveByte());      //BF(.7)=1 Busy
+  84   1      }
+  85          
+  86          void WriteCommand(unsigned char Cbyte )
+  87          {
+  88   1          CS = 1;
+  89   1          CheckBusy();
+  90   1          SendByte(0xf8);            //11111,RW(0),RS(0),0
+  91   1          SendByte(0xf0&Cbyte);      //高四位
+  92   1          SendByte(0xf0&Cbyte<<4);//低四位
+  93   1          CS = 0;
+  94   1      }
+  95          
+  96          void WriteData(uchar Dbyte )
+  97          {
+  98   1          CS = 1;
+  99   1          CheckBusy();
+ 100   1          SendByte(0xfa);            //11111,RW(0),RS(1),0
+ 101   1          SendByte(0xf0&Dbyte);      //高四位
+ 102   1          SendByte(0xf0&Dbyte<<4);//低四位(先执行<<)
+ 103   1          CS = 0;
+ 104   1      }
+ 105          
+ 106          
+ 107          void LineClear(uchar line)
+ 108          {
+ 109   1      
+ 110   1          uchar i;
+ 111   1          WriteCommand(0x30);      //8BitMCU
+ 112   1          WriteCommand(AC_TABLE[8*line]);      //起始位置
+ 113   1      
+ 114   1          for(i=0; i<16; i++)
+ 115   1          {
+ 116   2              WriteData(0x20);//空格
+C51 COMPILER V9.52.0.0   LCD                                                               04/20/2022 22:04:10 PAGE 3   
+
+ 117   2          }
+ 118   1      }
+ 119          
+ 120          
+ 121          void LcdClear( void )
+ 122          {
+ 123   1          uchar i;
+ 124   1          for(i=0; i<4; i++)
+ 125   1          {
+ 126   2              LineClear(i);
+ 127   2          }
+ 128   1      }
+ 129          
+ 130          void WriteChar(uchar row,uchar col,uchar ch)
+ 131          {
+ 132   1        WriteCommand(0x30);      //8BitMCU
+ 133   1        WriteCommand(AC_TABLE[8*row+col]);      //起始位置
+ 134   1        WriteData(ch);
+ 135   1      }
+ 136          
+ 137          void WriteStr(uchar row,uchar col,uchar *puts)
+ 138          {
+ 139   1          WriteCommand(0x30);      //8BitMCU
+ 140   1          WriteCommand(AC_TABLE[8*row+col]);      //起始位置
+ 141   1          while(*puts !='\0')      //判断字符串是否显示完毕
+ 142   1          {
+ 143   2              if(col==8)            //判断换行
+ 144   2              {
+ 145   3                  //若不判断,则自动从第一行到第三行
+ 146   3                  col=0;
+ 147   3                  row++;
+ 148   3              }
+ 149   2              if(row==4) row=0;      //一屏显示完,回到屏左上角
+ 150   2              WriteCommand(AC_TABLE[8*row+col]);
+ 151   2              WriteData(*puts);      //一个汉字要写两次
+ 152   2              puts++;
+ 153   2              if(*puts == '\0')
+ 154   2              {
+ 155   3                  return;
+ 156   3              }
+ 157   2              WriteData(*puts);
+ 158   2              puts++;
+ 159   2              col++;
+ 160   2          }
+ 161   1      }
+ 162          
+ 163          
+ 164          //image init and show
+ 165          void ImageShow(uchar *imagePtr)
+ 166          {
+ 167   1        uchar i, j, k, columnPosition;
+ 168   1        //init
+ 169   1      
+ 170   1        for(i = 0; i < 2; i++)
+ 171   1        {
+ 172   2          columnPosition = 0x80 + 0x08 * i;
+ 173   2          for(j = 0; j < 32; j++)
+ 174   2          {
+ 175   3            
+ 176   3      /*  for(k = 0; k < 4; k++)   //左半屏显示
+ 177   3            {
+ 178   3              //RE = 1
+C51 COMPILER V9.52.0.0   LCD                                                               04/20/2022 22:04:10 PAGE 4   
+
+ 179   3              WriteCommand(0x34);
+ 180   3              //set start position
+ 181   3              WriteCommand(0x80 + j);
+ 182   3              WriteCommand(columnPosition + k);
+ 183   3              
+ 184   3              //RE = 0
+ 185   3              WriteCommand(0x30);
+ 186   3              //write two bytes continuously
+ 187   3              WriteData(0x00);
+ 188   3              WriteData(0x00);
+ 189   3            }*/
+ 190   3            
+ 191   3            for(k = 0; k < 8; k++)    //全屏显示
+ 192   3            {
+ 193   4              //RE = 1
+ 194   4              WriteCommand(0x34);
+ 195   4              //set start position
+ 196   4              WriteCommand(0x80 + j);
+ 197   4              WriteCommand(columnPosition + k);
+ 198   4              
+ 199   4              //RE = 1
+ 200   4              WriteCommand(0x30);
+ 201   4              //write two bytes continuously
+ 202   4              WriteData(*imagePtr++);
+ 203   4              WriteData(*imagePtr++);
+ 204   4            }
+ 205   3          }
+ 206   2        }
+ 207   1        WriteCommand(0x32);
+ 208   1        WriteCommand(0x36);
+ 209   1      }
+ 210          
+ 211          
+ 212          void LcdShowPoint(unsigned char x)
+ 213          {
+ 214   1        unsigned char i;
+ 215   1        unsigned char col=x/16;
+ 216   1        unsigned char off=x%16;
+ 217   1        unsigned char row1=wave[x]/128;
+ 218   1        unsigned char datah1=0;
+ 219   1        unsigned char datal1=0;
+ 220   1        for(i=0;i<8;i++)
+ 221   1        {
+ 222   2          if(i<=off&&wave[col*16+i]/128==row1) datah1|=0x80>>i;
+ 223   2          if(i+8<=off&&wave[col*16+8+i]/128==row1) datal1|=0x80>>i;
+ 224   2        }
+ 225   1        
+ 226   1        WriteCommand(0x34);
+ 227   1        WriteCommand(0x80+31-row1);
+ 228   1        WriteCommand(0x80+col);
+ 229   1        WriteCommand(0x30);
+ 230   1        WriteData(datah1);
+ 231   1        WriteData(datal1);
+ 232   1        WriteCommand(0x32);
+ 233   1        WriteCommand(0x36);
+ 234   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    768    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----      13
+C51 COMPILER V9.52.0.0   LCD                                                               04/20/2022 22:04:10 PAGE 5   
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

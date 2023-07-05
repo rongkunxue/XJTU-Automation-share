@@ -1,0 +1,842 @@
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE HANDLE_MENU
+OBJECT MODULE PLACED IN Handle_Menu.obj
+COMPILER INVOKED BY: D:\Keil1\C51\BIN\C51.EXE source\Handle_Menu.c LARGE RTX51 BROWSE DEBUG OBJECTEXTEND PRINT(.\Handle_
+                    -Menu.lst) TABS(2) OBJECT(Handle_Menu.obj)
+
+line level    source
+
+   1          #include "Handle_Menu.h"
+   2          
+   3          unsigned int cf_path;               // 记录当前菜单路径
+   4          unsigned int cf_button;             // 记录按键位置
+   5          unsigned int cf_button1_hold_time;  // 记录按键保持时长
+   6          unsigned int cf_button2_hold_time;
+   7          unsigned int cf_button3_hold_time;
+   8          unsigned int point_temp;
+   9          
+  10          unsigned int draw_point;
+  11          unsigned int draw_method;
+  12          bit cf_lcd_draw_point;
+  13          
+  14          bit cf_button1_hold_on;             // 记录按键是否保持
+  15          bit cf_button2_hold_on;
+  16          bit cf_button3_hold_on;
+  17          
+  18          bit cf_lcd_enabled;
+  19          bit cf_lcd_gcram_enabled;
+  20          bit cf_led_enabled;
+  21          
+  22          bit cf_should_menu_update;
+  23          bit cf_force_menu_update;
+  24          bit cf_should_lcd_update;
+  25          bit cf_should_debug;
+  26          bit cf_adda_menu_update;
+  27          bit cf_debug_menu_update;
+  28          
+  29          const unsigned char xjtu_image[518] = { 0X00,0X01,0X40,0X00,0X40,0X00,
+  30          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+  31          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X01,0XC0,0X00,0X00,0X00,
+  32          0X00,0X00,0X00,0XE3,0XC3,0X00,0X00,0X00,0X00,0X00,0X01,0XE1,0XC3,0X80,0X00,0X00,
+  33          0X00,0X00,0X01,0XE3,0XC7,0X80,0X00,0X00,0X00,0X00,0X70,0XFF,0XFF,0X8E,0X00,0X00,
+  34          0X00,0X00,0XFB,0XFF,0XFF,0XCF,0X00,0X00,0X00,0X00,0X7F,0XE0,0X07,0XFE,0X00,0X00,
+  35          0X00,0X00,0X3F,0X00,0X00,0XFE,0X00,0X00,0X00,0X08,0X7C,0X00,0X00,0X1E,0X10,0X00,
+  36          0X00,0X1D,0XF0,0X00,0X00,0X0F,0XB8,0X00,0X00,0X3F,0XC0,0X00,0X00,0X03,0XFC,0X00,
+  37          0X00,0X1F,0X80,0X00,0XC0,0X01,0XF8,0X00,0X00,0X0F,0X00,0X00,0XD8,0X00,0XF0,0X00,
+  38          0X01,0X1E,0X00,0X05,0XD8,0X00,0X70,0X00,0X01,0XDC,0X03,0XFD,0XDE,0X00,0X3B,0X80,
+  39          0X03,0XF8,0X02,0X00,0XDF,0X00,0X1F,0XC0,0X03,0XF8,0X01,0XFF,0XDB,0X00,0X1F,0XC0,
+  40          0X00,0XF0,0X01,0XFF,0XD9,0X80,0X0F,0X00,0X00,0XF0,0X01,0XFF,0XD9,0XC0,0X07,0X00,
+  41          0X00,0XE0,0X01,0XFF,0XD8,0XC0,0X07,0X00,0X0C,0XE0,0X00,0X00,0XD8,0X60,0X03,0X10,
+  42          0X0F,0XC0,0X01,0XFF,0XD8,0X30,0X03,0XF0,0X0F,0XC0,0X01,0XFF,0XD8,0X30,0X03,0XF0,
+  43          0X0F,0XC0,0X1F,0XFF,0XFF,0X7F,0XC1,0XF8,0X01,0X80,0X1E,0X7F,0XFF,0X7F,0X81,0X80,
+  44          0X03,0X80,0X1F,0X7F,0XFF,0X7F,0X81,0XC0,0X03,0X80,0X1D,0XFF,0XFF,0X7C,0X01,0XC0,
+  45          0X03,0X80,0X1D,0XFF,0XFF,0X70,0X01,0XC0,0X1F,0X80,0X02,0XFF,0XFF,0X00,0X01,0XF8,
+  46          0X1F,0X80,0X02,0X3F,0XFC,0X00,0X01,0XF8,0X1F,0X80,0X00,0X1F,0XF8,0X01,0X81,0XF8,
+  47          0X03,0X80,0X04,0X1F,0XF8,0X00,0X01,0XF8,0X03,0X80,0X04,0X0F,0XF8,0X00,0X01,0XC0,
+  48          0X01,0X80,0X00,0X0F,0XF8,0X00,0X01,0X80,0X1F,0XC0,0X08,0X1F,0XFC,0X00,0X01,0X80,
+  49          0X0F,0XC0,0X08,0X1F,0XFC,0X01,0X03,0XF0,0X0F,0XC0,0X10,0X3F,0XFE,0X00,0X03,0XF0,
+  50          0X0C,0XE0,0X10,0X00,0X00,0X00,0X03,0XF0,0X00,0XE0,0X10,0XFF,0XFF,0X80,0X07,0X20,
+  51          0X00,0XE0,0X20,0X00,0X00,0X00,0X07,0X00,0X00,0XF0,0X27,0XFF,0XFF,0XF0,0X0E,0X00,
+  52          0X03,0XF9,0X27,0XC8,0X88,0XF0,0X0F,0X00,0X03,0XFB,0XE7,0XEC,0X88,0XF0,0X1F,0X80,
+  53          0X01,0XDF,0XF7,0XEA,0XAA,0XF0,0X3F,0X80,0X01,0X1E,0X77,0XED,0XDD,0XF0,0X7B,0X00,
+  54          0X00,0X0F,0X10,0X00,0X00,0X00,0XF1,0X00,0X00,0X1F,0XFF,0XFF,0XFF,0XFF,0XE0,0X00,
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 2   
+
+  55          0X00,0X3F,0XC0,0X00,0X00,0X03,0XF0,0X00,0X00,0X1F,0XF0,0X00,0X00,0X07,0XF8,0X00,
+  56          0X00,0X18,0X78,0X00,0X00,0X1F,0X70,0X00,0X00,0X00,0X7E,0X00,0X00,0X7E,0X20,0X00,
+  57          0X00,0X00,0X7F,0XE0,0X03,0XFF,0X00,0X00,0X00,0X00,0XF3,0XFF,0XFF,0XCF,0X00,0X00,
+  58          0X00,0X00,0X70,0XFF,0XFF,0X86,0X00,0X00,0X00,0X00,0X21,0XE7,0XE7,0X84,0X00,0X00,
+  59          0X00,0X00,0X01,0XE1,0XC3,0X80,0X00,0X00,0X00,0X00,0X01,0XE1,0XC3,0X80,0X00,0X00,
+  60          0X00,0X00,0X00,0X01,0XC0,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+  61          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+  62          };
+  63          
+  64          void Handle_Menu_Init(void) {
+  65   1          cf_path               = 0x0000;
+  66   1          cf_button             = 0x0000;
+  67   1          cf_button1_hold_time  = 0;
+  68   1          cf_button2_hold_time  = 0;
+  69   1          cf_button3_hold_time  = 0;
+  70   1          cf_button1_hold_on    = 0;
+  71   1          cf_button2_hold_on    = 0;
+  72   1          cf_button3_hold_on    = 0;
+  73   1          cf_lcd_gcram_enabled  = 1;
+  74   1          cf_should_menu_update = 1;
+  75   1          cf_force_menu_update  = 1;
+  76   1          cf_should_lcd_update  = 1;
+  77   1          cf_should_debug       = 0;
+  78   1          cf_debug_menu_update  = 1;
+  79   1          cf_adda_menu_update   = 1;
+  80   1          point_temp            = 0x0000;
+  81   1          draw_point            = 0x1F3F;
+  82   1          draw_method           = 0x0003;
+  83   1          cf_lcd_draw_point     = 0;
+  84   1      }
+  85          
+  86          void Handle_Menu_Test(void) {
+  87   1          Handle_Menu_Init();
+  88   1          Button2_Handler();
+  89   1          Button2_Handler();
+  90   1          Button2_Handler();
+  91   1          Button2_Handler();
+  92   1          Button2_Handler();
+  93   1          Button1_Handler();
+  94   1          Button3_Handler();
+  95   1          Button3_Handler();
+  96   1          Button1_Handler();
+  97   1          Button1_Handler();
+  98   1          Button1_Handler();
+  99   1          Button3_Handler();
+ 100   1          Button1_Handler();
+ 101   1          Button3_Handler();
+ 102   1      }
+ 103          
+ 104          void Generate_Menu(void) {
+ 105   1          unsigned int i;
+ 106   1          unsigned int offset;
+ 107   1          unsigned int tempi, tempj;
+ 108   1          if (cf_force_menu_update) {
+ 109   2              cf_should_menu_update = 1;
+ 110   2              cf_force_menu_update  = 0;
+ 111   2          }
+ 112   1          if (cf_should_menu_update) {
+ 113   2              LCD_SetMode(0x05);
+ 114   2              if (cf_path & 0xFFFF) {
+ 115   3                  // 0x0001~0xFFFF
+ 116   3                  if (cf_path & 0xFFF0) {
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 3   
+
+ 117   4                      // 0x001*~0xFFF*
+ 118   4                      if (cf_path & 0xFF00) {
+ 119   5                          // 0x00**~0xFF**
+ 120   5                          if (cf_path & 0x00FF) {
+ 121   6                              // solve 0x1000  1.显示学生信息
+ 122   6                              if ((cf_path & 0xF000) == 0x1000) {
+ 123   7                                  for (i = 0; i < 16; i++) {
+ 124   8                                      LCD_DDRAM_BACK[0][i] = lcd_stu_info[i];
+ 125   8                                      LCD_DDRAM_BACK[1][i] = lcd_stu_info[i + 16];
+ 126   8                                      LCD_DDRAM_BACK[2][i] = lcd_stu_info[i + 32];
+ 127   8                                      LCD_DDRAM_BACK[3][i] = lcd_placeholder[i];
+ 128   8                                  }
+ 129   7                              }
+ 130   6                              // solve 0x2000  2.控制显示图像
+ 131   6                              if ((cf_path & 0xF000) == 0x2000) {
+ 132   7                                  for (tempi = 0; tempi < 64; tempi++) {
+ 133   8                                      for (tempj = 0; tempj < 16; tempj++) {
+ 134   9                                          LCD_GCRAM_BACK[tempi][tempj]  = 0x00;
+ 135   9                                      }
+ 136   8                                  }
+ 137   7                                  LCD_SetMode(0x06);
+ 138   7                                  offset = cf_path & 0x000F;
+ 139   7                                  if (cf_path & 0x0010) {
+ 140   8                                      for (tempi = 0; tempi < 64; tempi++) {
+ 141   9                                          for (tempj = 0; tempj < 8; tempj++) {
+ 142  10                                              LCD_GCRAM_BACK[tempi][tempj + offset] |= xjtu_image[8 * tempi + te
+             -mpj + 6];
+ 143  10                                          }
+ 144   9                                      }
+ 145   8                                  } else {
+ 146   8                                      for (tempi = 0; tempi < 64; tempi++) {
+ 147   9                                          for (tempj = 0; tempj < 8; tempj++) {
+ 148  10                                              LCD_GCRAM_BACK[tempi][tempj + offset] = xjtu_image[8 * tempi + tem
+             -pj + 6];
+ 149  10                                          }
+ 150   9                                      }
+ 151   8                                  }
+ 152   7                              }
+ 153   6                              // solve 0x3000  3.计时器与秒表
+ 154   6                              if ((cf_path & 0xF000) == 0x3000) {
+ 155   7                                  for (tempi = 0; tempi < 64; tempi++) {
+ 156   8                                      for (tempj = 0; tempj < 16; tempj++) {
+ 157   9                                          LCD_GCRAM_BACK[tempi][tempj]  = 0x00;
+ 158   9                                      }
+ 159   8                                  }
+ 160   7                                  LCD_SetMode(0x06);
+ 161   7                              }
+ 162   6                              // solve 0x4000  4.按键控制游戏
+ 163   6                              if ((cf_path & 0xF000) == 0x4000) {
+ 164   7                                  for (i = 0; i < 16; i++) {
+ 165   8                                      LCD_DDRAM_BACK[0][i] = lcd_game_ovc[i];
+ 166   8                                      LCD_DDRAM_BACK[1][i] = lcd_game_ovc[i + 16];
+ 167   8                                  }
+ 168   7                                  for (i = 0; i < 12; i++) {
+ 169   8                                      LCD_DDRAM_BACK[2][i + 4] = 0x20;
+ 170   8                                      LCD_DDRAM_BACK[3][i] = 0x20;
+ 171   8                                  }
+ 172   7                                  if ((cf_path & 0x0030) == 0x0010) {
+ 173   8                                      for (i = 0; i < 4; i++) {
+ 174   9                                          LCD_DDRAM_BACK[2][i + 4] = lcd_game_ovc[i + 32];
+ 175   9                                          LCD_DDRAM_BACK[2][i + 8] = lcd_game_ovc[i + 36];
+ 176   9                                      }
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 4   
+
+ 177   8                                  }
+ 178   7                                  if ((cf_path & 0x0030) == 0x0020) {
+ 179   8                                      for (i = 0; i < 4; i++) {
+ 180   9                                          LCD_DDRAM_BACK[2][i + 4] = lcd_game_ovc[i + 32];
+ 181   9                                          LCD_DDRAM_BACK[2][i + 8] = lcd_game_ovc[i + 40];
+ 182   9                                      }
+ 183   8                                  }
+ 184   7                                  if ((cf_path & 0x0030) == 0x0030) {
+ 185   8                                      for (i = 0; i < 4; i++) {
+ 186   9                                          LCD_DDRAM_BACK[2][i + 4] = lcd_game_ovc[i + 32];
+ 187   9                                          LCD_DDRAM_BACK[2][i + 8] = lcd_game_ovc[i + 44];
+ 188   9                                      }
+ 189   8                                  }
+ 190   7                                  switch (cf_path & 0xF00F) {
+ 191   8                                  case 0x4001:
+ 192   8                                      for (i = 0; i < 4; i++) {
+ 193   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 48];
+ 194   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 48];
+ 195   9                                      }
+ 196   8                                      break;
+ 197   8                                  case 0x4002:
+ 198   8                                      for (i = 0; i < 4; i++) {
+ 199   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 48];
+ 200   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 52];
+ 201   9                                      }
+ 202   8                                      break;
+ 203   8                                  case 0x4003:
+ 204   8                                      for (i = 0; i < 4; i++) {
+ 205   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 48];
+ 206   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 60];
+ 207   9                                      }
+ 208   8                                      break;
+ 209   8                                  case 0x4005:
+ 210   8                                      for (i = 0; i < 4; i++) {
+ 211   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 52];
+ 212   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 48];
+ 213   9                                      }
+ 214   8                                      break;
+ 215   8                                  case 0x4006:
+ 216   8                                      for (i = 0; i < 4; i++) {
+ 217   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 52];
+ 218   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 52];
+ 219   9                                      }
+ 220   8                                      break;
+ 221   8                                  case 0x4007:
+ 222   8                                      for (i = 0; i < 4; i++) {
+ 223   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 52];
+ 224   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 60];
+ 225   9                                      }
+ 226   8                                      break;
+ 227   8                                  case 0x4009:
+ 228   8                                      for (i = 0; i < 4; i++) {
+ 229   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 56];
+ 230   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 48];
+ 231   9                                      }
+ 232   8                                      break;
+ 233   8                                  case 0x400A:
+ 234   8                                      for (i = 0; i < 4; i++) {
+ 235   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 56];
+ 236   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 52];
+ 237   9                                      }
+ 238   8                                      break;
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 5   
+
+ 239   8                                  case 0x400B:
+ 240   8                                      for (i = 0; i < 4; i++) {
+ 241   9                                          LCD_DDRAM_BACK[2][i] = lcd_game_ovc[i + 56];
+ 242   9                                          LCD_DDRAM_BACK[3][i + 12] = lcd_game_ovc[i + 60];
+ 243   9                                      }
+ 244   8                                      break;
+ 245   8                                  
+ 246   8                                  default:
+ 247   8                                      break;
+ 248   8                                  }
+ 249   7                                  cf_force_menu_update = 1;
+ 250   7                              }
+ 251   6      
+ 252   6                              // solve 0x5000  5.控制实际物体
+ 253   6                              if ((cf_path & 0xF000) == 0x5000) {
+ 254   7                                  // Display ADC and DAC
+ 255   7                                  offset = cf_path & 0x000F;
+ 256   7                                  if (cf_adda_menu_update) {
+ 257   8                                      for (i = 0; i < 16; i++) {
+ 258   9                                          LCD_DDRAM_BACK[0][i] = lcd_adc_dac[i + offset * 16 - 16];
+ 259   9                                          LCD_DDRAM_BACK[1][i] = lcd_adc_dac[i + offset * 16];
+ 260   9                                          LCD_DDRAM_BACK[2][i] = lcd_adc_dac[i + offset * 16 + 16];
+ 261   9                                          LCD_DDRAM_BACK[3][i] = lcd_adc_dac[i + offset * 16 + 32];
+ 262   9                                      }
+ 263   8                                      cf_adda_menu_update = 0;
+ 264   8                                  }
+ 265   7                                  switch (offset) {
+ 266   8                                  case 0x0001:
+ 267   8                                      LCD_DDRAM_BACK[2][13] = lcd_placeholder[channel];
+ 268   8                                      for (i = 0; i < 4; i++) {
+ 269   9                                          LCD_DDRAM_BACK[3][i + 10] = lcd_placeholder[Disp_Vref_Char[3 - i]];
+ 270   9                                      }
+ 271   8                                      break;
+ 272   8                                  case 0x0002:
+ 273   8                                      LCD_DDRAM_BACK[1][13] = lcd_placeholder[channel];
+ 274   8                                      for (i = 0; i < 4; i++) {
+ 275   9                                          LCD_DDRAM_BACK[2][i + 10] = lcd_placeholder[Disp_Vref_Char[3 - i]];
+ 276   9                                          LCD_DDRAM_BACK[3][i + 10] = lcd_placeholder[Disp_Vtar_Char[3 - i]];
+ 277   9                                      }
+ 278   8                                      break;
+ 279   8                                  case 0x0003:
+ 280   8                                      LCD_DDRAM_BACK[0][13] = lcd_placeholder[channel];
+ 281   8                                      for (i = 0; i < 4; i++) {
+ 282   9                                          LCD_DDRAM_BACK[1][i + 10] = lcd_placeholder[Disp_Vref_Char[3 - i]];
+ 283   9                                          LCD_DDRAM_BACK[2][i + 10] = lcd_placeholder[Disp_Vtar_Char[3 - i]];
+ 284   9                                          LCD_DDRAM_BACK[3][i + 10] = lcd_placeholder[Disp_Vadc_Char[3 - i]];
+ 285   9                                      }
+ 286   8                                      break;
+ 287   8                                  case 0x0004:
+ 288   8                                      for (i = 0; i < 4; i++) {
+ 289   9                                          LCD_DDRAM_BACK[0][i + 10] = lcd_placeholder[Disp_Vref_Char[3 - i]];
+ 290   9                                          LCD_DDRAM_BACK[1][i + 10] = lcd_placeholder[Disp_Vtar_Char[3 - i]];
+ 291   9                                          LCD_DDRAM_BACK[2][i + 10] = lcd_placeholder[Disp_Vadc_Char[3 - i]];
+ 292   9                                          LCD_DDRAM_BACK[3][i + 10] = lcd_placeholder[Disp_Vdac_Char[3 - i]];
+ 293   9                                      }
+ 294   8                                      break;
+ 295   8                                  
+ 296   8                                  default:
+ 297   8                                      break;
+ 298   8                                  }
+ 299   7      
+ 300   7                                  cf_force_menu_update = 1;
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 6   
+
+ 301   7                              }
+ 302   6      
+ 303   6                              // solve 0x6000  6.按键控制画图
+ 304   6                              if ((cf_path & 0xF000) == 0x6000) {
+ 305   7                                  for (tempi = 0; tempi < 64; tempi++) {
+ 306   8                                      for (tempj = 0; tempj < 16; tempj++) {
+ 307   9                                          LCD_GCRAM_BACK[tempi][tempj]  = 0x00;
+ 308   9                                      }
+ 309   8                                  }
+ 310   7                                  LCD_SetMode(0x07);
+ 311   7                                  for (i = 0; i < 16; i++) {
+ 312   8                                      LCD_DDRAM_BACK[0][i] = 0x20;
+ 313   8                                      LCD_DDRAM_BACK[1][i] = 0x20;
+ 314   8                                      LCD_DDRAM_BACK[2][i] = 0x20;
+ 315   8                                      LCD_DDRAM_BACK[3][i] = 0x20;
+ 316   8                                  }
+ 317   7                              }
+ 318   6                          
+ 319   6                              // solve 0xF000
+ 320   6                              if ((cf_path & 0xF000) == 0xF000) {
+ 321   7                                  
+ 322   7                                  for (tempi = 0; tempi < 64; tempi++) {
+ 323   8                                      for (tempj = 0; tempj < 16; tempj++) {
+ 324   9                                          LCD_GCRAM_BACK[tempi][tempj]  = 0x00;
+ 325   9                                      }
+ 326   8                                  }
+ 327   7                                  switch (cf_path) {
+ 328   8                                  case 0xF002:
+ 329   8                                      LCD_SetMode(0x06);
+ 330   8                                      break;
+ 331   8                                  case 0xF003:
+ 332   8                                      LCD_SetMode(0x07);
+ 333   8                                      break;
+ 334   8                                  default:
+ 335   8                                      if (cf_debug_menu_update) {
+ 336   9                                      for (i = 0; i < 16; i++) {
+ 337  10                                          LCD_DDRAM_BACK[0][i] = lcd_display[i];
+ 338  10                                          LCD_DDRAM_BACK[1][i] = lcd_display[i + 16];
+ 339  10                                          LCD_DDRAM_BACK[2][i] = lcd_display[i + 32];
+ 340  10                                          LCD_DDRAM_BACK[3][i] = lcd_display[i + 48];
+ 341  10                                      }
+ 342   9                                      cf_debug_menu_update = 0;
+ 343   9                                      }
+ 344   8                                      for (i = 0; i < 4; i++) {
+ 345   9                                          LCD_DDRAM_BACK[0][i + 3]  = lcd_placeholder[LED_LINE1[3 - i]];
+ 346   9                                          LCD_DDRAM_BACK[1][i + 3]  = lcd_placeholder[LED_LINE2[3 - i]];
+ 347   9                                          LCD_DDRAM_BACK[2][i + 3]  = lcd_placeholder[LED_LINE3[3 - i]];
+ 348   9                                          LCD_DDRAM_BACK[3][i + 3]  = lcd_placeholder[TMR0_VALUE[3 - i]];
+ 349   9                                          LCD_DDRAM_BACK[0][i + 11] = lcd_placeholder[TMR1_VALUE[3 - i]];
+ 350   9                                          LCD_DDRAM_BACK[1][i + 11] = lcd_placeholder[TMR2_VALUE[3 - i]];
+ 351   9                                          LCD_DDRAM_BACK[2][i + 11] = lcd_placeholder[TMR3_VALUE[3 - i]];
+ 352   9                                          LCD_DDRAM_BACK[3][i + 11] = lcd_placeholder[TMR4_VALUE[3 - i]];
+ 353   9                                      }
+ 354   8                                      cf_force_menu_update = 1;
+ 355   8                                      break;
+ 356   8                                  }
+ 357   7                              }
+ 358   6                          } else {
+ 359   6                              // 0x1000~0xF000
+ 360   6                              // Display inst
+ 361   6                              offset = 0x00F0 & cf_path >> 8;
+ 362   6                              for (i = 0; i < 16; i++) {
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 7   
+
+ 363   7                                  LCD_DDRAM_BACK[0][i] = 0x20;
+ 364   7                                  LCD_DDRAM_BACK[1][i] = lcd_inst[i + 48];
+ 365   7                                  LCD_DDRAM_BACK[2][i] = lcd_inst[i + 16];
+ 366   7                                  LCD_DDRAM_BACK[3][i] = lcd_inst[i + 64];
+ 367   7                              }
+ 368   6                              for (i = 2; i < 14; i++) {
+ 369   7                                  LCD_DDRAM_BACK[0][i] = lcd_menu[i + 18 + offset];
+ 370   7                              }
+ 371   6                          }
+ 372   5                      } else {
+ 373   5                          // 0x0010~0x00FF
+ 374   5                          // Display inst
+ 375   5                          offset = cf_path & 0x00F0;
+ 376   5                          for (i = 0; i < 16; i++) {
+ 377   6                              LCD_DDRAM_BACK[0][i] = 0x20;
+ 378   6                              LCD_DDRAM_BACK[1][i] = lcd_inst[i];
+ 379   6                              LCD_DDRAM_BACK[2][i] = lcd_inst[i + 16];
+ 380   6                              LCD_DDRAM_BACK[3][i] = lcd_inst[i + 32];
+ 381   6                          }
+ 382   5                          for (i = 2; i < 14; i++) {
+ 383   6                              LCD_DDRAM_BACK[0][i] = lcd_menu[i + 18 + offset];
+ 384   6                          }
+ 385   5                      }
+ 386   4                  } else {
+ 387   4                      // 0x0001~0x000F
+ 388   4                      // Display menu
+ 389   4                      offset = cf_path & 0x000F;
+ 390   4                      for (i = 0; i < 16; i++) {
+ 391   5                          LCD_DDRAM_BACK[0][i] = lcd_menu[i];
+ 392   5                          LCD_DDRAM_BACK[1][i] = lcd_menu[i + offset * 16];
+ 393   5                          LCD_DDRAM_BACK[2][i] = lcd_menu[i + 16 + offset * 16];
+ 394   5                          LCD_DDRAM_BACK[3][i] = lcd_menu[i + 32 + offset * 16];
+ 395   5                      }
+ 396   4                      LCD_DDRAM_BACK[2][0] = '-';
+ 397   4                      LCD_DDRAM_BACK[2][1] = '>';
+ 398   4                  }
+ 399   3              } else {
+ 400   3                  // 0x0000
+ 401   3                  // Display welcome
+ 402   3                  for (i = 0; i < 16; i++) {
+ 403   4                      LCD_DDRAM_BACK[0][i] = lcd_welcome[i];
+ 404   4                      LCD_DDRAM_BACK[1][i] = lcd_stu_info[i];
+ 405   4                      LCD_DDRAM_BACK[2][i] = lcd_welcome[i + 16];
+ 406   4                      LCD_DDRAM_BACK[3][i] = lcd_welcome[i + 32];
+ 407   4                  }
+ 408   3              }
+ 409   2          }
+ 410   1          cf_should_menu_update = 0;
+ 411   1      }
+ 412          
+ 413          void Generate_DrawLCD(void) {
+ 414   1          unsigned int tempi, tempj;
+ 415   1          // solve 0x3000
+ 416   1          if ((cf_path & 0xF000) == 0x3000) {
+ 417   2              tempi = 0x007F & timer0_value >> 1;
+ 418   2              tempj = 0x0001 & ~timer0_value >> 8;
+ 419   2              LCD_DrawLine(0x3404, 0x347B, 0x0001, 128);
+ 420   2              LCD_DrawPoint(0x3404 + 0x0100, 1);
+ 421   2              LCD_DrawPoint(0x3404 + 0x0200, 1);
+ 422   2              LCD_DrawPoint(0x3404 + 0x0300, 1);
+ 423   2              LCD_DrawPoint(0x3404 + 0x0400, 1);
+ 424   2              LCD_DrawPoint(0x3404 + 0x0500, 1);
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 8   
+
+ 425   2              LCD_DrawPoint(0x3404 + 0x0600, 1);
+ 426   2              LCD_DrawLine(0x3B7B, 0x3B04, 0x0001, 128);
+ 427   2              LCD_DrawPoint(0x347B + 0x0100, 1);
+ 428   2              LCD_DrawPoint(0x347B + 0x0200, 1);
+ 429   2              LCD_DrawPoint(0x347B + 0x0300, 1);
+ 430   2              LCD_DrawPoint(0x347B + 0x0400, 1);
+ 431   2              LCD_DrawPoint(0x347B + 0x0500, 1);
+ 432   2              LCD_DrawPoint(0x347B + 0x0600, 1);
+ 433   2              if (tempi < 116) {
+ 434   3                  LCD_DrawPoint(0x3606 + tempi, tempj);
+ 435   3                  LCD_DrawPoint(0x3706 + tempi, tempj);
+ 436   3                  LCD_DrawPoint(0x3806 + tempi, tempj);
+ 437   3                  LCD_DrawPoint(0x3906 + tempi, tempj);
+ 438   3              } else if (timer0_value > 0x01FF) {
+ 439   3                  Timer0_Stop;
+ 440   3              }
+ 441   2          }
+ 442   1      
+ 443   1          // solve 0x6000
+ 444   1          if ((cf_path & 0xF000) == 0x6000) {
+ 445   2              for (tempi = 0; tempi < 64; tempi++) {
+ 446   3                  for (tempj = 0; tempj < 16; tempj++) {
+ 447   4                      LCD_GCRAM_BACK[tempi][tempj] = LCD_GCRAM_BOARD[tempi][tempj];
+ 448   4                  }
+ 449   3              }
+ 450   2              LCD_DrawPoint(draw_point, 2);
+ 451   2              LCD_DrawPoint(draw_point + 0x0001, 2);
+ 452   2              LCD_DrawPoint(draw_point - 0x0001, 2);
+ 453   2              LCD_DrawPoint(draw_point + 0x0100, 2);
+ 454   2              LCD_DrawPoint(draw_point - 0x0100, 2);
+ 455   2              // LCD_DrawLine(draw_point - 0x0004, draw_point + 0x0004, 2, 9);
+ 456   2              // LCD_DrawLine(draw_point - 0x0001, draw_point + 0x0001, 2, 3);
+ 457   2              // LCD_DrawLine(draw_point - 0x0100, draw_point + 0x0100, 2, 3);
+ 458   2              if (cf_lcd_draw_point) {
+ 459   3                  LCD_DrawPointOnDoard(draw_point, draw_method);
+ 460   3                  cf_lcd_draw_point = 0;
+ 461   3              }
+ 462   2          }
+ 463   1          
+ 464   1          // solve 0xF000
+ 465   1          if ((cf_path & 0xF000) == 0xF000) {
+ 466   2              LCD_DrawLine(0x0000, 0x007F, 0x0001, 64);
+ 467   2              LCD_DrawLine(0x007F, 0x3F7F, 0x0001, 128);
+ 468   2              LCD_DrawLine(0x3F7F, 0x3F00, 0x0001, 64);
+ 469   2              LCD_DrawLine(0x3F00, 0x0000, 0x0001, 64);
+ 470   2              LCD_DrawLine(0x0000, 0x3F7F, 0x0001, -1);
+ 471   2              LCD_DrawLine(0x007F, 0x3F00, 0x0001, -1);
+ 472   2          }
+ 473   1      }
+ 474          
+ 475          void Button1_Handler(void) {
+ 476   1          // unsigned int tempi, tempj;
+ 477   1          if (cf_path & 0xFFFF) {
+ 478   2              // 0x0001~0xFFFF
+ 479   2              if (cf_path & 0xFFF0) {
+ 480   3              // 0x001*~0xFFF*
+ 481   3                  if (cf_path & 0xFF00) {
+ 482   4                      // 0x00**~0xFF**
+ 483   4                      if (cf_path & 0xF000) {
+ 484   5                          if (cf_path & 0x00FF) {
+ 485   6                              cf_path--;
+ 486   6                          } else {
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 9   
+
+ 487   6                              cf_path >>= 12;  // 三级菜单右移进入一级菜单
+ 488   6                          }
+ 489   5                      }
+ 490   4                      // solve 0x5000  5.控制实际物体
+ 491   4                      if ((cf_path & 0xF000) == 0x5000) {
+ 492   5                          if (cf_path & 0x00F0) {
+ 493   6                              cf_path++;
+ 494   6                              switch (cf_path & 0x00FF) {
+ 495   7                              case 0x0011:
+ 496   7                              case 0x0021:
+ 497   7                              case 0x0031:
+ 498   7                              case 0x0041:
+ 499   7                                  channel++;
+ 500   7                                  break;
+ 501   7                              case 0x0012:
+ 502   7                                  vref += 1;
+ 503   7                                  break;
+ 504   7                              case 0x0022:
+ 505   7                                  vref += 10;
+ 506   7                                  break;
+ 507   7                              case 0x0032:
+ 508   7                                  vref += 100;
+ 509   7                                  break;
+ 510   7                              case 0x0042:
+ 511   7                                  vref += 1000;
+ 512   7                                  break;
+ 513   7                              case 0x0013:
+ 514   7                                  vtarget += 1;
+ 515   7                                  break;
+ 516   7                              case 0x0023:
+ 517   7                                  vtarget += 10;
+ 518   7                                  break;
+ 519   7                              case 0x0033:
+ 520   7                                  vtarget += 100;
+ 521   7                                  break;
+ 522   7                              case 0x0043:
+ 523   7                                  vtarget += 1000;
+ 524   7                                  break;
+ 525   7                              
+ 526   7                              default:
+ 527   7                                  break;
+ 528   7                              }
+ 529   6                          }
+ 530   5                          // Display ADC and DAC
+ 531   5                          cf_adda_menu_update  = 1;
+ 532   5                      }
+ 533   4                  } else {
+ 534   4                      // 0x0010~0x00FF
+ 535   4                      cf_debug_menu_update = 1;
+ 536   4                      cf_adda_menu_update  = 1;
+ 537   4                      cf_path <<= 8;  // 二级菜单右移进入三级菜单
+ 538   4                      cf_path++;
+ 539   4                  }
+ 540   3              } else {
+ 541   3                  // 0x0001~0x000F
+ 542   3                  cf_path--;  // 一级菜单循环减
+ 543   3              }
+ 544   2          } else {
+ 545   2              // 0x0000
+ 546   2              cf_path = 0x000F;
+ 547   2          }
+ 548   1          cf_should_menu_update = 1;
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 10  
+
+ 549   1      }
+ 550          
+ 551          void Button2_Handler(void) {
+ 552   1          if (cf_path & 0xFFFF) {
+ 553   2              // 0x0001~0xFFFF
+ 554   2              if (cf_path & 0xFFF0) {
+ 555   3              // 0x001*~0xFFF*
+ 556   3                  if (cf_path & 0xF000) {
+ 557   4                      if (~cf_path & 0x00FF) {
+ 558   5                          cf_debug_menu_update = 1;
+ 559   5                          cf_path++;
+ 560   5                      }
+ 561   4                      // solve 0x5000  5.控制实际物体
+ 562   4                      if ((cf_path & 0xF000) == 0x5000) {
+ 563   5                          if (cf_path & 0x00F0) {
+ 564   6                              cf_path--;
+ 565   6                              switch (cf_path & 0x00FF) {
+ 566   7                              case 0x0011:
+ 567   7                              case 0x0021:
+ 568   7                              case 0x0031:
+ 569   7                              case 0x0041:
+ 570   7                                  channel--;
+ 571   7                                  break;
+ 572   7                              case 0x0012:
+ 573   7                                  vref -= 1;
+ 574   7                                  break;
+ 575   7                              case 0x0022:
+ 576   7                                  vref -= 10;
+ 577   7                                  break;
+ 578   7                              case 0x0032:
+ 579   7                                  vref -= 100;
+ 580   7                                  break;
+ 581   7                              case 0x0042:
+ 582   7                                  vref -= 1000;
+ 583   7                                  break;
+ 584   7                              case 0x0013:
+ 585   7                                  vtarget -= 1;
+ 586   7                                  break;
+ 587   7                              case 0x0023:
+ 588   7                                  vtarget -= 10;
+ 589   7                                  break;
+ 590   7                              case 0x0033:
+ 591   7                                  vtarget -= 100;
+ 592   7                                  break;
+ 593   7                              case 0x0043:
+ 594   7                                  vtarget -= 1000;
+ 595   7                                  break;
+ 596   7                              
+ 597   7                              default:
+ 598   7                                  break;
+ 599   7                              }
+ 600   6                          }
+ 601   5                          // Display ADC and DAC
+ 602   5                          cf_adda_menu_update  = 1;
+ 603   5                      }
+ 604   4                  }
+ 605   3              } else if (cf_path != 0x000F) {
+ 606   3                  // 0x0001~0x000E
+ 607   3                  cf_path++;  // 一级菜单循环加
+ 608   3              } else {
+ 609   3                  cf_path = 0x0000;  // 加满溢出
+ 610   3              }
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 11  
+
+ 611   2          } else {
+ 612   2              // 0x0000
+ 613   2              cf_path++;
+ 614   2          }
+ 615   1          cf_should_menu_update = 1;
+ 616   1      }
+ 617          
+ 618          void Button3_Handler(void) {
+ 619   1          if (cf_path & 0xFFFF) {
+ 620   2              // 0x0001~0xFFFF
+ 621   2              if (cf_path & 0xFFF0) {
+ 622   3              // 0x001*~0xFFF*
+ 623   3                  if (cf_path & 0xFF00) {
+ 624   4                      // 0x00**~0xFF**
+ 625   4                      // solve 0x3000  3.计时器与秒表
+ 626   4                      if ((cf_path & 0xF000) == 0x3000) {
+ 627   5                          Timer0_Start;  // 设定 TCON 中断标志位 4，定时器 0 开启
+ 628   5                      }
+ 629   4      
+ 630   4                      // solve 0x4000  4.按键控制游戏
+ 631   4                      if ((cf_path & 0xF000) == 0x4000) {
+ 632   5                          switch (cf_path) {
+ 633   6                          case 0x4001:
+ 634   6                          case 0x4006:
+ 635   6                          case 0x400B:
+ 636   6                              cf_path |= 0x0020;
+ 637   6                              break;
+ 638   6                          case 0x4002:
+ 639   6                          case 0x4007:
+ 640   6                          case 0x4009:
+ 641   6                              cf_path |= 0x0010;
+ 642   6                              break;
+ 643   6                          case 0x4003:
+ 644   6                          case 0x4008:
+ 645   6                          case 0x400A:
+ 646   6                              cf_path |= 0x0030;
+ 647   6                              break;
+ 648   6                          default:
+ 649   6                              if (cf_path & 0x000F) {
+ 650   7                                  cf_path &= 0xFF0F;
+ 651   7                              } else {
+ 652   7                                  cf_path = 0x4000;
+ 653   7                              }
+ 654   6                              break;
+ 655   6                          }
+ 656   5                      }
+ 657   4                      
+ 658   4                      // solve 0x5000  5.控制实际物体
+ 659   4                      if ((cf_path & 0xF000) == 0x5000) {
+ 660   5                          // Display ADC and DAC
+ 661   5                          if ((cf_path & 0x00F0) == 0x0040) {
+ 662   6                              cf_path -= 0x0040;
+ 663   6                          } else {
+ 664   6                              cf_path += 0x0010;
+ 665   6                          }
+ 666   5                          cf_adda_menu_update  = 1;
+ 667   5                      }
+ 668   4      
+ 669   4                      // solve 0x6000
+ 670   4                      if ((cf_path & 0xF000) == 0x6000) {
+ 671   5                          // 如果上一个点没有画完则不能画下一个点
+ 672   5                          if (~cf_lcd_draw_point) {
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 12  
+
+ 673   6                              switch (cf_path & 0x000F) {
+ 674   7                              case  1: case  2: case  3: case  4: draw_method = 3; break;
+ 675   7                              case  5: case  6: case  7: case  8: draw_method = 1; break;
+ 676   7                              case  9: case 10: case 11: case 12: draw_method = 0; break;
+ 677   7                              case 13: case 14: case 15: case 16: draw_method = 2; break;
+ 678   7                              default: break;
+ 679   7                              }
+ 680   6                              switch (cf_path & 0x000F) {
+ 681   7                              case 1: case 5: case  9: case 13: draw_point += 0x0001; break;
+ 682   7                              case 2: case 6: case 10: case 14: draw_point += 0x0100; break;
+ 683   7                              case 3: case 7: case 11: case 15: draw_point -= 0x0001; break;
+ 684   7                              case 4: case 8: case 12: case 16: draw_point -= 0x0100; break;
+ 685   7                              default: break;
+ 686   7                              }
+ 687   6                              cf_lcd_draw_point = 1;
+ 688   6                          }
+ 689   5                      }
+ 690   4                  } else {
+ 691   4                      // 0x0010~0x00FF
+ 692   4                      cf_path >>= 4;  // 二级菜单右移进入一级菜单
+ 693   4                  }
+ 694   3              } else {
+ 695   3              // 0x0001~0x000F
+ 696   3              cf_path <<= 4;  // 一级菜单左移进入二级菜单
+ 697   3              }
+ 698   2          } else {
+ 699   2              // 0x0000
+ 700   2              // cf_path = 0x0000;
+ 701   2              // cf_path = 0xF001;
+ 702   2          }
+ 703   1          cf_should_menu_update = 1;
+ 704   1      }
+ 705          
+ 706          void Timer0_ISR(void) interrupt 1 {
+ 707   1          timer0_value++;
+ 708   1          led_line2_value++;
+ 709   1      
+ 710   1          TH0 = 0x7F; // Reinit Timer0 High register
+ 711   1          TL0 = 0xFF;
+ 712   1      }
+ 713          
+ 714          void INT1_ISR(void) interrupt 2 {
+ 715   1          switch (P5) {
+ 716   2          case 0xFB:                      // 左边那个键
+ 717   2              cf_button |= 0x0001;        // 标记按键 1 b001
+ 718   2              cf_button1_hold_time = 0;   // 按键保持计时清零
+ 719   2              break;
+ 720   2          case 0xFD:                      // 中间那个键
+ 721   2              cf_button |= 0x0002;        // 标记按键 2 b010
+ 722   2              cf_button2_hold_time = 0;   // 按键保持计时清零
+ 723   2              break;
+ 724   2          case 0xFE:                      // 右边那个键
+ 725   2              cf_button |= 0x0004;        // 标记按键 3 b100
+ 726   2              cf_button3_hold_time = 0;   // 按键保持计时清零
+ 727   2              break;
+ 728   2          }
+ 729   1      }
+ 730          
+ 731          void Timer1_Init_MainCtr(void) {
+ 732   1          Enable_Timer1;       // 设定 IE 标志位 1，允许 Timer1 溢出中断请求
+ 733   1          Timer1_Set_Method1;  // 设置定时器 1 为方式 1 定时器功能
+ 734   1      }
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 13  
+
+ 735          
+ 736          void Timer1_ISR(void) interrupt 3 {
+ 737   1          timer1_value++;
+ 738   1          led_line3_value++;
+ 739   1      
+ 740   1          // solve 0x4000  4.按键控制游戏
+ 741   1          if ((cf_path & 0xF0F0) == 0x4000) {
+ 742   2              cf_path &= 0xF003;
+ 743   2              cf_path |= (timer1_value % 0x0003) << 2;
+ 744   2          }
+ 745   1      
+ 746   1          // 锁住当前按键按下的状态，并设定按键超时时间
+ 747   1          if (cf_button & 0x0001) {
+ 748   2              cf_button1_hold_time++;
+ 749   2              if (cf_button1_hold_time == 2) {
+ 750   3                  cf_button1_hold_on = 1;
+ 751   3              } else if (cf_button1_hold_time >= 200) {
+ 752   3                  cf_button &= 0x0006;
+ 753   3              }
+ 754   2          }
+ 755   1          if (cf_button & 0x0002) {
+ 756   2              cf_button2_hold_time++;
+ 757   2              if (cf_button2_hold_time == 2) {
+ 758   3                  cf_button2_hold_on = 1;
+ 759   3              } else if (cf_button2_hold_time >= 200) {
+ 760   3                  cf_button &= 0x0005;
+ 761   3              }
+ 762   2          }
+ 763   1          if (cf_button & 0x0004) {
+ 764   2              cf_button3_hold_time++;
+ 765   2              if (cf_button3_hold_time == 2) {
+ 766   3                  cf_button3_hold_on = 1;
+ 767   3              } else if (cf_button3_hold_time >= 200) {
+ 768   3                  cf_button &= 0x0003;
+ 769   3              }
+ 770   2          }
+ 771   1      
+ 772   1          led_line1_value = cf_path;
+ 773   1      
+ 774   1          // 保证按键按下以后只处理一次按键事件
+ 775   1          if (cf_button1_hold_on) {
+ 776   2              Button1_Handler();
+ 777   2              cf_button1_hold_on = 0;
+ 778   2          }
+ 779   1          if (cf_button2_hold_on) {
+ 780   2              Button2_Handler();
+ 781   2              cf_button2_hold_on = 0;
+ 782   2          }
+ 783   1          if (cf_button3_hold_on) {
+ 784   2              Button3_Handler();
+ 785   2              cf_button3_hold_on = 0;
+ 786   2          }
+ 787   1      
+ 788   1          TH1 = 0x00; // Reinit Timer0 High register
+ 789   1          TL1 = 0x00;
+ 790   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   7834    ----
+   CONSTANT SIZE    =    744    ----
+   XDATA SIZE       =    534      12
+C51 COMPILER V9.52.0.0   HANDLE_MENU                                                       06/06/2019 17:51:07 PAGE 14  
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =     13    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

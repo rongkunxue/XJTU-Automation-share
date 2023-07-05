@@ -1,0 +1,61 @@
+C51 COMPILER V9.52.0.0   DELAY                                                             04/20/2022 22:04:10 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE DELAY
+OBJECT MODULE PLACED IN Delay.obj
+COMPILER INVOKED BY: C:\Keil_v51\C51\BIN\C51.EXE source\Delay.c LARGE RTX51 BROWSE DEBUG OBJECTEXTEND PRINT(.\Delay.lst)
+                    - TABS(2) OBJECT(Delay.obj)
+
+line level    source
+
+   1          #include "Delay.h"
+   2          
+   3          void Delay_us(unsigned int val) {
+   4   1          unsigned int i;
+   5   1      
+   6   1          for (i = 0; i < val; i++) {
+   7   2              _nop_();
+   8   2              _nop_();
+   9   2              _nop_();
+  10   2              _nop_();
+  11   2              // _nop_();
+  12   2              // _nop_();
+  13   2              // _nop_();
+  14   2          }
+  15   1      }
+  16          
+  17          void Delay_ms(unsigned int val) {
+  18   1          unsigned int i;
+  19   1      
+  20   1          for (i = 0; i < val; i++)
+  21   1              Delay_us(1000);
+  22   1      }
+  23          
+  24          void Delay1(uint k)
+  25          {
+  26   1          do
+  27   1          {
+  28   2          }
+  29   1          while( --k );
+  30   1      }
+  31          
+  32          // void Delay_s(unsigned int val) {
+  33          //     unsigned int i;
+  34          
+  35          //     for (i = 0; i < val; i++)
+  36          //         Delay_ms(1000);
+  37          // }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     59    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

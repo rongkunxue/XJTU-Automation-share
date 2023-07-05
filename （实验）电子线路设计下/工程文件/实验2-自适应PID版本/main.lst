@@ -1,0 +1,586 @@
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.obj
+COMPILER INVOKED BY: C:\Keil_v51\C51\BIN\C51.EXE source\main.c LARGE RTX51 BROWSE DEBUG OBJECTEXTEND PRINT(.\main.lst) T
+                    -ABS(2) OBJECT(main.obj)
+
+line level    source
+
+   1          
+   2          // 字符编码使用 UTF-8
+   3          #include "ADC.h"
+   4          #include "DAC.h"
+   5          #include "Delay.h"
+   6          #include "SYS_Init.h"
+   7          #include "Timer.h"
+   8          #include "led.h"
+   9          #include "lcd.h" 
+  10          // #include "Handle_Menu.h"
+  11          #include "c8051f020.h"
+  12          #include <math.h>
+  13          #include <stdlib.h>
+  14          #define NB -3
+  15          #define NM -2
+  16          #define NS -1
+  17          #define ZO 0
+  18          #define PS 1
+  19          #define PM 2
+  20          #define PB 3
+  21          
+  22          void FuzzyPID();  //初始化PID参数
+  23          float FuzzyPIDcontroller(float e_max, float e_min, float ec_max, float ec_min, float kp_max, float kp_min,
+             - float error, float error_c, float ki_max, float ki_min,float kd_max, float kd_min,float error_pre, float error_ppre);  
+             -//模糊PID控制实现函数
+  24          float Quantization(float maximum, float minimum, float x);  //误差 error 和误差变化 error_c 映射�
+             -�论域中的函数
+  25          void Get_grad_membership(float error, float error_c); ////计算输入e与de/dt隶属度
+  26          void GetSumGrad();// 获取输出增量 △kp、△ki、△kd 的总隶属度
+  27          void GetOUT();  // 计算输出增量 △kp、△ki、△kd 对应论域值
+  28          float Inverse_quantization(float maximum, float minimum, float qvalues);  //去模糊化
+  29          
+  30          
+  31          const int  num_area = 8; //划分区域个数
+  32          float e_membership_values[7] = {-3,-2,-1,0,1,2,3}; //输入e的隶属值
+  33          float ec_membership_values[7] = { -3,-2,-1,0,1,2,3 };//输入de/dt的隶属值
+  34          float kp_menbership_values[7] = { -3,-2,-1,0,1,2,3 };//输出增量kp的隶属值
+  35          float ki_menbership_values[7] = { -3,-2,-1,0,1,2,3 }; //输出增量ki的隶属值
+  36          float kd_menbership_values[7] = { -3,-2,-1,0,1,2,3 };  //输出增量kd的隶属值
+  37          
+  38          float kp;                       //PID参数kp
+  39          float ki;                       //PID参数ki
+  40          float kd;                       //PID参数kd
+  41          float qdetail_kp;               //增量kp对应论域中的值
+  42          float qdetail_ki;               //增量ki对应论域中的值
+  43          float qdetail_kd;               //增量kd对应论域中的值
+  44          float detail_kp;                //输出增量kp
+  45          float detail_ki;                //输出增量ki
+  46          float detail_kd;                //输出增量kd
+  47          float qerror;                    //输入e对应论域中的值
+  48          float qerror_c;                  //输入de/dt对应论域中的值             
+  49          float e_gradmembership[2];      //输入e的隶属度
+  50          float ec_gradmembership[2];     //输入de/dt的隶属度
+  51          int e_grad_index[2];            //输入e隶属度在规则表的索引
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 2   
+
+  52          int ec_grad_index[2];           //输入de/dt隶属度在规则表的索引
+  53          float KpgradSums[7] = { 0,0,0,0,0,0,0 };   //输出增量kp总的隶属度
+  54          float KigradSums[7] = { 0,0,0,0,0,0,0 };   //输出增量ki总的隶属度
+  55          float KdgradSums[7] = { 0,0,0,0,0,0,0 };   //输出增量kd总的隶属度
+  56          
+  57          float e_max = 150;      //误差最大值
+  58          float e_min = -150;    //误差最小值
+  59          float ec_max = 300;     //误差变化最大值
+  60          float ec_min = -300;    //误差变化最小值
+  61          float kp_max = 50;       //比例系数 kp 上限值
+  62          float kp_min = -50;    //比例系数 kp 下限值
+  63          float ki_max = 0.1;     //积分系数 ki 上限值
+  64          float ki_min = -0.1;    //积分系数 ki 下限值
+  65          float kd_max = 0.01;    //微分系数 kd 上限值
+  66          float kd_min = -0.01;   //微分系数 kd 下限值
+  67          float error;        //误差值
+  68          float error_c;      //误差变化值
+  69          float error_pre = 0;    //上一次误差值
+  70          float error_ppre = 0;   //上上次误差值
+  71          
+  72          
+  73          int  Kp_rule_list[7][7] = { {PB,PB,PM,PM,PS,ZO,ZO},        //kp规则表
+  74                       {PB,PB,PM,PS,PS,ZO,NS},
+  75                       {PM,PM,PM,PS,ZO,NS,NS},
+  76                       {PM,PM,PS,ZO,NS,NM,NM},
+  77                       {PS,PS,ZO,NS,NS,NM,NM},
+  78                       {PS,ZO,NS,NM,NM,NM,NB},
+  79                       {ZO,ZO,NM,NM,NM,NB,NB} };
+  80          
+  81          int  Ki_rule_list[7][7] = { {NB,NB,NM,NM,NS,ZO,ZO},     //ki规则表
+  82                      {NB,NB,NM,NS,NS,ZO,ZO},
+  83                      {NB,NM,NS,NS,ZO,PS,PS},
+  84                      {NM,NM,NS,ZO,PS,PM,PM},
+  85                      {NM,NS,ZO,PS,PS,PM,PB},
+  86                      {ZO,ZO,PS,PS,PM,PB,PB},
+  87                      {ZO,ZO,PS,PM,PM,PB,PB} };
+  88          
+  89            int  Kd_rule_list[7][7] = { {PS,NS,NB,NB,NB,NM,PS},     //kd规则表
+  90                       {PS,NS,NB,NM,NM,NS,ZO},
+  91                       {ZO,NS,NM,NM,NS,NS,ZO},
+  92                       {ZO,NS,NS,NS,NS,NS,ZO},
+  93                       {ZO,ZO,ZO,ZO,ZO,ZO,ZO},
+  94                                     {PB,NS,PS,PS,PS,PS,PB},
+  95                                     {PB,PM,PM,PM,PS,PS,PB} };
+  96          
+  97          void FuzzyPID()  //参数初始化
+  98          {
+  99   1        kp = 0;
+ 100   1        ki = 0;
+ 101   1        kd = 0;
+ 102   1        qdetail_kp = 0;
+ 103   1        qdetail_ki = 0;
+ 104   1        qdetail_kd = 0;
+ 105   1      }
+ 106          
+ 107          //模糊PID控制实现函数
+ 108          float FuzzyPIDcontroller(float e_max, float e_min, float ec_max, float ec_min, float kp_max, float kp_min,
+             - float error, float error_c,float ki_max,float ki_min,float kd_max,float kd_min,float error_pre,float error_ppre)
+ 109          {
+ 110   1        float output;
+ 111   1        qerror = Quantization(e_max, e_min, error);    //将 误差 error 映射到论域中
+ 112   1        qerror_c = Quantization(ec_max, ec_min, error_c);   //将误差变化 error_c 映射到论域中
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 3   
+
+ 113   1        Get_grad_membership(qerror, qerror_c);  //计算误差 error 和误差变化 error_c 的隶属度
+ 114   1        GetSumGrad(); //计算输出增量 △kp、△ki、△kd 的总隶属度
+ 115   1        GetOUT();   // 计算输出增量 △kp、△ki、△kd 对应论域值
+ 116   1        detail_kp = Inverse_quantization(kp_max, kp_min, qdetail_kp);    //去模糊化得到增量 △kp
+ 117   1        detail_ki = Inverse_quantization(ki_max, ki_min, qdetail_ki);    //去模糊化得到增量 △ki
+ 118   1        detail_kd = Inverse_quantization(kd_max, kd_min, qdetail_kd);    //去模糊化得到增量 △kd
+ 119   1        qdetail_kd = 0;
+ 120   1        qdetail_ki = 0;
+ 121   1        qdetail_kp = 0;
+ 122   1        kp = kp + detail_kp;    //得到最终的 kp 值
+ 123   1        ki = ki + detail_ki;    //得到最终的 ki 值
+ 124   1        kd = kd + detail_kd;    //得到最终的 kd 值
+ 125   1        if (kp < 0){
+ 126   2          kp = 0;}
+ 127   1        if (ki < 0){
+ 128   2          ki = 0;}
+ 129   1        if (kd < 0){
+ 130   2          kd = 0;}
+ 131   1        detail_kp = 0;
+ 132   1        detail_ki = 0;
+ 133   1        detail_kd = 0;
+ 134   1        output = kp*(error - error_pre) + ki * error + kd * (error - 2 * error_pre + error_ppre);   //计算最�
+             -��的输出
+ 135   1        return output;
+ 136   1      }
+ 137          
+ 138           
+ 139          ///区间映射函数
+ 140          float Quantization(float maximum,float minimum,float x)
+ 141          {
+ 142   1        float qvalues= 6.0 *(x-minimum)/(maximum - minimum)-3;
+ 143   1        return qvalues;
+ 144   1      }
+ 145           
+ 146          //输入e与de/dt隶属度计算函数
+ 147          void Get_grad_membership(float error,float error_c)   
+ 148          {
+ 149   1        int i;
+ 150   1        if (error > e_membership_values[0] && error < e_membership_values[6])
+ 151   1        {
+ 152   2          for ( i = 0; i < num_area - 2; i++)
+ 153   2          {
+ 154   3            if (error >= e_membership_values[i] && error <= e_membership_values[i + 1])
+ 155   3            {
+ 156   4              e_gradmembership[0] = -(error - e_membership_values[i + 1]) / (e_membership_values[i + 1] - e_membersh
+             -ip_values[i]);
+ 157   4              e_gradmembership[1] = 1+(error - e_membership_values[i + 1]) / (e_membership_values[i + 1] - e_members
+             -hip_values[i]);
+ 158   4              e_grad_index[0] = i;
+ 159   4              e_grad_index[1] = i + 1;
+ 160   4              break;
+ 161   4            }
+ 162   3          }
+ 163   2        }
+ 164   1        else
+ 165   1        {
+ 166   2          if (error <= e_membership_values[0])
+ 167   2          {
+ 168   3            e_gradmembership[0] = 1;
+ 169   3            e_gradmembership[1] = 0;
+ 170   3            e_grad_index[0] = 0;
+ 171   3            e_grad_index[1] = -1;
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 4   
+
+ 172   3          }
+ 173   2          else if (error >= e_membership_values[6])
+ 174   2          {
+ 175   3            e_gradmembership[0] = 1;
+ 176   3            e_gradmembership[1] = 0;
+ 177   3            e_grad_index[0] = 6;
+ 178   3            e_grad_index[1] = -1;
+ 179   3          }
+ 180   2        }
+ 181   1       
+ 182   1        if (error_c > ec_membership_values[0] && error_c < ec_membership_values[6])
+ 183   1        {
+ 184   2          for ( i = 0; i < num_area - 2; i++)
+ 185   2          {
+ 186   3            if (error_c >= ec_membership_values[i] && error_c <= ec_membership_values[i + 1])
+ 187   3            {
+ 188   4              ec_gradmembership[0] = -(error_c - ec_membership_values[i + 1]) / (ec_membership_values[i + 1] - ec_me
+             -mbership_values[i]);
+ 189   4              ec_gradmembership[1] = 1 + (error_c - ec_membership_values[i + 1]) / (ec_membership_values[i + 1] - ec
+             -_membership_values[i]);
+ 190   4              ec_grad_index[0] = i;
+ 191   4              ec_grad_index[1] = i + 1;
+ 192   4              break;
+ 193   4            }
+ 194   3          }
+ 195   2        }
+ 196   1        else
+ 197   1        {
+ 198   2          if (error_c <= ec_membership_values[0])
+ 199   2          {
+ 200   3            ec_gradmembership[0] = 1;
+ 201   3            ec_gradmembership[1] = 0;
+ 202   3            ec_grad_index[0] = 0;
+ 203   3            ec_grad_index[1] = -1;
+ 204   3          }
+ 205   2          else if (error_c >= ec_membership_values[6])
+ 206   2          {
+ 207   3            ec_gradmembership[0] = 1;
+ 208   3            ec_gradmembership[1] = 0;
+ 209   3            ec_grad_index[0] = 6;
+ 210   3            ec_grad_index[1] = -1;
+ 211   3          }
+ 212   2        }
+ 213   1       
+ 214   1      }
+ 215           
+ 216          // 获取输出增量kp,ki,kd的总隶属度
+ 217          void GetSumGrad()
+ 218          {
+ 219   1        int i;
+ 220   1        int j;
+ 221   1      
+ 222   1          // 初始化 Kp、Ki、Kd 总的隶属度值为 0
+ 223   1                      
+ 224   1        for ( i = 0; i <= num_area - 1; i++)
+ 225   1        {
+ 226   2          KpgradSums[i] = 0;
+ 227   2          KigradSums[i] = 0;
+ 228   2                  KdgradSums[i] = 0;
+ 229   2        }
+ 230   1      
+ 231   1            for ( i = 0; i < 2; i++)
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 5   
+
+ 232   1           {
+ 233   2                  if (e_grad_index[i] == -1)
+ 234   2                  {
+ 235   3                        continue;
+ 236   3                }
+ 237   2                  for ( j = 0; j < 2; j++)
+ 238   2                {
+ 239   3                        if (ec_grad_index[j] != -1)
+ 240   3                        {
+ 241   4                            int indexKp = Kp_rule_list[e_grad_index[i]][ec_grad_index[j]] + 3;
+ 242   4                            int indexKi = Ki_rule_list[e_grad_index[i]][ec_grad_index[j]] + 3;
+ 243   4                            int indexKd = Kd_rule_list[e_grad_index[i]][ec_grad_index[j]] + 3;
+ 244   4                            KpgradSums[indexKp]= KpgradSums[indexKp] + (e_gradmembership[i] * ec_gradmembership[j])
+             -;
+ 245   4                            KigradSums[indexKi] = KigradSums[indexKi] + (e_gradmembership[i] * ec_gradmembership[j]
+             -);
+ 246   4                            KdgradSums[indexKd] = KdgradSums[indexKd] + (e_gradmembership[i] * ec_gradmembership[j]
+             -);
+ 247   4                        }
+ 248   3                        else
+ 249   3                        {
+ 250   4                            continue;
+ 251   4                        }
+ 252   3                  }
+ 253   2         }
+ 254   1      }
+ 255           
+ 256          // 计算输出增量kp,kd,ki对应论域值
+ 257          void GetOUT()
+ 258          {
+ 259   1        int i;
+ 260   1        for ( i = 0; i < num_area - 1; i++)
+ 261   1        {
+ 262   2          qdetail_kp += kp_menbership_values[i] * KpgradSums[i];
+ 263   2          qdetail_ki += ki_menbership_values[i] * KigradSums[i];
+ 264   2          qdetail_kd += kd_menbership_values[i] * KdgradSums[i];
+ 265   2        }
+ 266   1      }
+ 267           
+ 268          //反区间映射函数
+ 269          float Inverse_quantization(float maximum, float minimum, float qvalues)
+ 270          {
+ 271   1        float x = (maximum - minimum) *(qvalues + 3)/6 + minimum;
+ 272   1        return x;
+ 273   1      }
+ 274          // Timers value
+ 275          unsigned int  timer0_value;
+ 276          unsigned int  timer1_value;
+ 277          unsigned int  timer2_value;
+ 278          unsigned int  timer3_value;
+ 279          unsigned int  timer4_value;
+ 280          
+ 281          // ADC & DAC variables
+ 282          unsigned char channel;   // ADC 通道转换
+ 283          unsigned int  vref;      // VREF
+ 284          unsigned int  vtarget;   // VTARGET
+ 285          unsigned int  vadc;      // ADC 取值
+ 286          unsigned int  vadc_dec;  // ADC 取值
+ 287          unsigned int  vdac;      // DAC 输出
+ 288          unsigned int  vdac_dec;  // DAC 输出
+ 289          
+ 290          
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 6   
+
+ 291          
+ 292          
+ 293          
+ 294          //用户初始化代码
+ 295          uchar code str0[]="PIDCONTROL";
+ 296          uchar code str1[]="accruate";
+ 297          uchar code str2[]="Press 1 to start";
+ 298          uchar code str3[]="Press 3 to back";
+ 299          
+ 300          typedef struct{
+ 301            int setpoint; 
+ 302            long sumerror;      
+ 303            float P;      
+ 304            float I;      
+ 305            float D;  
+ 306            int lasterror;  
+ 307            int preverror;
+ 308            int result;
+ 309          }PID;
+ 310          
+ 311          PID tmp_pid={0,0,0,0,0,0,0,0};
+ 312          const unsigned char code blank[1024] = { /* 0X00,0X01,0X80,0X00,0X40,0X00, */
+ 313          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 314          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 315          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 316          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 317          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 318          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 319          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 320          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 321          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 322          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 323          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 324          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 325          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 326          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 327          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 328          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 329          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 330          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 331          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 332          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 333          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 334          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 335          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 336          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 337          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 338          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 339          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 340          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 341          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 342          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 343          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 344          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 345          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 346          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 347          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 348          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 349          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 350          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 351          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 352          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 7   
+
+ 353          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 354          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 355          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 356          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 357          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 358          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 359          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 360          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 361          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 362          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 363          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 364          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 365          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 366          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 367          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 368          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 369          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 370          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 371          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 372          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 373          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 374          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 375          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 376          0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,0X00,
+ 377          };
+ 378          
+ 379          volatile int wave[128]={0};
+ 380          
+ 381          unsigned int KEY_FLAG;
+ 382          
+ 383          
+ 384          //用户初始化代码
+ 385          void PID_init(PID* ptr)
+ 386          {
+ 387   1        ptr->setpoint = 3000;
+ 388   1        ptr->sumerror = 0; 
+ 389   1        ptr->lasterror = 0;
+ 390   1        ptr->preverror = 0; 
+ 391   1        ptr->P = 1;                
+ 392   1        ptr->I = 0.025;                
+ 393   1        ptr->D = 0.004;   
+ 394   1        ptr->result = 0;                                            
+ 395   1      }
+ 396          
+ 397          
+ 398          void PID_contrl(PID* ptr,int nowpoint){
+ 399   1        int tmp_error;
+ 400   1        int tmp_common;
+ 401   1        tmp_error = ptr->setpoint - nowpoint; 
+ 402   1        ptr->sumerror+=tmp_error;
+ 403   1        tmp_common=tmp_error-ptr->lasterror;
+ 404   1        ptr->result=FuzzyPIDcontroller(2000, -2000,500, -500, 50, -50, tmp_error, tmp_common, 0.1,-0.1,0.01, -0.0
+             -1,ptr->lasterror, ptr->preverror);
+ 405   1        ptr->preverror=ptr->lasterror;
+ 406   1        ptr->lasterror = tmp_error;   
+ 407   1      }
+ 408          
+ 409          void PID_display(){
+ 410   1            WriteStr(0, 0, str0);
+ 411   1            WriteStr(1, 0, str1);
+ 412   1            WriteStr(2, 0, str2);
+ 413   1            WriteStr(3, 0, str3);
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 8   
+
+ 414   1      }
+ 415          
+ 416          //User end
+ 417          
+ 418          void Timer1_Init_Main(void) {
+ 419   1          Enable_Timer1;       // 设定 IE 标志位 1，允许 Timer1 溢出中断请求
+ 420   1          Timer1_Set_Method1;  // 设置定时器 1 为方式 1 定时器功能
+ 421   1      }
+ 422          
+ 423          void Timer1_ISR(void) interrupt 3 {
+ 424   1          timer1_value++;
+ 425   1      
+ 426   1          TH1 = 0x00; // Reinit Timer0 High register
+ 427   1          TL1 = 0x00;
+ 428   1      }
+ 429          
+ 430          void Device_Init(void) {
+ 431   1          SYS_Init();  // SYS 初始化
+ 432   1          LcdInit();
+ 433   1          LedInit();
+ 434   1          Timer1_Init_Main();
+ 435   1          Timer3_Init_ADC0(SYSCLK / SAMPLERATE);  // TIMER3 初始化 
+ 436   1      
+ 437   1          INT_Init();  // INT 中断初始化
+ 438   1      
+ 439   1          ADC0_Init();     // ADC0 初始化
+ 440   1          ADC0_Enable(1);  // 使能 ADC0
+ 441   1          DAC0_Init();     // DAC 初始化
+ 442   1      
+ 443   1          Timer1_Start;  // 设定 TCON 中断标志位 6，定时器 1 开启
+ 444   1      
+ 445   1          timer1_value = 0;
+ 446   1          timer3_value = 0;
+ 447   1      
+ 448   1          channel  = 1;
+ 449   1          vref     = 5244;
+ 450   1          vtarget  = 2800;
+ 451   1          vadc     = 0x0000;
+ 452   1          vadc_dec = 0;
+ 453   1          vdac     = 0x0000;
+ 454   1          vdac_dec = 0;
+ 455   1      }
+ 456          
+ 457          void Do(void) {
+ 458   1          if ((timer1_value & 0x0007) == 0x0001) {     
+ 459   2              if (channel == 1)    {
+ 460   3                  // 从 ADC0 AIN1 取得 10 位 16 进制数 vadc
+ 461   3                  vadc = ADC_ValueReturn(channel);
+ 462   3                  // 将 vadc 转化为 10 进制数进行计算
+ 463   3                  vadc_dec = (unsigned long int)vadc * (unsigned long int)vref / 4096;
+ 464   3                  PID_contrl(&tmp_pid,vadc_dec);
+ 465   3                  vdac_dec=vadc_dec+tmp_pid.result;
+ 466   3                  // 将 10 进制数 vdac_dec 转化为 16 进制数
+ 467   3                  vdac = (unsigned long int)vdac_dec * 4096 / (unsigned long int)vref;
+ 468   3                  // 从 ADC0 输出 10 位 16 进制数 vdac
+ 469   3                  DAC0_Output(vdac);
+ 470   3                //调节目标霍尔电压值
+ 471   3                if(KEY_FLAG==1){
+ 472   4                  tmp_pid.setpoint-=100;
+ 473   4                  KEY_FLAG=0;}
+ 474   3                else{
+ 475   4                  if(KEY_FLAG==2){
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 9   
+
+ 476   5                  tmp_pid.setpoint+=100;
+ 477   5                  KEY_FLAG=0;}
+ 478   4                }
+ 479   3            }
+ 480   2          }
+ 481   1        }
+ 482          int main(void) {
+ 483   1          int i=0,j=0;
+ 484   1          Device_Init();
+ 485   1          PID_init(&tmp_pid);
+ 486   1          while (1) {
+ 487   2          my_LedDispNum(vadc_dec,tmp_pid.setpoint,vdac_dec);
+ 488   2          PID_display();
+ 489   2          if(KEY_FLAG==1){
+ 490   3          LcdClear();
+ 491   3          ImageShow(blank);
+ 492   3          KEY_FLAG=0;
+ 493   3          while(KEY_FLAG!=3){
+ 494   4            my_LedDispNum(vadc_dec,tmp_pid.setpoint,vdac_dec);
+ 495   4            Do();
+ 496   4            i+=1;
+ 497   4            if(i%5==0){
+ 498   5              wave[j]=vadc_dec;
+ 499   5              LcdShowPoint(j);
+ 500   5              i=0;
+ 501   5              j+=1;
+ 502   5              if(j==128){
+ 503   6                ImageShow(blank);
+ 504   6                j=0;
+ 505   6                }
+ 506   5              }
+ 507   4            }
+ 508   3            vdac=0;
+ 509   3            DAC0_Output(vdac);
+ 510   3            KEY_FLAG=0;
+ 511   3            LcdInit();
+ 512   3            }
+ 513   2          }
+ 514   1      }
+ 515          
+ 516          void INT1_ISR(void) interrupt 2
+ 517          {
+ 518   1        Delay_ms(20);
+ 519   1        switch(P5){
+ 520   2          case 0xfb:
+ 521   2            KEY_FLAG=1;
+ 522   2            break;    
+ 523   2          case 0xfd:
+ 524   2            KEY_FLAG=2;
+ 525   2            break;
+ 526   2          case 0xfe:
+ 527   2            KEY_FLAG=3;
+ 528   2            break;
+ 529   2        }
+ 530   1      }
+ 531          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   5333    ----
+   CONSTANT SIZE    =   1077    ----
+   XDATA SIZE       =    949     113
+C51 COMPILER V9.52.0.0   MAIN                                                              04/20/2022 22:04:09 PAGE 10  
+
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

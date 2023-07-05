@@ -1,0 +1,12 @@
+"main.obj",
+"ADC.obj",
+"DAC.obj",
+"Delay.obj",
+"SYS_Init.obj",
+"Timer.obj",
+"lcd.obj",
+"led.obj" 
+TO "dzxlsj" RTX51 
+RAMSIZE(256) 
+CODE( 0X0000-0XFFFF )
+XDATA( 0X0000-0X0FFF )

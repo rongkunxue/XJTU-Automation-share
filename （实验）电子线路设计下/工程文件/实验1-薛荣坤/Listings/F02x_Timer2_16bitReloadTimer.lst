@@ -1,0 +1,214 @@
+C51 COMPILER V9.55   F02X_TIMER2_16BITRELOADTIMER                                          02/27/2017 18:58:00 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE F02X_TIMER2_16BITRELOADTIMER
+OBJECT MODULE PLACED IN .\Objects\F02x_Timer2_16bitReloadTimer.obj
+COMPILER INVOKED BY: D:\Keil_v5\C51\BIN\C51.EXE F02x_Timer2_16bitReloadTimer.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTE
+                    -ND PRINT(.\Listings\F02x_Timer2_16bitReloadTimer.lst) OBJECT(.\Objects\F02x_Timer2_16bitReloadTimer.obj)
+
+line level    source
+
+   1          //-----------------------------------------------------------------------------
+   2          // F02x_Timer2_16bitReloadTimer.c
+   3          //-----------------------------------------------------------------------------
+   4          //
+   5          // Copyright 2005 Silicon Laboratories, Inc.
+   6          // http://www.silabs.com
+   7          //
+   8          // Program Description:
+   9          //
+  10          // This program presents an example of use of the Timer2 of the C8051F02x's in
+  11          // 16-bit reload counter/timer mode. It uses the 'F020DK as HW platform.
+  12          //
+  13          // The timer reload registers are initialized with a certain value so that
+  14          // the timer counts from that value up to FFFFh and when it overflows an
+  15          // interrupt is generated and the timer is automatically reloaded.
+  16          // In this interrupt the ISR toggles the LED.
+  17          //
+  18          // Pinout:
+  19          //
+  20          //    P1.6 -> LED
+  21          //
+  22          //    all other port pins unused
+  23          //
+  24          // How To Test:
+  25          //
+  26          // 1) Open the F02x_Timer2_16bitReloadTimer.c file in the Silicon Labs IDE.
+  27          // 2) If a change in the interrupt period is required, change the value of
+  28          //    LED_TOGGLE_RATE.
+  29          // 3) Compile and download the code.
+  30          // 4) Verify J3 is populated on the 'F02x TB.
+  31          // 5) Run the code.
+  32          // 6) Check that the LED is blinking
+  33          //
+  34          //
+  35          // FID:            02X000024
+  36          // Target:         C8051F02x
+  37          // Tool chain:     KEIL C51 7.20 / KEIL EVAL C51
+  38          // Command Line:   None
+  39          //
+  40          // Release 1.0
+  41          //    -Initial Revision (CG)
+  42          //    -7 DEC 2005
+  43          //
+  44          
+  45          //-----------------------------------------------------------------------------
+  46          // Includes
+  47          //-----------------------------------------------------------------------------
+  48          
+  49          #include <C8051F020.h>                 // SFR declarations
+  50          
+  51          //-----------------------------------------------------------------------------
+  52          // Global Constants
+  53          //-----------------------------------------------------------------------------
+  54          
+C51 COMPILER V9.55   F02X_TIMER2_16BITRELOADTIMER                                          02/27/2017 18:58:00 PAGE 2   
+
+  55          #define SYSCLK             16000000/8  // SYSCLK in Hz (16 MHz internal
+  56                                                 // oscillator / 8)
+  57                                                 // the internal oscillator has a
+  58                                                 // tolerance of +/- 20%
+  59          
+  60          #define TIMER_PRESCALER            12  // Based on Timer2 CKCON settings
+  61          
+  62          #define LED_TOGGLE_RATE            50  // LED toggle rate in milliseconds
+  63                                                 // if LED_TOGGLE_RATE = 1, the LED will
+  64                                                 // be on for 1 millisecond and off for
+  65                                                 // 1 millisecond
+  66          
+  67          // There are SYSCLK/TIMER_PRESCALER timer ticks per second, so
+  68          // SYSCLK/TIMER_PRESCALER/1000 timer ticks per millisecond.
+  69          #define TIMER_TICKS_PER_MS  SYSCLK/TIMER_PRESCALER/1000
+  70          
+  71          // Note: LED_TOGGLE_RATE*TIMER_TICKS_PER_MS should not exceed 65535 (0xFFFF)
+  72          // for the 16-bit timer
+  73          
+  74          #define AUX1     TIMER_TICKS_PER_MS*LED_TOGGLE_RATE
+  75          #define AUX2     -AUX1
+  76          
+  77          #define TIMER2_RELOAD            AUX2  // Reload value for Timer2
+  78          
+  79          sbit LED = P1^6;                       // LED='1' means ON
+  80          
+  81          //-----------------------------------------------------------------------------
+  82          // Function Prototypes
+  83          //-----------------------------------------------------------------------------
+  84          
+  85          void Port_Init1 (void);                 // Port initialization routine
+  86          void Timer2_Init (void);               // Timer2 initialization routine
+  87          
+  88          //-----------------------------------------------------------------------------
+  89          // Global Variables
+  90          //-----------------------------------------------------------------------------
+  91          
+  92          sfr16 RCAP2 = 0xCA;                    // Timer2 Reload Register
+  93          sfr16 TMR2 = 0xCC;                     // Timer2 Register
+  94          
+  95          //-----------------------------------------------------------------------------
+  96          // main() Routine
+  97          //-----------------------------------------------------------------------------
+  98          
+  99          /*
+ 100          void main (void)
+ 101          {
+ 102             WDTCN = 0xDE;                       // Disable watchdog timer
+ 103             WDTCN = 0xAD;
+ 104          
+ 105             Timer2_Init ();                     // Initialize the Timer2
+ 106             Port_Init ();                       // Init Ports
+ 107             EA = 1;                             // Enable global interrupts
+ 108          
+ 109             while (1);                          // Loop forever
+ 110          }
+ 111          */
+ 112          
+ 113          //-----------------------------------------------------------------------------
+ 114          // Initialization Subroutines
+ 115          //-----------------------------------------------------------------------------
+ 116          
+C51 COMPILER V9.55   F02X_TIMER2_16BITRELOADTIMER                                          02/27/2017 18:58:00 PAGE 3   
+
+ 117          //-----------------------------------------------------------------------------
+ 118          // Port_Init
+ 119          //-----------------------------------------------------------------------------
+ 120          //
+ 121          // Return Value : None
+ 122          // Parameters   : None
+ 123          //
+ 124          // This function configures the crossbar and GPIO ports.
+ 125          //
+ 126          // Pinout:
+ 127          //
+ 128          //    P1.6 -> LED
+ 129          //
+ 130          //    all other port pins unused
+ 131          //
+ 132          //-----------------------------------------------------------------------------
+ 133          void Port_Init1 (void)
+ 134          {
+ 135   1         // Enable crossbar
+ 136   1         XBR2 = 0x40;
+ 137   1         P1MDOUT = 0x40;                     // Set P1.6(LED) to push-pull
+ 138   1      }
+ 139          
+ 140          //-----------------------------------------------------------------------------
+ 141          // Timer2_Init
+ 142          //-----------------------------------------------------------------------------
+ 143          //
+ 144          // Return Value : None
+ 145          // Parameters   : None
+ 146          //
+ 147          // This function configures Timer2 as a 16-bit reload timer, interrupt enabled.
+ 148          // Using the SYSCLK at 16MHz/8 with a 1:12 prescaler.
+ 149          //
+ 150          // Note: The Timer2 uses a 1:12 prescaler.  If this setting changes, the
+ 151          // TIMER_PRESCALER constant must also be changed.
+ 152          //-----------------------------------------------------------------------------
+ 153          void Timer2_Init(void)
+ 154          {
+ 155   1         CKCON &= ~0x40;                     // Timer2 uses SYSCLK/12
+ 156   1      
+ 157   1         RCAP2 = TIMER2_RELOAD;              // Timer2 reload value
+ 158   1         TMR2 = RCAP2;                       // Initialize the timer
+ 159   1      
+ 160   1         T2CON = 0x04;                       // Enable Timer2 in Reload Mode
+ 161   1         ET2 = 1;                            // Timer2 interrupt enabled
+ 162   1      }
+ 163          
+ 164          
+ 165          //-----------------------------------------------------------------------------
+ 166          // Interrupt Service Routines
+ 167          //-----------------------------------------------------------------------------
+ 168          
+ 169          //-----------------------------------------------------------------------------
+ 170          // Timer2_ISR
+ 171          //-----------------------------------------------------------------------------
+ 172          //
+ 173          // Here we process the Timer2 interrupt and toggle the LED
+ 174          //
+ 175          //-----------------------------------------------------------------------------
+ 176          void Timer2_ISR (void) interrupt 5
+ 177          {
+ 178   1         LED = ~LED;                         // Toggle the LED
+C51 COMPILER V9.55   F02X_TIMER2_16BITRELOADTIMER                                          02/27/2017 18:58:00 PAGE 4   
+
+ 179   1         TF2 = 0;                            // Reset Interrupt
+ 180   1      }
+ 181          
+ 182          //-----------------------------------------------------------------------------
+ 183          // End Of File
+ 184          //-----------------------------------------------------------------------------
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     33    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,307 @@
+C51 COMPILER V9.52.0.0   A                                                                 04/20/2022 21:34:21 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE A
+OBJECT MODULE PLACED IN a.obj
+COMPILER INVOKED BY: C:\Keil_v51\C51\BIN\C51.EXE source\a.c LARGE RTX51 BROWSE DEBUG OBJECTEXTEND PRINT(.\a.lst) TABS(2)
+                    - OBJECT(a.obj)
+
+line level    source
+
+   1          #include <stdio.h>
+   2          #include <math.h>
+   3          #include <stdlib.h>
+   4          #define NB -3
+   5          #define NM -2
+   6          #define NS -1
+   7          #define ZO 0
+   8          #define PS 1
+   9          #define PM 2
+  10          #define PB 3
+  11          
+  12          void FuzzyPID();  //初始化PID参数
+  13          float FuzzyPIDcontroller(float e_max, float e_min, float ec_max, float ec_min, float kp_max, float kp_min,
+             - float error, float error_c, float ki_max, float ki_min,float kd_max, float kd_min,float error_pre, float error_ppre);  
+             -//模糊PID控制实现函数
+  14          float Quantization(float maximum, float minimum, float x);  //误差 error 和误差变化 error_c 映射�
+             -�论域中的函数
+  15          void Get_grad_membership(float error, float error_c); ////计算输入e与de/dt隶属度
+  16          void GetSumGrad();// 获取输出增量 △kp、△ki、△kd 的总隶属度
+  17          void GetOUT();  // 计算输出增量 △kp、△ki、△kd 对应论域值
+  18          float Inverse_quantization(float maximum, float minimum, float qvalues);  //去模糊化
+  19          
+  20          
+  21          const int  num_area = 8; //划分区域个数
+  22          float e_membership_values[7] = {-3,-2,-1,0,1,2,3}; //输入e的隶属值
+  23          float ec_membership_values[7] = { -3,-2,-1,0,1,2,3 };//输入de/dt的隶属值
+  24          float kp_menbership_values[7] = { -3,-2,-1,0,1,2,3 };//输出增量kp的隶属值
+  25          float ki_menbership_values[7] = { -3,-2,-1,0,1,2,3 }; //输出增量ki的隶属值
+  26          float kd_menbership_values[7] = { -3,-2,-1,0,1,2,3 };  //输出增量kd的隶属值
+  27          
+  28          float kp;                       //PID参数kp
+  29          float ki;                       //PID参数ki
+  30          float kd;                       //PID参数kd
+  31          float qdetail_kp;               //增量kp对应论域中的值
+  32          float qdetail_ki;               //增量ki对应论域中的值
+  33          float qdetail_kd;               //增量kd对应论域中的值
+  34          float detail_kp;                //输出增量kp
+  35          float detail_ki;                //输出增量ki
+  36          float detail_kd;                //输出增量kd
+  37          float qerror;                    //输入e对应论域中的值
+  38          float qerror_c;                  //输入de/dt对应论域中的值             
+  39          float e_gradmembership[2];      //输入e的隶属度
+  40          float ec_gradmembership[2];     //输入de/dt的隶属度
+  41          int e_grad_index[2];            //输入e隶属度在规则表的索引
+  42          int ec_grad_index[2];           //输入de/dt隶属度在规则表的索引
+  43          float KpgradSums[7] = { 0,0,0,0,0,0,0 };   //输出增量kp总的隶属度
+  44          float KigradSums[7] = { 0,0,0,0,0,0,0 };   //输出增量ki总的隶属度
+  45          float KdgradSums[7] = { 0,0,0,0,0,0,0 };   //输出增量kd总的隶属度
+  46          
+  47          float e_max = 150;      //误差最大值
+  48          float e_min = -150;    //误差最小值
+  49          float ec_max = 300;     //误差变化最大值
+  50          float ec_min = -300;    //误差变化最小值
+  51          float kp_max = 50;       //比例系数 kp 上限值
+C51 COMPILER V9.52.0.0   A                                                                 04/20/2022 21:34:21 PAGE 2   
+
+  52          float kp_min = -50;    //比例系数 kp 下限值
+  53          float ki_max = 0.1;     //积分系数 ki 上限值
+  54          float ki_min = -0.1;    //积分系数 ki 下限值
+  55          float kd_max = 0.01;    //微分系数 kd 上限值
+  56          float kd_min = -0.01;   //微分系数 kd 下限值
+  57          float error;        //误差值
+  58          float error_c;      //误差变化值
+  59          float error_pre = 0;    //上一次误差值
+  60          float error_ppre = 0;   //上上次误差值
+  61          
+  62          
+  63          int  Kp_rule_list[7][7] = { {PB,PB,PM,PM,PS,ZO,ZO},        //kp规则表
+  64                       {PB,PB,PM,PS,PS,ZO,NS},
+  65                       {PM,PM,PM,PS,ZO,NS,NS},
+  66                       {PM,PM,PS,ZO,NS,NM,NM},
+  67                       {PS,PS,ZO,NS,NS,NM,NM},
+  68                       {PS,ZO,NS,NM,NM,NM,NB},
+  69                       {ZO,ZO,NM,NM,NM,NB,NB} };
+  70          
+  71          int  Ki_rule_list[7][7] = { {NB,NB,NM,NM,NS,ZO,ZO},     //ki规则表
+  72                      {NB,NB,NM,NS,NS,ZO,ZO},
+  73                      {NB,NM,NS,NS,ZO,PS,PS},
+  74                      {NM,NM,NS,ZO,PS,PM,PM},
+  75                      {NM,NS,ZO,PS,PS,PM,PB},
+  76                      {ZO,ZO,PS,PS,PM,PB,PB},
+  77                      {ZO,ZO,PS,PM,PM,PB,PB} };
+  78          
+  79            int  Kd_rule_list[7][7] = { {PS,NS,NB,NB,NB,NM,PS},     //kd规则表
+  80                       {PS,NS,NB,NM,NM,NS,ZO},
+  81                       {ZO,NS,NM,NM,NS,NS,ZO},
+  82                       {ZO,NS,NS,NS,NS,NS,ZO},
+  83                       {ZO,ZO,ZO,ZO,ZO,ZO,ZO},
+  84                                     {PB,NS,PS,PS,PS,PS,PB},
+  85                                     {PB,PM,PM,PM,PS,PS,PB} };
+  86          
+  87          void FuzzyPID()  //参数初始化
+  88          {
+  89   1        kp = 0;
+  90   1        ki = 0;
+  91   1        kd = 0;
+  92   1        qdetail_kp = 0;
+  93   1        qdetail_ki = 0;
+  94   1        qdetail_kd = 0;
+  95   1      }
+  96          
+  97          //模糊PID控制实现函数
+  98          float FuzzyPIDcontroller(float e_max, float e_min, float ec_max, float ec_min, float kp_max, float kp_min,
+             - float error, float error_c,float ki_max,float ki_min,float kd_max,float kd_min,float error_pre,float error_ppre)
+  99          {
+ 100   1        float output;
+ 101   1        qerror = Quantization(e_max, e_min, error);    //将 误差 error 映射到论域中
+ 102   1        qerror_c = Quantization(ec_max, ec_min, error_c);   //将误差变化 error_c 映射到论域中
+ 103   1        Get_grad_membership(qerror, qerror_c);  //计算误差 error 和误差变化 error_c 的隶属度
+ 104   1        GetSumGrad(); //计算输出增量 △kp、△ki、△kd 的总隶属度
+ 105   1        GetOUT();   // 计算输出增量 △kp、△ki、△kd 对应论域值
+ 106   1        detail_kp = Inverse_quantization(kp_max, kp_min, qdetail_kp);    //去模糊化得到增量 △kp
+ 107   1        detail_ki = Inverse_quantization(ki_max, ki_min, qdetail_ki);    //去模糊化得到增量 △ki
+ 108   1        detail_kd = Inverse_quantization(kd_max, kd_min, qdetail_kd);    //去模糊化得到增量 △kd
+ 109   1        qdetail_kd = 0;
+ 110   1        qdetail_ki = 0;
+ 111   1        qdetail_kp = 0;
+ 112   1        kp = kp + detail_kp;    //得到最终的 kp 值
+C51 COMPILER V9.52.0.0   A                                                                 04/20/2022 21:34:21 PAGE 3   
+
+ 113   1        ki = ki + detail_ki;    //得到最终的 ki 值
+ 114   1        kd = kd + detail_kd;    //得到最终的 kd 值
+ 115   1        if (kp < 0){
+ 116   2          kp = 0;}
+ 117   1        if (ki < 0){
+ 118   2          ki = 0;}
+ 119   1        if (kd < 0){
+ 120   2          kd = 0;}
+ 121   1        detail_kp = 0;
+ 122   1        detail_ki = 0;
+ 123   1        detail_kd = 0;
+ 124   1        output = kp*(error - error_pre) + ki * error + kd * (error - 2 * error_pre + error_ppre);   //计算最�
+             -��的输出
+ 125   1        return output;
+ 126   1      }
+ 127          
+ 128           
+ 129          ///区间映射函数
+ 130          float Quantization(float maximum,float minimum,float x)
+ 131          {
+ 132   1        float qvalues= 6.0 *(x-minimum)/(maximum - minimum)-3;
+ 133   1        return qvalues;
+ 134   1      }
+ 135           
+ 136          //输入e与de/dt隶属度计算函数
+ 137          void Get_grad_membership(float error,float error_c)   
+ 138          {
+ 139   1        int i;
+ 140   1        if (error > e_membership_values[0] && error < e_membership_values[6])
+ 141   1        {
+ 142   2          for ( i = 0; i < num_area - 2; i++)
+ 143   2          {
+ 144   3            if (error >= e_membership_values[i] && error <= e_membership_values[i + 1])
+ 145   3            {
+ 146   4              e_gradmembership[0] = -(error - e_membership_values[i + 1]) / (e_membership_values[i + 1] - e_membersh
+             -ip_values[i]);
+ 147   4              e_gradmembership[1] = 1+(error - e_membership_values[i + 1]) / (e_membership_values[i + 1] - e_members
+             -hip_values[i]);
+ 148   4              e_grad_index[0] = i;
+ 149   4              e_grad_index[1] = i + 1;
+ 150   4              break;
+ 151   4            }
+ 152   3          }
+ 153   2        }
+ 154   1        else
+ 155   1        {
+ 156   2          if (error <= e_membership_values[0])
+ 157   2          {
+ 158   3            e_gradmembership[0] = 1;
+ 159   3            e_gradmembership[1] = 0;
+ 160   3            e_grad_index[0] = 0;
+ 161   3            e_grad_index[1] = -1;
+ 162   3          }
+ 163   2          else if (error >= e_membership_values[6])
+ 164   2          {
+ 165   3            e_gradmembership[0] = 1;
+ 166   3            e_gradmembership[1] = 0;
+ 167   3            e_grad_index[0] = 6;
+ 168   3            e_grad_index[1] = -1;
+ 169   3          }
+ 170   2        }
+ 171   1       
+C51 COMPILER V9.52.0.0   A                                                                 04/20/2022 21:34:21 PAGE 4   
+
+ 172   1        if (error_c > ec_membership_values[0] && error_c < ec_membership_values[6])
+ 173   1        {
+ 174   2          for ( i = 0; i < num_area - 2; i++)
+ 175   2          {
+ 176   3            if (error_c >= ec_membership_values[i] && error_c <= ec_membership_values[i + 1])
+ 177   3            {
+ 178   4              ec_gradmembership[0] = -(error_c - ec_membership_values[i + 1]) / (ec_membership_values[i + 1] - ec_me
+             -mbership_values[i]);
+ 179   4              ec_gradmembership[1] = 1 + (error_c - ec_membership_values[i + 1]) / (ec_membership_values[i + 1] - ec
+             -_membership_values[i]);
+ 180   4              ec_grad_index[0] = i;
+ 181   4              ec_grad_index[1] = i + 1;
+ 182   4              break;
+ 183   4            }
+ 184   3          }
+ 185   2        }
+ 186   1        else
+ 187   1        {
+ 188   2          if (error_c <= ec_membership_values[0])
+ 189   2          {
+ 190   3            ec_gradmembership[0] = 1;
+ 191   3            ec_gradmembership[1] = 0;
+ 192   3            ec_grad_index[0] = 0;
+ 193   3            ec_grad_index[1] = -1;
+ 194   3          }
+ 195   2          else if (error_c >= ec_membership_values[6])
+ 196   2          {
+ 197   3            ec_gradmembership[0] = 1;
+ 198   3            ec_gradmembership[1] = 0;
+ 199   3            ec_grad_index[0] = 6;
+ 200   3            ec_grad_index[1] = -1;
+ 201   3          }
+ 202   2        }
+ 203   1       
+ 204   1      }
+ 205           
+ 206          // 获取输出增量kp,ki,kd的总隶属度
+ 207          void GetSumGrad()
+ 208          {
+ 209   1        int i;
+ 210   1        int j;
+ 211   1      
+ 212   1          // 初始化 Kp、Ki、Kd 总的隶属度值为 0
+ 213   1                      
+ 214   1        for ( i = 0; i <= num_area - 1; i++)
+ 215   1        {
+ 216   2          KpgradSums[i] = 0;
+ 217   2          KigradSums[i] = 0;
+ 218   2                  KdgradSums[i] = 0;
+ 219   2        }
+ 220   1      
+ 221   1            for ( i = 0; i < 2; i++)
+ 222   1           {
+ 223   2                  if (e_grad_index[i] == -1)
+ 224   2                  {
+ 225   3                        continue;
+ 226   3                }
+ 227   2                  for ( j = 0; j < 2; j++)
+ 228   2                {
+ 229   3                        if (ec_grad_index[j] != -1)
+ 230   3                        {
+ 231   4                            int indexKp = Kp_rule_list[e_grad_index[i]][ec_grad_index[j]] + 3;
+C51 COMPILER V9.52.0.0   A                                                                 04/20/2022 21:34:21 PAGE 5   
+
+ 232   4                            int indexKi = Ki_rule_list[e_grad_index[i]][ec_grad_index[j]] + 3;
+ 233   4                            int indexKd = Kd_rule_list[e_grad_index[i]][ec_grad_index[j]] + 3;
+ 234   4                            KpgradSums[indexKp]= KpgradSums[indexKp] + (e_gradmembership[i] * ec_gradmembership[j])
+             -;
+ 235   4                            KigradSums[indexKi] = KigradSums[indexKi] + (e_gradmembership[i] * ec_gradmembership[j]
+             -);
+ 236   4                            KdgradSums[indexKd] = KdgradSums[indexKd] + (e_gradmembership[i] * ec_gradmembership[j]
+             -);
+ 237   4                        }
+ 238   3                        else
+ 239   3                        {
+ 240   4                            continue;
+ 241   4                        }
+ 242   3                  }
+ 243   2         }
+ 244   1      }
+ 245           
+ 246          // 计算输出增量kp,kd,ki对应论域值
+ 247          void GetOUT()
+ 248          {
+ 249   1        int i;
+ 250   1        for ( i = 0; i < num_area - 1; i++)
+ 251   1        {
+ 252   2          qdetail_kp += kp_menbership_values[i] * KpgradSums[i];
+ 253   2          qdetail_ki += ki_menbership_values[i] * KigradSums[i];
+ 254   2          qdetail_kd += kd_menbership_values[i] * KdgradSums[i];
+ 255   2        }
+ 256   1      }
+ 257           
+ 258          //反区间映射函数
+ 259          float Inverse_quantization(float maximum, float minimum, float qvalues)
+ 260          {
+ 261   1        float x = (maximum - minimum) *(qvalues + 3)/6 + minimum;
+ 262   1        return x;
+ 263   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   4079    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    644     102
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
