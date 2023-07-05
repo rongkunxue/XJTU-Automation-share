@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="GB2312" ?>
+<drvi_3.x BusLine="256" >
+	<BackIconIC  >
+		<ICName value="" > </ICName>
+		<BGColor value="7" > </BGColor>
+	</BackIconIC>
+	<LEDIC BusLine=" 4 "  >
+		<ICName value="" > </ICName>
+		<X0 value="459" > </X0>
+		<Y0 value="133" > </Y0>
+		<Width value="102" > </Width>
+		<High value="32" > </High>
+		<FGColor value="0" > </FGColor>
+		<BGColor value="10" > </BGColor>
+		<LengthOfLed value="6" > </LengthOfLed>
+		<Align value="1" > </Align>
+		<Value value="125.000000" > </Value>
+		<BusDataLine value="4" > </BusDataLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</LEDIC>
+	<LEDIC BusLine=" 1 "  >
+		<ICName value="" > </ICName>
+		<X0 value="867" > </X0>
+		<Y0 value="136" > </Y0>
+		<Width value="102" > </Width>
+		<High value="32" > </High>
+		<FGColor value="0" > </FGColor>
+		<BGColor value="10" > </BGColor>
+		<LengthOfLed value="6" > </LengthOfLed>
+		<Align value="1" > </Align>
+		<Value value="125.000000" > </Value>
+		<BusDataLine value="1" > </BusDataLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</LEDIC>
+	<LEDIC BusLine=" 7 "  >
+		<ICName value="" > </ICName>
+		<X0 value="644" > </X0>
+		<Y0 value="134" > </Y0>
+		<Width value="102" > </Width>
+		<High value="32" > </High>
+		<FGColor value="0" > </FGColor>
+		<BGColor value="10" > </BGColor>
+		<LengthOfLed value="6" > </LengthOfLed>
+		<Align value="1" > </Align>
+		<Value value="125.000000" > </Value>
+		<BusDataLine value="7" > </BusDataLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</LEDIC>
+	<LEDIC BusLine=" 17 "  >
+		<ICName value="" > </ICName>
+		<X0 value="469" > </X0>
+		<Y0 value="288" > </Y0>
+		<Width value="102" > </Width>
+		<High value="32" > </High>
+		<FGColor value="0" > </FGColor>
+		<BGColor value="10" > </BGColor>
+		<LengthOfLed value="6" > </LengthOfLed>
+		<Align value="1" > </Align>
+		<Value value="125.000000" > </Value>
+		<BusDataLine value="17" > </BusDataLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</LEDIC>
+	<ButtonIC BusLine=" 1388 "  >
+		<ICName value="" > </ICName>
+		<X0 value="576" > </X0>
+		<Y0 value="252" > </Y0>
+		<Width value="60" > </Width>
+		<High value="24" > </High>
+		<Caption value="ZERO" > </Caption>
+		<FGColor value="16" > </FGColor>
+		<BGColor value="2" > </BGColor>
+		<GroupofDrivenIC value="1100" > </GroupofDrivenIC>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</ButtonIC>
+	<SwitchButtonIC BusLine=" 20 "  >
+		<ICName value="" > </ICName>
+		<X0 value="611" > </X0>
+		<Y0 value="23" > </Y0>
+		<Width value="40" > </Width>
+		<High value="20" > </High>
+		<BGColor value="2" > </BGColor>
+		<FGColor value="12" > </FGColor>
+		<Direction value="1" > </Direction>
+		<Value value="0" > </Value>
+		<BusDataLine value="20" > </BusDataLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</SwitchButtonIC>
+	<WaveParaIC BusLine=" 22 3 "  >
+		<ICName value="" > </ICName>
+		<X0 value="507" > </X0>
+		<Y0 value="99" > </Y0>
+		<MathType value="0" > </MathType>
+		<WaveLen value="1024" > </WaveLen>
+		<BusWaveLine value="22" > </BusWaveLine>
+		<BusOutParLine value="3" > </BusOutParLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</WaveParaIC>
+	<WaveParaIC BusLine=" 21 2 "  >
+		<ICName value="" > </ICName>
+		<X0 value="929" > </X0>
+		<Y0 value="100" > </Y0>
+		<MathType value="0" > </MathType>
+		<WaveLen value="1024" > </WaveLen>
+		<BusWaveLine value="21" > </BusWaveLine>
+		<BusOutParLine value="2" > </BusOutParLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</WaveParaIC>
+	<WaveParaIC BusLine=" 24 15 "  >
+		<ICName value="" > </ICName>
+		<X0 value="499" > </X0>
+		<Y0 value="251" > </Y0>
+		<MathType value="0" > </MathType>
+		<WaveLen value="1024" > </WaveLen>
+		<BusWaveLine value="24" > </BusWaveLine>
+		<BusOutParLine value="15" > </BusOutParLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</WaveParaIC>
+	<OctaveIC BusLine=" 10 8 "  >
+		<ICName value="" > </ICName>
+		<X0 value="461" > </X0>
+		<Y0 value="371" > </Y0>
+		<Width value="500" > </Width>
+		<High value="200" > </High>
+		<BGColor value="3" > </BGColor>
+		<FGColor value="12" > </FGColor>
+		<TextColor value="7" > </TextColor>
+		<Maximum value="200.000000" > </Maximum>
+		<Minimum value="0.000000" > </Minimum>
+		<FFTLength value="1024" > </FFTLength>
+		<Octave1orOctave3 value="3" > </Octave1orOctave3>
+		<Weight value="1" > </Weight>
+		<BusINPowerSpectrumLine value="10" > </BusINPowerSpectrumLine>
+		<BusOutOctaveLine value="8" > </BusOutOctaveLine>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</OctaveIC>
+	<FFTIC BusLine=" 9 10 11 "  >
+		<ICName value="" > </ICName>
+		<X0 value="693" > </X0>
+		<Y0 value="101" > </Y0>
+		<SpectrumType value="0" > </SpectrumType>
+		<FFTLength value="1024" > </FFTLength>
+		<BusInWaveLine value="9" > </BusInWaveLine>
+		<BusOutSpec1Line value="10" > </BusOutSpec1Line>
+		<BusOutSpec2Line value="11" > </BusOutSpec2Line>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+	</FFTIC>
+	<VBScriptIC BusLine=" 20 "  >
+		<ICName value="" > </ICName>
+		<X0 value="752" > </X0>
+		<Y0 value="232" > </Y0>
+		<BusDataLine value="20" > </BusDataLine>
+		<BusDataLineType value="1" > </BusDataLineType>
+		<BusLineGroup value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" > </BusLineGroup>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+		<script>
+<![CDATA[If Getline(20)=0 Then 
+ 
+Setline 1,0 
+Setline 4,0 
+Setline 6,0 
+Setline 7,0 
+Setline 17,0 
+ 
+End If 
+ 
+ 
+
+]]></script>
+	</VBScriptIC>
+	<VBScriptIC BusLine=" 22 "  >
+		<ICName value="TEMP" > </ICName>
+		<X0 value="465" > </X0>
+		<Y0 value="98" > </Y0>
+		<BusDataLine value="22" > </BusDataLine>
+		<BusDataLineType value="1" > </BusDataLineType>
+		<BusLineGroup value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" > </BusLineGroup>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+		<script>
+<![CDATA[Rem Write VBScript Here 
+Rem 热电阻测量电路的输出特性是10mv/℃，并且是线性对应关系 
+ 
+Vt=Getline(3) 
+ 
+T=Vt/10 
+ 
+t=int(T) 
+ 
+Setline 4,t 
+
+]]></script>
+	</VBScriptIC>
+	<VBScriptIC BusLine=" 21 "  >
+		<ICName value="CO2" > </ICName>
+		<X0 value="873" > </X0>
+		<Y0 value="103" > </Y0>
+		<BusDataLine value="21" > </BusDataLine>
+		<BusDataLineType value="1" > </BusDataLineType>
+		<BusLineGroup value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" > </BusLineGroup>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+		<script>
+<![CDATA[Rem Write VBScript Here
+Rem this is the Co2 sensor 
+ 
+ 
+ 
+ 
+ 
+Vi=Getline(2) 
+ 
+  L=Vi/50 
+ 
+C=round(L,2) 
+ 
+Setline 1,C 
+
+]]></script>
+	</VBScriptIC>
+	<VBScriptIC BusLine=" 9 "  >
+		<ICName value="NOISE" > </ICName>
+		<X0 value="657" > </X0>
+		<Y0 value="102" > </Y0>
+		<BusDataLine value="9" > </BusDataLine>
+		<BusDataLineType value="1" > </BusDataLineType>
+		<BusLineGroup value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" > </BusLineGroup>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+		<script>
+<![CDATA[Rem Noise detection
+ 
+Dim data(2048) 
+ 
+For k=0 To 2047 
+ 
+   data(k)=0.00001 
+ 
+Next 
+ 
+Document.getarrayline 8,1024,data 
+ 
+db=int(data(1)) 
+ 
+Setline 7,db 
+ 
+
+]]></script>
+	</VBScriptIC>
+	<VBScriptIC BusLine=" 24 "  >
+		<ICName value="" > </ICName>
+		<X0 value="467" > </X0>
+		<Y0 value="253" > </Y0>
+		<BusDataLine value="24" > </BusDataLine>
+		<BusDataLineType value="1" > </BusDataLineType>
+		<BusLineGroup value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" > </BusLineGroup>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+		<script>
+<![CDATA[Rem Write VBScript Here
+ 
+k=2 
+ 
+Vi=Getline(15) 
+ 
+z_set=Getline(50) 
+ 
+ 
+ 
+ 
+If z_set=100 Then 
+ 
+  z=Getline(16) 
+ 
+  L=(Vi-z)*k 
+ 
+Else 
+ 
+  L=Vi*k 
+ 
+End If 
+ 
+Setline 17,L
+]]></script>
+	</VBScriptIC>
+	<VBScriptIC  >
+		<ICName value="1100" > </ICName>
+		<X0 value="533" > </X0>
+		<Y0 value="252" > </Y0>
+		<BusDataLine value="-1" > </BusDataLine>
+		<BusDataLineType value="1" > </BusDataLineType>
+		<BusLineGroup value="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" > </BusLineGroup>
+		<BlockWinPos value="0,0" > </BlockWinPos>
+		<script>
+<![CDATA[Rem Write VBScript Here 
+ 
+ 
+ 
+
+Setline 50,100 
+ 
+z=Getline(15) 
+ 
+Setline 16,z 
+ 
+Setline 17,0 
+ 
+
+]]></script>
+	</VBScriptIC>
+	<FontIC  >
+		<ICName value="" > </ICName>
+		<X0 value="448" > </X0>
+		<Y0 value="53" > </Y0>
+		<Width value="150" > </Width>
+		<High value="25" > </High>
+		<Caption value="Temperature" > </Caption>
+		<FGColor value="0" > </FGColor>
+		<ShadowColor value="15" > </ShadowColor>
+		<BGColor value="7" > </BGColor>
+		<FontWidthHigh value="0.700000" > </FontWidthHigh>
+		<Direction value="0" > </Direction>
+		<FontProperty value="0" > </FontProperty>
+		<ShadowEffect value="1" > </ShadowEffect>
+		<BusDataLine value="-1" > </BusDataLine>
+	</FontIC>
+	<FontIC  >
+		<ICName value="" > </ICName>
+		<X0 value="842" > </X0>
+		<Y0 value="50" > </Y0>
+		<Width value="150" > </Width>
+		<High value="25" > </High>
+		<Caption value="Concentration" > </Caption>
+		<FGColor value="0" > </FGColor>
+		<ShadowColor value="15" > </ShadowColor>
+		<BGColor value="7" > </BGColor>
+		<FontWidthHigh value="0.700000" > </FontWidthHigh>
+		<Direction value="0" > </Direction>
+		<FontProperty value="0" > </FontProperty>
+		<ShadowEffect value="1" > </ShadowEffect>
+		<BusDataLine value="-1" > </BusDataLine>
+	</FontIC>
+	<FontIC  >
+		<ICName value="" > </ICName>
+		<X0 value="642" > </X0>
+		<Y0 value="53" > </Y0>
+		<Width value="150" > </Width>
+		<High value="25" > </High>
+		<Caption value="Noise intensity" > </Caption>
+		<FGColor value="0" > </FGColor>
+		<ShadowColor value="15" > </ShadowColor>
+		<BGColor value="7" > </BGColor>
+		<FontWidthHigh value="0.700000" > </FontWidthHigh>
+		<Direction value="0" > </Direction>
+		<FontProperty value="0" > </FontProperty>
+		<ShadowEffect value="1" > </ShadowEffect>
+		<BusDataLine value="-1" > </BusDataLine>
+	</FontIC>
+	<FontIC  >
+		<ICName value="" > </ICName>
+		<X0 value="469" > </X0>
+		<Y0 value="214" > </Y0>
+		<Width value="150" > </Width>
+		<High value="25" > </High>
+		<Caption value="Light intensity" > </Caption>
+		<FGColor value="0" > </FGColor>
+		<ShadowColor value="15" > </ShadowColor>
+		<BGColor value="7" > </BGColor>
+		<FontWidthHigh value="0.700000" > </FontWidthHigh>
+		<Direction value="0" > </Direction>
+		<FontProperty value="0" > </FontProperty>
+		<ShadowEffect value="1" > </ShadowEffect>
+		<BusDataLine value="-1" > </BusDataLine>
+	</FontIC>
+	<USBDAQ BusLine=" 20 "  >
+		<ICName value="" > </ICName>
+		<X0 value="782" > </X0>
+		<Y0 value="233" > </Y0>
+		<SampleMode value="0" > </SampleMode>
+		<PreSampleLen value="0" > </PreSampleLen>
+		<TrigleLevel value="0.000000" > </TrigleLevel>
+		<SampleLength value="1024" > </SampleLength>
+		<SampleFrequency value="5000.000000" > </SampleFrequency>
+		<SampleChannel value="0,1,0,1,1,1,0,0" > </SampleChannel>
+		<ChannelRateCoef value="1,1,1,1,1,1,1,1" > </ChannelRateCoef>
+		<ChannelDCCoef value="0,0,0,0,0,0,0,0" > </ChannelDCCoef>
+		<BusChannelLine value="-1,24,-1,21,9,22,-1,-1" > </BusChannelLine>
+		<BusSampleFreLine value="-1" > </BusSampleFreLine>
+		<BusSwitchLine value="20" > </BusSwitchLine>
+	</USBDAQ>
+</drvi_3.x>
