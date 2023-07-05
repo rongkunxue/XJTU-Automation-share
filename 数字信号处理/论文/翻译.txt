@@ -1,0 +1,38 @@
+1.Review Paper on Denoising of ECG Signal
+关于ECG信号降噪的回顾论文（2017）
+04.Personalized ECG Signal Classification Using  Block-Based Neural-Network and  Particle Swarm Optimization
+基于块的神经网络和粒子群算法的个性化心电信号分类（2013）
+  05.Deep learning approach for active classiﬁcation   signals
+  主动分类心电图信号的深度学习方法（2016）
+  06.Feature extraction of electrocardiogram signals by applying adaptive threshold and principal component analysis 
+  应用自适应阈值和主成分分析的心电图信号特征提取（2015）
+  07.Integration of independent component analysis and neural networks for ECG beat classification
+  独立成分分析和神经网络的集成，用于心电图搏动分类（2007）
+08.Classification of Body Movements in Wearable ECG (W-ECG) Signals Using Artificial Neural Networks 
+使用人工神经网络对可穿戴ECG（W-ECG）信号中的身体运动进行分类（2013）
+09.PATIENT-SPECIFIC ECG CLASSIFICATION BASED ON RECURRENT NEURAL NETWORKS AND CLUSTERING TECHNIQUE 
+基于递归神经网络和聚类技术的患者特定心电图分类（2017）
+10.Efficient and low complexity analysis of Biosignals using continuous Haar wavelet transforms for removing noise 
+使用连续Haar小波变换去除噪声的高效和低复杂度生物信号分析（2010）
+13.Recurrent Neural Network Based classiﬁcation of ECG signal Features for Obstruction of Sleep Apnea Detection
+基于递归神经网络的ECG信号分类，用于阻塞睡眠呼吸暂停检测（2017）
+14.A NOVEL WAVELET SEQUENCES BASED ON DEEP BIDIRECTIONAL LSTM NETWORK MODEL FOR ECG SIGNAL CLASSIFICATION
+基于深度双向LSTM网络模型的心电信号分类新小波序列（2018）
+15.Discrete Cosine Transform Features in Automated Classiﬁcation of Cardiac Arrhythmia Beats
+心律失常搏动的自动分类中的离散余弦变换特征（2015）
+16.Data clustering: 50 years beyond K-means
+数据聚类：K均值法之后的50年（2010）
+17.Fast Fourier Transform for Feature Extraction And Neural Network for Classification of Electrocardiogram Signals
+用于特征提取的快速傅里叶变换和用于心电图信号分类的神经网络（2015）
+18.Adaptive Threshold and Principal Component Analysis for Features Extraction of Electrocardiogram Signals 
+自适应阈值和主成分分析的心电图信号特征提取（2014）
+19. Wavelet analysis of ECG signal.
+ECG信号的小波分析。（1990）
+20.Automated High-Speed Analysis of Holter Tapes with Microcomputers
+用微型计算机自动分析动态心电图（1983）
+021.De-Noising by Soft-Thresholding 
+通过软阈值去噪（1995）
+21.Comparison of FCM, PCA and WT techniques for classiﬁcation ECG arrhythmias using artiﬁcial neural network
+使用人工神经网络比较FCM，PCA和WT技术分类ECG心律失常（2007）
+22.ECG Beat Detection Using Filter Banks
+使用滤波器组进行心电图心跳检测（1999）
