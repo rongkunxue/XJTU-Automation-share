@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/index.css">
+    <script src="/static/js/jquery.min.js"></script>
+    <title>知了传课福利彩票</title>
+</head>
+<body>
+    <div class="logoAss">
+    <div class="containerHome">
+        <img class="cwllogo" src="/static/img/zhiliao.png">
+        <div class="sousuo"></div>
+        <div class="h5dhkg">
+        <span class="hGa0  hGa01"></span>
+        <span class="hGa0  hGa02"></span>
+        <span class="hGa0  hGa03"></span>
+        </div>
+    </div>
+    <div class="cleardiv"></div>
+    </div>
+    <div class="homeNav homeNavKl8">
+        <div class="containerHome">
+            <ul class="sydh01">
+                <li class="dq sye">首页</li>
+                <li>
+                    <a rel="external" href="/search" class="ui-link">查询</a>
+                </li>
+                <li>
+                    <a rel="external" href="/kai_jiang" class="ui-link">开奖</a>
+                </li>
+                <li>
+                    <a rel="external" href="/contract" class="ui-link">智能合约</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="containerHome containerBody">
+        <div class="topNew">
+            <div class="containerHome">
+              <div class="touTiao">助力扶贫第【{{.total}}】期  知了以太坊彩票公益驿站为爱前行</div>
+            </div>
+        </div>
+
+        <div class="card-group" style="margin-bottom: 30px;background-color:#ddd;">
+            <form style="max-width: 400px;">
+                <div class="form-group">
+                    <label>用户名：</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label>交易密码：</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="请输入交易密码">
+                </div>
+                <div class="form-group">
+                    <label>投注：</label>
+                    <select name="n1" id="num1">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                    <select name="n2" id="num2">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                    <select name="n3" id="num3">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                    <select name="n4" id="num4">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                    </select>
+                    <select name="n5" style="margin-left: 20px;"  id="num5">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <button type="button" class="btn btn-danger" id="btn">投注</button>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <h2 style="padding-bottom: 10px;">实时投注表</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>投注人</th>
+                        <th>投注号码</th>
+                    </tr>
+                </thead>
+                <tbody id="accounts">
+                    {{/*<tr>*/}}
+                        {{/*<td>0x29794AB2ED6C47faFF7Ebdd6dcdD71A263E25460</td>*/}}
+                        {{/*<td>*/}}
+                            {{/*<ul class="kjh">*/}}
+                                {{/*<li>2</li>*/}}
+                                {{/*<li>4</li>*/}}
+                                {{/*<li>1</li>*/}}
+                                {{/*<li>2</li>*/}}
+                                {{/*<li>2</li>   */}}
+                            {{/*</ul>*/}}
+                        {{/*</td>*/}}
+                    {{/*</tr>*/}}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+
+
+        // 升级为ws
+        var ws = new WebSocket("ws://127.0.0.1:8080/get_accounts");
+        ws.onmessage = function (ev) {
+            var data = ev["data"];
+            console.log(data);
+            data = jQuery.parseJSON(data);
+            console.log(typeof data);
+            var accounts = data["accounts"];
+
+            var accounts_tag = document.getElementById("accounts");
+            // 所有的已有的子标签删除
+            var child = accounts_tag.lastElementChild;
+            while (child) {
+                accounts_tag.removeChild(child);
+                child = accounts_tag.lastElementChild;
+            }
+
+            for(var i=0;i<accounts.length;i++){
+                var addr = accounts[i]["addr"];
+                var tr = document.createElement("tr");
+                var td1 = document.createElement("td");
+                td1.innerText = addr;
+                var td2 = document.createElement("td");
+                var ul = document.createElement("ul");
+                ul.className = "kjh";
+                var nums = accounts[i]["nums"];
+                for(var j=0;j<nums.length;j++){
+                    var li = document.createElement("li");
+                    li.innerText = nums[j];
+                    ul.appendChild(li);
+                }
+                td2.appendChild(ul);
+                tr.appendChild(td1);
+                tr.appendChild(td2);
+                accounts_tag.appendChild(tr);
+            }
+        };
+
+
+
+        // 轮询，使用ajax
+        // window.setInterval(get_accounts,3000);
+        // get_accounts();
+        function get_accounts() {
+            var accounts_tag = document.getElementById("accounts");
+            // 所有的已有的子标签删除
+            var child = accounts_tag.lastElementChild;
+            while (child) {
+                accounts_tag.removeChild(child);
+                child = accounts_tag.lastElementChild;
+            }
+
+            $.ajax({
+                url:"/get_accounts",
+                type:"GET",
+                data:{},
+                success:function (data) {
+                    var accounts = data["accounts"];
+                    if(accounts.length > 0) {
+                        console.log(accounts);
+                        for(var i=0;i<accounts.length;i++){
+                            var addr = accounts[i]["addr"];
+                            var tr = document.createElement("tr");
+                            var td1 = document.createElement("td");
+                            td1.innerText = addr;
+                            var td2 = document.createElement("td");
+                            var ul = document.createElement("ul");
+                            ul.className = "kjh";
+                            var nums = accounts[i]["nums"];
+                            for(var j=0;j<nums.length;j++){
+                                var li = document.createElement("li");
+                                li.innerText = nums[j];
+                                ul.appendChild(li);
+                            }
+                            td2.appendChild(ul);
+                            tr.appendChild(td1);
+                            tr.appendChild(td2);
+                            accounts_tag.appendChild(tr);
+                        }
+                    }
+
+
+
+
+                }
+
+            })
+
+        }
+
+        var btn = document.getElementById("btn");
+
+        btn.onclick = function (ev) {
+            var username = document.getElementById("username").value;
+            var pwd = document.getElementById("password").value;
+            var num1 = document.getElementById("num1").value;
+            var num2 = document.getElementById("num2").value;
+            var num3 = document.getElementById("num3").value;
+            var num4 = document.getElementById("num4").value;
+            var num5 = document.getElementById("num5").value;
+            $.ajax({
+                url: "/post_touzhu",
+                type: "POST",
+                data: {
+                    "username":username,
+                    "pwd":pwd,
+                    "num1":num1,
+                    "num2":num2,
+                    "num3":num3,
+                    "num4":num4,
+                    "num5":num5
+                },
+                success: function (data) {
+                    alert(data["msg"]);
+                },
+                fail: function (data) {
+
+                }
+            })
+        }
+    </script>
+</body>
+</html>

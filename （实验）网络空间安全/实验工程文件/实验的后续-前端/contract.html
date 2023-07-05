@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/index.css">
+    <title>知了传课福利彩票</title>
+</head>
+<body>
+    <div class="logoAss">
+    <div class="containerHome">
+        <img class="cwllogo" src="/static/img/zhiliao.png">
+        <div class="sousuo"></div>
+        <div class="h5dhkg">
+        <span class="hGa0  hGa01"></span>
+        <span class="hGa0  hGa02"></span>
+        <span class="hGa0  hGa03"></span>
+        </div>
+    </div>
+    <div class="cleardiv"></div>
+    </div>
+    <div class="homeNav homeNavKl8">
+        <div class="containerHome">
+            <ul class="sydh01">
+                <li>
+                    <a rel="external" href="/" class="ui-link">首页</a>
+                </li>
+                <li>
+                    <a rel="external" href="/search" class="ui-link">查询</a>
+                </li>
+                <li>
+                    <a rel="external" href="/kai_jiang" class="ui-link">开奖</a>
+                </li>
+                <li class="dq sye">智能合约</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="containerHome containerBody">
+
+        <div class="card-group" style="margin-bottom: 30px; margin-top: 20px;">
+            <pre>
+                pragma solidity>=0.4.22 < 0.6.0
+                import"./ballot.sol";//this import is automatically injected by Remix.
+                import"./ballot.sol";
+                contract test3{
+
+
+                    Ballot ballotToTest;
+                    function beforeAll()public{
+                        ballotToTest=new Ballot(2);
+                    }
+
+
+                    function checkWinningProposal()public{
+                        ballotToTest.vote(1);
+                        Assert.equal(ballotToTest.winningProposal(),uint(1),"1 should be the winning proposal");
+                    }
+
+                    
+                    function checkWinninProposalWithReturnValue() public view return (bool){
+                        return ballotToTest.winningProposal()==1;
+                    }
+                }
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

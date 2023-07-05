@@ -1,0 +1,120 @@
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, figure, figure, legend, textarea, p, blockquote, th, td, input, label {
+    margin: 0;
+    padding: 0;
+    font-family: "Microsoft YaHei";
+    word-wrap: break-word;
+}
+.logoAss{
+    height: 80px;
+}
+
+.cwllogo{
+    width: 300px;
+    margin-top: 8px;
+}
+
+.containerHome {
+    width: 1000px;
+    margin: 0 auto;
+}
+.homeNav {
+    background: #e60013;
+    height: 40px;
+}
+.homeNav .containerHome {
+    position: relative;
+}
+
+.containerHome {
+    width: 1000px;
+    margin: 0 auto;
+}
+.homeNav .sydh01 {
+    float: left;
+    _display: inline;
+    width: 540px;
+}
+
+.homeNav li.dq {
+    background: #a1000d;
+}
+.homeNav li {
+    padding: 0 7px;
+    min-width: 58px;
+    margin-right: 18px;
+}
+.homeNav li {
+    float: left;
+    _display: inline;
+    padding: 0 7px;
+    text-align: center;
+    font: bold 16px/40px "Microsoft YaHei", "微软雅黑", Arial;
+    color: #fff;
+}
+li {
+    list-style: none;
+}
+.homeNav .sydh01 a {
+    white-space: nowrap;
+    color: #fff;
+}
+a{
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+    color: inherit;
+}
+
+
+.my-input{
+    float: left;
+    width: 148px;
+    height: 38px;
+    padding: 0 10px;
+    font: 16px/38px "Microsoft YaHei", "微软雅黑", Arial;
+    border: 1px solid #ccc;
+    box-sizing: content-box;
+}
+
+.topNew {
+    padding-top: 20px;
+    margin-bottom: 20px;
+}
+
+.topNew .touTiao {
+    overflow: hidden;
+    height: 50px;
+    margin-bottom: 3px;
+    text-align: center;
+    font: 40px/50px "Microsoft YaHei", "微软雅黑", Arial;
+    color: #e1081f;
+}
+
+.sliceShow{
+    margin-bottom: 40px;
+}
+
+.card-group{
+    border: 1px solid #dedede;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.kjh li {
+    width: 30px;
+    height: 30px;
+    font: 20px / 30px "Microsoft YaHei", 微软雅黑, Arial;
+    background-color: #e60013;
+    border-radius: 15px;
+    margin-bottom: 8px;
+    color: #fff;
+    float: left;
+    margin-right: 4px;
+    text-align: center;
+}
+
+.kjh li:last-child{
+    background-color: #549fe0;
+    margin-left: 10px;
+}

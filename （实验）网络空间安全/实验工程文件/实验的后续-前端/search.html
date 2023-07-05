@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/index.css">
+    <title>知了传课福利彩票</title>
+</head>
+<body>
+    <div class="logoAss">
+    <div class="containerHome">
+        <img class="cwllogo" src="/static/img/zhiliao.png">
+        <div class="sousuo"></div>
+        <div class="h5dhkg">
+        <span class="hGa0  hGa01"></span>
+        <span class="hGa0  hGa02"></span>
+        <span class="hGa0  hGa03"></span>
+        </div>
+    </div>
+    <div class="cleardiv"></div>
+    </div>
+    <div class="homeNav homeNavKl8">
+        <div class="containerHome">
+            <ul class="sydh01">
+                <li>
+                    <a rel="external" href="/" class="ui-link">首页</a>
+                </li>
+                <li class="dq sye">
+                    查询
+                </li>
+                <li>
+                    <a rel="external" href="/kai_jiang" class="ui-link">开奖</a>
+                </li>
+                <li>
+                    <a rel="external" href="/contract" class="ui-link">智能合约</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="containerHome containerBody">
+
+        <div class="card-group" style="margin-bottom: 30px; margin-top: 20px;">
+            <form style="max-width: 400px;" class="form-inline" action="/get_acountInfo" method="get">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="addr" placeholder="{{.account_info.addr}}">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-danger">搜索</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-group">
+            <div style="padding-bottom: 20px; border-bottom:1px solid #cdcdcd;">
+                <h2>账户余额：{{.account_info.balance}} wei</h2>
+            </div>
+    
+            <div>
+                <h2 style="padding-bottom: 10px; margin-top: 20px;">投注信息</h2>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>投注人</th>
+                            <th>投注号码</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{range .account_info.nums}}
+                            <tr>
+                                <td>{{$.account_info.addr}}</td>
+                                <td>
+                                    <ul class="kjh">
+                                        {{range .}}
+                                            <li>{{.}}</li>
+                                        {{end}}
+
+                                        {{/*<li>4</li>*/}}
+                                        {{/*<li>1</li>*/}}
+                                        {{/*<li>2</li>*/}}
+                                        {{/*<li>2</li>*/}}
+                                    </ul>
+                                </td>
+                            </tr>
+                        {{end}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
