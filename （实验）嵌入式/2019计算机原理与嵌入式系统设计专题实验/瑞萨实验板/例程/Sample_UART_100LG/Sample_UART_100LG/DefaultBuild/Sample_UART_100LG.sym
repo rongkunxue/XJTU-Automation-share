@@ -1,0 +1,79 @@
+#05
+;FF     PUBLIC
+02FCFC6_?DATA
+02FCFD4_?DATAL
+02FCFD4_?DATS
+02FCFD4_?INIS
+02FCFD4_?INIT
+02FCFD4_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+0100014_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+00FFEE0_@STBEG
+00FCFD4_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+010001E_@vect1e
+0100020_@vect20
+01001E9_R_CGC_Create
+0100212_R_CGC_Get_ResetSource
+01001C1_R_MAIN_UserInit
+0100217_R_PORT_Create
+010021B_R_SAU0_Create
+01001C5_R_Systeminit
+010022D_R_UART0_Create
+01002F9_R_UART0_Receive
+010031F_R_UART0_Send
+01002AD_R_UART0_Start
+01002D8_R_UART0_Stop
+010035F_R_WDT_Create
+010036F_R_WDT_Restart
+02FCFC5_end_flag
+02FCF96_errno
+01003B7_exit
+02FCFC0_g_uart0_rx_count
+02FCFC2_g_uart0_rx_length
+02FCFBC_g_uart0_tx_count
+02FCFBE_gp_uart0_rx_address
+02FCFBA_gp_uart0_tx_address
+01001E1_hdwinit
+02FCFC6_i
+02FCFC8_j
+0100198_main
+02FCFC4_rx_data
+0100373_stkinit
+02FCFCA_tx_data
+;FF     @cstart
+;FF     r_main
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     r_cg_serial
+;FF     r_cg_serial_user
+<010035D_r_uart0_callback_receiveend
+010035E_r_uart0_callback_sendend
+0100185_r_uart0_interrupt_receive
+0100191_r_uart0_interrupt_send
+;FF     r_cg_wdt
+;FF     r_cg_wdt_user
+<0100196_r_wdt_interrupt
+;FF     @stkinit
+;FF     exit
+;FF     @rom
+=
+

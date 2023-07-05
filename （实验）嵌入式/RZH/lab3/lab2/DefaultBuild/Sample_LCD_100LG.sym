@@ -1,0 +1,89 @@
+#05
+;FF     PUBLIC
+02FCFBE_?DATA
+02FCFD6_?DATAL
+02FCFD6_?DATS
+02FCFD6_?INIS
+02FCFD6_?INIT
+02FCFD6_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+010001E_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+00FFEE0_@STBEG
+00FCFD6_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+010002C_@vect2c
+0100427_CursorSet
+0100810_Keyboard_scan
+01005D7_LcdFill_Level
+0100691_LcdFill_REC
+0100558_LcdFill_Vertical
+01002C3_R_CGC_Create
+01002F2_R_CGC_Get_ResetSource
+01001C4_R_MAIN_UserInit
+010073F_R_PORT_Create
+01002A7_R_Systeminit
+01007C0_R_TAU0_Channel0_Start
+01007D1_R_TAU0_Channel0_Stop
+0100769_R_TAU0_Create
+01007E2_R_WDT_Create
+01007F2_R_WDT_Restart
+01003B8_WriteStr
+02FCFBE_date
+01007F6_delay
+01001C8_display
+02FCF96_errno
+01009EE_exit
+02FCFD2_flag
+0100242_getnext
+0100271_getpre
+01002BB_hdwinit
+02FCFBA_i
+0100337_lcd_busy
+01002FE_lcd_delay
+0100488_lcd_display
+01003D5_lcd_init
+0100370_lcd_write
+0100189_main
+02FCFBC_num_keyboard
+02FCFD0_pre
+0100321_shortdel
+01009AA_stkinit
+02FCFD4_temp
+02FCFBD_testvalue
+02FCFCE_x
+;FF     @cstart
+;FF     r_cg_wdt_user
+<0100185_r_wdt_interrupt
+;FF     r_main
+<0103000L0005
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_lcd
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     r_cg_timer
+;FF     r_cg_timer_user
+<0100187_r_tau0_channel0_interrupt
+;FF     r_cg_wdt
+;FF     r_cg_KeyScan
+;FF     @stkinit
+;FF     exit
+;FF     @rom
+=
+

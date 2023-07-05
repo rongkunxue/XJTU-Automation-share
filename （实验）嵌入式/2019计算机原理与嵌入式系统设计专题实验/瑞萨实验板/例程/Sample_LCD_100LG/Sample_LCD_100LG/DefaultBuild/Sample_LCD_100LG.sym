@@ -1,0 +1,76 @@
+#05
+;FF     PUBLIC
+02FCFBC_?DATA
+02FCFBC_?DATAL
+02FCFBC_?DATS
+02FCFBC_?INIS
+02FCFBC_?INIT
+02FCFBC_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+0100002_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+00FFEE0_@STBEG
+00FCFBC_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+010002C_@vect2c
+0100326_CursorSet
+01004D6_LcdFill_Level
+0100590_LcdFill_REC
+0100457_LcdFill_Vertical
+01001C2_R_CGC_Create
+01001F1_R_CGC_Get_ResetSource
+01001A2_R_MAIN_UserInit
+010063E_R_PORT_Create
+01001A6_R_Systeminit
+01006AC_R_TAU0_Channel0_Start
+01006BD_R_TAU0_Channel0_Stop
+0100655_R_TAU0_Create
+01006CE_R_WDT_Create
+01006DE_R_WDT_Restart
+01002B7_WriteStr
+02FCF96_errno
+0100726_exit
+01001BA_hdwinit
+02FCFBA_i
+0100236_lcd_busy
+01001FD_lcd_delay
+0100387_lcd_display
+01002D4_lcd_init
+010026F_lcd_write
+0100189_main
+0100220_shortdel
+01006E2_stkinit
+;FF     @cstart
+;FF     r_cg_wdt_user
+<0100185_r_wdt_interrupt
+;FF     r_main
+<0103000L0005
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_lcd
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     r_cg_timer
+;FF     r_cg_timer_user
+<0100187_r_tau0_channel0_interrupt
+;FF     r_cg_wdt
+;FF     @stkinit
+;FF     exit
+;FF     @rom
+=
+

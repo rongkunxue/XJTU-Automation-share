@@ -1,0 +1,6 @@
+Dependencies for Project 'lcd', Target 'Target 1': (DO NOT MODIFY !)
+F (.\GLCD.c)(0x57E3D2D6)()
+F (.\LCD.c)(0x5DE9B2C6)()
+F (.\Picture.c)(0x5DE9B2C6)()
+F (.\GLCD.h)(0x4E3FBD44)()
+F (.\W90P710.s)(0x56567E40)()

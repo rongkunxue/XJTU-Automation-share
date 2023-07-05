@@ -1,0 +1,22 @@
+*** Creating Trace Output File 'lcd.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"glcd.o"'
+### List of Objects: adding '"lcd.o"'
+### List of Objects: adding '"picture.o"'
+### List of Objects: adding '"w90p710.o"'
+### ADS-LD Command completed:
+--device DARMP "glcd.o" "lcd.o" "picture.o" "w90p710.o" --strict --scatter "lcd.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\lcd.map" -o "lcd.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'lcd.axf'
+### ADS-LD Command File: 'lcd.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'lcd.lnp', Handle=0x00000810
+### Writing '.lnp' file
+### ADS-LD Command file 'lcd.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

@@ -1,0 +1,16 @@
+//KPI中断服务子程序
+__irq void IRQ_Handler(void){
+	 u32 KeyValue, temp;
+	 temp = ReadReg(REG_KPISTATUS);
+	 temp &= 0x0000000f;
+	 if(temp > 0xB){
+	 	KeyValue = temp - 0xC;
+	 }
+	 else if(temp < 0x4){
+	 	KeyValue = temp + 0xC; 
+	 }
+	 else{
+	 	KeyValue = temp; 
+	 }
+	 WriteReg(EBILED_ADDRESS, ~KeyValue);
+}

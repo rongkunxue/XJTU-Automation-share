@@ -1,0 +1,1 @@
+keyscan.o: keyscan.c

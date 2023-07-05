@@ -1,0 +1,62 @@
+#05
+;FF     PUBLIC
+02FCFBA_?DATA
+02FCFBA_?DATAL
+02FCFBA_?DATS
+02FCFBA_?INIS
+02FCFBA_?INIT
+02FCFBA_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+0100002_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+00FFEE0_@STBEG
+00FCFBA_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+010002C_@vect2c
+01001D4_R_CGC_Create
+01001FD_R_CGC_Get_ResetSource
+01001AD_R_MAIN_UserInit
+0100202_R_PORT_Create
+01001B1_R_Systeminit
+010027B_R_TAU0_Channel0_Start
+010028C_R_TAU0_Channel0_Stop
+010020C_R_TAU0_Create
+010029D_R_WDT_Create
+01002AD_R_WDT_Restart
+02FCF96_errno
+01002F5_exit
+01001CC_hdwinit
+010019A_main
+01002B1_stkinit
+;FF     @cstart
+;FF     r_main
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     r_cg_timer
+;FF     r_cg_timer_user
+<0100185_r_tau0_channel0_interrupt
+;FF     r_cg_wdt
+;FF     r_cg_wdt_user
+<0100198_r_wdt_interrupt
+;FF     @stkinit
+;FF     exit
+;FF     @rom
+=
+

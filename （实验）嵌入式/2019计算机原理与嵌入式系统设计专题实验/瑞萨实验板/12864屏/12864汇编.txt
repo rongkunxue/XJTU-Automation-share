@@ -1,0 +1,171 @@
+ST7920
+
+;*************************************
+;CONTROLLER:ST7920(8BIT INTERFACE)
+;128×64点阵
+;EDITOR:ZY
+;CRYSTAL:12MHz
+;RS=P3.0 RW=P3.1 E=P3.2  D0-D7=P1
+;*************************************
+
+    RS    EQU  P3.0      ;H=DATA,L=COM
+    RW    EQU  P3.1      ;H=READ,L=WRITE
+    E     EQU  P3.2      ;
+
+    COM   EQU  30H       ;控制字暂存单元
+    DAT   EQU  31H       ;显示数据暂存单元
+    CODER EQU  32H       ;字符代码暂存单元
+    ADDR  EQU  33H       ;地址暂存单元
+
+    ORG   0000H
+    AJMP  MAIN
+    ORG   0030H
+
+MAIN:
+    MOV   SP,#60H
+    MOV   P3,#0F8H
+    LCALL DEL_20MS
+    LCALL DEL_20MS
+    LCALL INI            ;进入初始化子程序
+
+    MOV   ADDR,#80H
+    MOV   DPTR,#WEL_1
+    LCALL W_LINE
+    MOV   ADDR,#90H
+    MOV   DPTR,#WEL_2
+    LCALL W_LINE
+    LCALL DEL_1500MS
+
+    MOV   ADDR,#80H
+    MOV   DPTR,#WEL_3
+    LCALL W_LINE
+    MOV   ADDR,#90H
+    MOV   DPTR,#WEL_4
+    LCALL W_LINE
+    LCALL DEL_1500MS
+
+    MOV   ADDR,#80H      ;
+    MOV   DPTR,#HZ_1     ;
+    LCALL W_LINE
+    MOV   ADDR,#90H      ;
+    MOV   DPTR,#HZ_2     ;
+    LCALL W_LINE
+    LCALL DEL_1500MS     ;延时后显示下一页
+
+    MOV   ADDR,#80H      ;
+    MOV   DPTR,#HZ_3     ;
+    LCALL W_LINE
+    MOV   ADDR,#90H      ;
+    MOV   DPTR,#HZ_4     ;
+    LCALL W_LINE
+    LCALL DEL_1500MS
+
+    LJMP  MAIN
+
+INI:
+    MOV   COM,#30H       ;功能设定,基本指令
+    LCALL WCOM
+    MOV   COM,#30H       ;基本指令,8-bit模式,基本指令
+    LCALL WCOM
+    MOV   COM,#0CH       ;显示开,游标关,反白关
+    LCALL WCOM
+    MOV   COM,#01H       ;清除显示
+    LCALL WCOM
+    MOV   COM,#06H       ;进入设定点,游标7右移,画面不移动
+    LCALL WCOM
+    RET
+
+W_LINE:                   ;写入一行8汉字子程序
+    MOV   COM,ADDR    ;
+    LCALL WCOM         ;
+    MOV   R2,#20         ;16个循环,连续写入8个汉字或是16个西文字符
+W_L1:
+    MOV   A,#00H
+    MOVC  A,@A+DPTR
+    MOV   CODER,A
+    LCALL WCODE
+    INC   DPTR
+    DJNZ  R2,W_L1
+    RET
+
+WCOM:                    ;写指令子程序
+    CLR   RS
+    SETB  RW
+WC1:
+    MOV   P1,#0FFH
+    SETB  E
+    MOV   A,P1
+    CLR   E
+    JB    ACC.7,WC1     ;查忙
+    CLR   RW
+    MOV   P1,COM
+    SETB  E
+    CLR   E
+    RET
+
+WCODE:                 ;写代码子程序
+    CLR   RS
+    SETB  RW
+WCO1:
+    MOV   P1,#0FFH
+    SETB  E
+    MOV   A,P1
+    CLR   E
+    JB    ACC.7,WCO1
+    SETB  RS
+    CLR   RW
+    MOV   P1,CODER
+    SETB  E
+    CLR   E
+    RET
+
+DEL_20MS:
+       MOV   R0,#20
+D2:
+       MOV   R1,#200
+D1:
+       NOP
+       NOP
+       NOP
+       DJNZ  R1,D1
+       DJNZ  R0,D2
+       RET
+
+DEL_100MS:
+      LCALL  DEL_20MS
+      LCALL  DEL_20MS
+      LCALL  DEL_20MS
+      LCALL  DEL_20MS
+      LCALL  DEL_20MS
+      RET
+
+DEL_500MS:
+      LCALL  DEL_100MS
+      LCALL  DEL_100MS
+      LCALL  DEL_100MS
+      LCALL  DEL_100MS
+      LCALL  DEL_100MS
+      RET
+
+DEL_1500MS:
+      LCALL  DEL_500MS
+      LCALL  DEL_500MS
+      LCALL  DEL_500MS
+      RET
+
+
+WEL_3:
+    DB "128 * 64中文字库 "
+
+HZ_1:
+    DB "内藏8192个中文字 "
+HZ_2:
+    DB "串口并口可供选择 "
+HZ_3:
+    DB "适配 M6800  时序 "
+HZ_4:
+    DB "**谢谢您的使用** "
+
+
+END
+

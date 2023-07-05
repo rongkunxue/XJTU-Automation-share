@@ -1,0 +1,4 @@
+--device DARMP "w90p710.o" "keyscan.o" --strict --scatter "keyboard.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\keyboard.map" -o "keyboard.axf"

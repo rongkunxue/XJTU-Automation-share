@@ -1,0 +1,18 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\XJTU\Desktop\新建文件夹\mus.uvproj
+Project File Date:  10/22/2019
+
+<h2>Output:</h2>
+compiling mus.c...
+mus.c - 0 Error(s), 0 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling mus.c...
+linking...
+Program Size: data=11.0 xdata=0 code=547
+creating hex file from "mus"...
+"mus" - 0 Error(s), 0 Warning(s).

@@ -1,0 +1,155 @@
+C51 COMPILER V9.52.0.0   LED4                                                              07/20/2019 22:06:10 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LED4
+OBJECT MODULE PLACED IN led4.OBJ
+COMPILER INVOKED BY: d:\Keil1\C51\BIN\C51.EXE led4.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1                    #include <reg51.h>    //包含头文件
+   2          sbit KEY1=P1^0;     //用位定义指令分别定义4个按键所对应的引脚
+   3          sbit KEY2=P1^1;
+   4          sbit KEY3=P1^2;
+   5          sbit KEY4=P1^3;
+   6          unsigned char keyval;  // 全局变量定义，定义键值变量
+   7          //LED流水灯延时函数
+   8          void led_delay(void)
+   9          {
+  10   1        unsigned char i,j;
+  11   1       for(i = 0;i < 251;i++)
+  12   1       {
+  13   2         for(j = 0;j < 251;j++);
+  14   2       }
+  15   1      }
+  16          //按键消抖延时函数
+  17          void delay20ms(void)
+  18          {
+  19   1        unsigned char i,j;
+  20   1       for(i = 0;i < 100;i++)
+  21   1       {
+  22   2         for(j = 0;j < 60;j++);
+  23   2       }
+  24   1      }
+  25          //正向流水灯
+  26          void forward(void)
+  27          {
+  28   1        P3 = 0xfe;     //点亮P3.0引脚的LED灯
+  29   1       led_delay();
+  30   1       P3 = 0xfd;
+  31   1       led_delay();
+  32   1       P3 = 0xfb;
+  33   1       led_delay();
+  34   1       P3 = 0xf7;
+  35   1       led_delay();
+  36   1       P3 = 0xef;
+  37   1       led_delay();
+  38   1       P3 = 0xdf;
+  39   1       led_delay();
+  40   1       P3 = 0xbf;
+  41   1       led_delay();
+  42   1       P3 = 0x7f;
+  43   1       led_delay();
+  44   1       P3 = 0xfe;
+  45   1       led_delay();
+  46   1      }
+  47          //反向流水灯
+  48          void backward(void)
+  49          {
+  50   1        P3 = 0x7f;    //点亮P3.7引脚的LED灯
+  51   1       led_delay();
+  52   1       P3 = 0xbf;
+  53   1       led_delay();
+  54   1       P3 = 0xdf;
+  55   1       led_delay();
+C51 COMPILER V9.52.0.0   LED4                                                              07/20/2019 22:06:10 PAGE 2   
+
+  56   1       P3 = 0xef;
+  57   1       led_delay();
+  58   1       P3 = 0xf7;
+  59   1       led_delay();
+  60   1       P3 = 0xfb;
+  61   1       led_delay();
+  62   1       P3 = 0xfd;
+  63   1       led_delay();
+  64   1       P3 = 0xfe;
+  65   1       led_delay();
+  66   1       P3 = 0x7f;
+  67   1       led_delay();
+  68   1      }
+  69          //关闭所有LED灯
+  70          void stop(void)
+  71          {
+  72   1        P3 = 0xff; 
+  73   1      }
+  74          //所有LED闪烁
+  75          void flash(void)
+  76          {
+  77   1        P3 = 0xff;
+  78   1       led_delay();
+  79   1       P3 = 0x00;
+  80   1       led_delay(); 
+  81   1      }
+  82          //键盘扫描函数
+  83          void key_scan(void)
+  84          {
+  85   1        if((P1 & 0x0f)!=0x0f)    //检测是否有按键被按下
+  86   1       {
+  87   2         delay20ms();
+  88   2        if((P1 & 0x0f)!=0x0f)    //延时后再次检测是否有按键被按下
+  89   2        {
+  90   3         if(KEY1 == 0)    //判断是那个按键被按下
+  91   3         {
+  92   4           keyval = 1;
+  93   4         }
+  94   3         if(KEY2 == 0)
+  95   3         {
+  96   4           keyval = 2;
+  97   4         }
+  98   3         if(KEY3 == 0)
+  99   3         {
+ 100   4           keyval = 3;
+ 101   4         }
+ 102   3         if(KEY4 == 0)
+ 103   3         {
+ 104   4           keyval = 4;
+ 105   4         }
+ 106   3        }
+ 107   2       }
+ 108   1      }
+ 109          //主函数
+ 110          void main(void)
+ 111          {
+ 112   1       keyval = 0;      //
+ 113   1       while(1)
+ 114   1       {
+ 115   2         key_scan();    //调用键值检测函数
+ 116   2        switch(keyval)     //根据键值实现相应功能
+ 117   2        {
+C51 COMPILER V9.52.0.0   LED4                                                              07/20/2019 22:06:10 PAGE 3   
+
+ 118   3          case 1:forward();
+ 119   3                break;
+ 120   3         case 2:backward();
+ 121   3                break;
+ 122   3         case 3:stop();
+ 123   3                break;
+ 124   3         case 4:flash();
+ 125   3                break;
+ 126   3        }
+ 127   2       }
+ 128   1      } 
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    230    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

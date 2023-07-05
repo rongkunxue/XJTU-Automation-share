@@ -1,0 +1,4 @@
+--device DARMP "w90p710.o" "glcd.o" "lcd.o" "background.o" "arm_ani.o" "irq.o" "ren001.o" "ren002.o" "ren003.o" "ren004.o" "ren005.o" "ren006.o" "ren007.o" "ren008.o" "ren009.o" "ren010.o" "ren011.o" "ren012.o" "ren013.o" "ren014.o" "ren015.o" "ren016.o" "ren017.o" "ren018.o" --strict --scatter "lcd.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\lcd.map" -o "lcd.axf"

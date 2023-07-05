@@ -1,0 +1,107 @@
+#05
+;FF     PUBLIC
+02FFED8@@CPR1
+02FFEDE@@FPRF1
+02FFEDF@@FPRF2
+02FFEDE@@FPRFP
+02FFED8@@FPRS
+02FFEDC@@FPRXD
+02FFEDC@@FPRXP
+02FFEDD@@FPRXS
+0100185@@lscmp
+02FCFD2_?DATA
+02FCFEA_?DATAL
+02FCFEA_?DATS
+02FCFEA_?INIS
+02FCFEA_?INIT
+02FCFEA_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+010001E_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+02FFED8_@RTARG0
+02FFED9_@RTARG1
+02FFEDA_@RTARG2
+02FFEDB_@RTARG3
+02FFEDC_@RTARG4
+02FFEDD_@RTARG5
+02FFEDE_@RTARG6
+02FFEDF_@RTARG7
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+00FFED8_@STBEG
+00FCFEA_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+0100024_@vect24
+02FCFCF_Cmd_Exe_End
+02FCFCE_Cmd_Type
+01002B6_R_CGC_Create
+01002DF_R_CGC_Get_ResetSource
+01003C0_R_CSI10_CmdSend
+0100308_R_CSI10_Create
+01003F1_R_CSI10_DataSend
+010042F_R_CSI10_Send_Receive
+0100378_R_CSI10_Start
+01003A5_R_CSI10_Stop
+0100477_R_PORT_Create
+01002F8_R_SAU0_Create
+0100293_R_Systeminit
+01002E4_R_WDT_Create
+01002F4_R_WDT_Restart
+02FCFE5_Rx_Data
+02FCFD0_end_txif
+02FCF96_errno
+01004C2_exit
+02FCFBE_g_csi10_rx_count
+02FCFBC_g_csi10_rx_length
+02FCFC2_g_csi10_send_length
+02FCFC4_g_csi10_tx_count
+02FCFBA_gp_csi10_rx_address
+02FCFC0_gp_csi10_tx_address
+01002AE_hdwinit
+02FCFE6_iw
+010021C_main
+02FCFCC_pRxdata
+02FCFCA_pTxdata
+02FCFC8_return_data
+02FCFDD_rx_data
+010047E_stkinit
+02FCFDA_tx_cmdata
+02FCFC7_tx_count
+02FCFD2_tx_data
+02FCFC6_tx_len
+02FCFE8_xd
+;FF     @cstart
+;FF     r_main
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_wdt
+;FF     r_cg_wdt_user
+<0100199_r_wdt_interrupt
+;FF     r_cg_serial
+;FF     r_cg_serial_user
+<010046F_r_csi10_callback_error
+010046E_r_csi10_callback_receiveend
+0100473_r_csi10_callback_sendend
+010019B_r_csi10_interrupt
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     @lscmp
+;FF     @stkinit
+;FF     @RTARG0
+;FF     exit
+;FF     @rom
+=
+

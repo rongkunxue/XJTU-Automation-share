@@ -1,0 +1,3 @@
+Dependencies for Project 'sample', Target 'Target 1': (DO NOT MODIFY !)
+F (.\W90P710.s)(0x4E3FB9DC)(--device DARMP -g --apcs=interwork -I "d:\Keil1\ARM\CMSIS\Include" -I "d:\Keil1\ARM\INC\Winbond\W90P710" --list "W90P710.lst" --xref -o "W90P710.o" --depend "W90P710.d")
+F (.\main.c)(0x5DE9A1B6)(-c --device DARMP -g -O0 --apcs=interwork -I "d:\Keil1\ARM\CMSIS\Include" -I "d:\Keil1\ARM\INC\Winbond\W90P710" -o "main.o" --omf_browse "main.crf" --depend "main.d")

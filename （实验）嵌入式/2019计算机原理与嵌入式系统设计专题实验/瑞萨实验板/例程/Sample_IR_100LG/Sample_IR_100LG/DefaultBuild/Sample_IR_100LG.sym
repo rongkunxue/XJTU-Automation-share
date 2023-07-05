@@ -1,0 +1,82 @@
+#05
+;FF     PUBLIC
+02FCFC4_?DATA
+02FCFE2_?DATAL
+02FCFE2_?DATS
+02FCFE2_?INIS
+02FCFE2_?INIT
+02FCFE2_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+0100042_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+00FFEE0_@STBEG
+00FCFE2_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+010001E_@vect1e
+0100020_@vect20
+0100022_@vect22
+0100226_R_CGC_Create
+010024F_R_CGC_Get_ResetSource
+01001FA_R_MAIN_UserInit
+0100254_R_PORT_Create
+0100258_R_SAU0_Create
+01001FE_R_Systeminit
+0100427_R_TAU0_Channel5_Start
+010043C_R_TAU0_Channel5_Stop
+01003A3_R_TAU0_Create
+010026A_R_UART0_Create
+0100348_R_UART0_Receive
+010036E_R_UART0_Send
+01002F0_R_UART0_Start
+0100321_R_UART0_Stop
+0100451_R_WDT_Create
+0100461_R_WDT_Restart
+02FCFC4_Rxd_Data
+0103000_Txd_Data
+02FCF96_errno
+01004A9_exit
+02FCFC0_g_uart0_rx_count
+02FCFC2_g_uart0_rx_length
+02FCFBC_g_uart0_tx_count
+02FCFBE_gp_uart0_rx_address
+02FCFBA_gp_uart0_tx_address
+010021E_hdwinit
+01001CB_main
+0100465_stkinit
+;FF     @cstart
+;FF     r_main
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     r_cg_serial
+;FF     r_cg_serial_user
+<01003A2_r_uart0_callback_sendend
+01001A3_r_uart0_interrupt_error
+0100185_r_uart0_interrupt_receive
+01001B1_r_uart0_interrupt_send
+;FF     r_cg_timer
+;FF     r_cg_timer_user
+;FF     r_cg_wdt
+;FF     r_cg_wdt_user
+<01001C9_r_wdt_interrupt
+;FF     @stkinit
+;FF     exit
+;FF     @rom
+=
+

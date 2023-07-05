@@ -1,0 +1,201 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        10/22/2019  19:46:46  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL1\C51\BIN\BL51.EXE STARTUP.obj, mus.obj TO mus RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  STARTUP.obj (?C_STARTUP)
+  mus.obj (MUS)
+  D:\KEIL1\C51\LIB\C51S.LIB (?C?ULCMP)
+
+
+LINK MAP OF MODULE:  mus (?C_STARTUP)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0007H     UNIT         ?DT?MUS
+            DATA    000FH     0006H     UNIT         _DATA_GROUP_
+            IDATA   0015H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     0008H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     008AH     UNIT         ?PR?MAIN?MUS
+            CODE    0098H     0083H     UNIT         ?CO?MUS
+            CODE    011BH     0048H     UNIT         ?PR?_DELAY?MUS
+            CODE    0163H     0011H     UNIT         ?C?LIB_CODE
+            CODE    0174H     000DH     UNIT         ?PR?T0INT?MUS
+            CODE    0181H     000DH     UNIT         ?PR?SONG?MUS
+            CODE    018EH     000CH     UNIT         ?C_C51STARTUP
+
+
+
+OVERLAY MAP OF MODULE:   mus (?C_STARTUP)
+
+
+SEGMENT                          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH
+----------------------------------------------
+?C_C51STARTUP                  -----    -----
+  +--> ?PR?MAIN?MUS
+
+?PR?MAIN?MUS                   -----    -----
+  +--> ?CO?MUS
+  +--> ?PR?SONG?MUS
+
+?PR?SONG?MUS                   -----    -----
+  +--> ?PR?_DELAY?MUS
+
+?PR?_DELAY?MUS                 000FH    0006H
+
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/22/2019  19:46:46  PAGE 2
+
+
+
+SYMBOL TABLE OF MODULE:  mus (?C_STARTUP)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C_STARTUP
+  C:018EH         SEGMENT       ?C_C51STARTUP
+  I:0015H         SEGMENT       ?STACK
+  C:0000H         PUBLIC        ?C_STARTUP
+  D:00E0H         SYMBOL        ACC
+  D:00F0H         SYMBOL        B
+  D:0083H         SYMBOL        DPH
+  D:0082H         SYMBOL        DPL
+  N:0000H         SYMBOL        IBPSTACK
+  N:0100H         SYMBOL        IBPSTACKTOP
+  N:0080H         SYMBOL        IDATALEN
+  C:0191H         SYMBOL        IDATALOOP
+  N:0000H         SYMBOL        PBPSTACK
+  N:0100H         SYMBOL        PBPSTACKTOP
+  N:0000H         SYMBOL        PDATALEN
+  N:0000H         SYMBOL        PDATASTART
+  N:0000H         SYMBOL        PPAGE
+  N:0000H         SYMBOL        PPAGEENABLE
+  D:00A0H         SYMBOL        PPAGE_SFR
+  D:0081H         SYMBOL        SP
+  C:018EH         SYMBOL        STARTUP1
+  N:0000H         SYMBOL        XBPSTACK
+  N:0000H         SYMBOL        XBPSTACKTOP
+  N:0000H         SYMBOL        XDATALEN
+  N:0000H         SYMBOL        XDATASTART
+  C:0000H         LINE#         126
+  C:018EH         LINE#         133
+  C:0190H         LINE#         134
+  C:0191H         LINE#         135
+  C:0192H         LINE#         136
+  C:0194H         LINE#         185
+  C:0197H         LINE#         196
+  -------         ENDMOD        ?C_STARTUP
+
+  -------         MODULE        MUS
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+  D:00A8H         PUBLIC        IE
+  C:011BH         PUBLIC        _delay
+  D:00B8H         PUBLIC        IP
+  C:0098H         PUBLIC        sszymmh
+  C:000EH         PUBLIC        main
+  D:0008H         PUBLIC        time
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  C:0181H         PUBLIC        song
+  D:0009H         PUBLIC        timer0h
+  D:000AH         PUBLIC        timer0l
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/22/2019  19:46:46  PAGE 3
+
+
+  B:00A8H.1       PUBLIC        ET0
+  D:008CH         PUBLIC        TH0
+  D:008AH         PUBLIC        TL0
+  B:0088H.4       PUBLIC        TR0
+  D:00C8H         PUBLIC        T2CON
+  D:000BH         PUBLIC        i
+  D:000DH         PUBLIC        k
+  B:0090H.0       PUBLIC        speaker
+  C:0174H         PUBLIC        t0int
+  C:00E3H         PUBLIC        FREQH
+  D:00D0H         PUBLIC        PSW
+  C:00FFH         PUBLIC        FREQL
+  -------         PROC          _DELAY
+  D:000FH         SYMBOL        t
+  -------         DO            
+  D:0010H         SYMBOL        t1
+  D:0011H         SYMBOL        t2
+  -------         ENDDO         
+  C:011BH         LINE#         27
+  C:011DH         LINE#         28
+  C:011DH         LINE#         31
+  C:0127H         LINE#         32
+  C:0127H         LINE#         33
+  C:0145H         LINE#         34
+  C:0145H         LINE#         36
+  C:015CH         LINE#         37
+  C:0160H         LINE#         38
+  C:0162H         LINE#         39
+  -------         ENDPROC       _DELAY
+  -------         PROC          T0INT
+  C:0174H         LINE#         40
+  C:0174H         LINE#         42
+  C:0176H         LINE#         43
+  C:0178H         LINE#         44
+  C:017BH         LINE#         45
+  C:017EH         LINE#         46
+  C:0180H         LINE#         47
+  -------         ENDPROC       T0INT
+  -------         PROC          SONG
+  C:0181H         LINE#         48
+  C:0181H         LINE#         49
+  C:0181H         LINE#         50
+  C:0184H         LINE#         51
+  C:0187H         LINE#         52
+  C:0189H         LINE#         53
+  -------         ENDPROC       SONG
+  -------         PROC          MAIN
+  C:000EH         LINE#         55
+  C:000EH         LINE#         56
+  C:000EH         LINE#         57
+  C:0010H         LINE#         59
+  C:0013H         LINE#         60
+  C:0015H         LINE#         61
+  C:0017H         LINE#         62
+  C:0017H         LINE#         63
+  C:0017H         LINE#         64
+  C:001CH         LINE#         65
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/22/2019  19:46:46  PAGE 4
+
+
+  C:0027H         LINE#         66
+  C:0027H         LINE#         67
+  C:0059H         LINE#         68
+  C:0069H         LINE#         69
+  C:0078H         LINE#         70
+  C:0088H         LINE#         71
+  C:0093H         LINE#         72
+  C:0096H         LINE#         73
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MUS
+
+  -------         MODULE        ?C?ULCMP
+  C:0163H         PUBLIC        ?C?ULCMP
+  -------         ENDMOD        ?C?ULCMP
+
+Program Size: data=22.0 xdata=0 code=402
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,4 @@
+"STARTUP.obj",
+"mus.obj" 
+TO "mus" 
+RAMSIZE(256) 

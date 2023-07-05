@@ -1,0 +1,63 @@
+C51 COMPILER V9.52.0.0   JIAOAODESHAONIAN                                                  09/22/2019 23:45:57 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE JIAOAODESHAONIAN
+OBJECT MODULE PLACED IN jiaoaodeshaonian.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE jiaoaodeshaonian.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          sbit K0=P1^0;
+   3          sbit SOND=P1^7;
+   4          unsigned char i,j;
+   5          unsigned char code  th[22]={
+   6            0,196,202,208,211,216,220,224,226,229,232,233,236,238,240,241,242,244,244,246,247,248};
+   7          unsigned char code  tl[22]={
+   8            0,12,27,21,7,4,16,12,4,12,9,20,2,8,6,2,22,5,26,1,4,3};
+   9          unsigned char code  s[46]={
+  10            5,8,9,10,0,11,10,9,8,8,0,5,8,9,10,10,10,11,10,9,8,8,
+  11            0,5,8,9,10,0,11,10,9,8,8,0,5,8,9,10,10,10,5,11,10,9,10,8};
+  12          unsigned char code  L[46]={
+  13            8,4,8,20,16,4,12,8,4,32,8,8,8,8,16,8,8,4,12,8,4,16,
+  14            8,8,4,8,20,16,4,12,8,4,36,8,8,8,8,8,8,12,4,4,12,8,4,36};
+  15          void main(){
+  16   1        unsigned int  t;
+  17   1        TMOD =0x10;
+  18   1        TH1 =0xc5;TL1=0x68;
+  19   1        IP =0x02;
+  20   1        IE =0x8a;
+  21   1        while(1){
+  22   2          while(K0==1);
+  23   2          while(K0==0);
+  24   2          for(i=0;i<46;i++){
+  25   3          if(s[i]==0) {SOND=0;
+  26   4            TR0=0;}
+  27   3          else  {TH0=th[s[i]];
+  28   4            TL0=tl[s[i]];
+  29   4          TR0=1;}
+  30   3          j=L[i];TR1=1;
+  31   3          while(TR1==1);
+  32   3          TR0=0;
+  33   3          SOND=0;
+  34   3          for(t=0;t<2000;t++);}}}
+  35          void t0()  interrupt 1{
+  36   1        SOND=~SOND;
+  37   1        TH0=th[s[i]];TL0=tl[s[i]];}
+  38          void t1()  interrupt 3{
+  39   1        TH1=0x3c;TL1=0xb0;
+  40   1        if((j--)==0) TR1=0;}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    179    ----
+   CONSTANT SIZE    =    136    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

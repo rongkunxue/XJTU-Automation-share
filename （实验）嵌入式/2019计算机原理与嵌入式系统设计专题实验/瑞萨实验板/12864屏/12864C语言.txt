@@ -1,0 +1,53 @@
+C语言程序代码：
+
+#include <reg52.h>
+#include <intrins.h>
+#include "clip.h"
+
+#define uchar unsigned char
+#define uint  unsigned int
+
+
+sbit RS  =P3^0;
+sbit RW  =P3^1;
+sbit E   =P3^2;
+sbit REST =P3^3;
+
+
+#define lcd_data P1
+
+//初始化
+
+//----------------------------------------------------------------
+
+void init_lcd (void)
+{
+   delay_ms(100);    // Wait for internal initialization
+   wr_cmd(0x30);
+   wr_cmd(0x34);
+   wr_cmd(0x0c);              // Turn on LCD and Cursor
+   LCD_CLS();
+   wr_cmd(0x06);           // Entry Mode Set            
+}
+
+//写指令
+
+//----------------------------------------------------------------
+
+void wr_cmd(uchar cmd)
+{
+ 
+  lcd_data = 0x00; // Set the port as Output 
+  RS = 0;  
+  RW = 0;
+  E = 1;
+  lcd_data = cmd;
+    delay_us(5);     
+
+   E = 0;
+   RW = 1;
+    lcd_data = 0xFF;
+    delay_us(5); 
+
+} 
+

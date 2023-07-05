@@ -1,0 +1,20 @@
+*** Creating Trace Output File 'sample.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"w90p710.o"'
+### List of Objects: adding '"main.o"'
+### ADS-LD Command completed:
+--device DARMP "w90p710.o" "main.o" --strict --scatter "sample.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\sample.map" -o "sample.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'sample.axf'
+### ADS-LD Command File: 'sample.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'sample.lnp', Handle=0x0000068C
+### Writing '.lnp' file
+### ADS-LD Command file 'sample.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

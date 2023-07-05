@@ -1,0 +1,4 @@
+--device DARMP "w90p710.o" "glcd.o" "lcd.o" "background.o" "arm_ani.o" "irq.o" "pic4.o" "pic1.o" "pic2.o" "pic3.o" "pic7.o" "pic5.o" "pic6.o" --strict --scatter "lcd.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\lcd.map" -o "lcd.axf"

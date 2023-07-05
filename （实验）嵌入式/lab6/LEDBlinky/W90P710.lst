@@ -1,0 +1,2314 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;/******************************************************
+                       ***********************/
+    2 00000000         ;/* W90P710.S: Startup file for Winbond W90P710 device s
+                       eries                 */
+    3 00000000         ;/******************************************************
+                       ***********************/
+    4 00000000         ;/* <<< Use Configuration Wizard in Context Menu >>>    
+                                             */ 
+    5 00000000         ;/******************************************************
+                       ***********************/
+    6 00000000         ;/* This file is part of the uVision/ARM development too
+                       ls.                   */
+    7 00000000         ;/* Copyright (c) 2005-2007 Keil Software. All rights re
+                       served.               */
+    8 00000000         ;/* This software may only be used under the terms of a 
+                       valid, current,       */
+    9 00000000         ;/* end user licence from KEIL for a compatible version 
+                       of KEIL software      */
+   10 00000000         ;/* development tools. Nothing else gives you the right 
+                       to use this software. */
+   11 00000000         ;/******************************************************
+                       ***********************/
+   12 00000000         
+   13 00000000         
+   14 00000000         ;/*
+   15 00000000         ; *  The W90P710.S code is executed after CPU Reset. Thi
+                       s file may be 
+   16 00000000         ; *  translated with the following SET symbols. In uVisi
+                       on these SET 
+   17 00000000         ; *  symbols are entered under Options - ASM - Define.
+   18 00000000         ; *
+   19 00000000         ; *  EBI_NOINIT: when set the startup code does not init
+                       ialize External Bus 
+   20 00000000         ; *              Interface (EBI)
+   21 00000000         ; */
+   22 00000000         
+   23 00000000         
+   24 00000000         ; Standard definitions of Mode bits and Interrupt (I & F
+                       ) flags in PSRs
+   25 00000000         
+   26 00000000 00000010 
+                       Mode_USR
+                               EQU              0x10
+   27 00000000 00000011 
+                       Mode_FIQ
+                               EQU              0x11
+   28 00000000 00000012 
+                       Mode_IRQ
+                               EQU              0x12
+   29 00000000 00000013 
+                       Mode_SVC
+                               EQU              0x13
+   30 00000000 00000017 
+                       Mode_ABT
+                               EQU              0x17
+   31 00000000 0000001B 
+                       Mode_UND
+                               EQU              0x1B
+   32 00000000 0000001F 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                       Mode_SYS
+                               EQU              0x1F
+   33 00000000         
+   34 00000000 00000080 
+                       I_Bit   EQU              0x80        ; when I bit is set
+                                                            , IRQ is disabled
+   35 00000000 00000040 
+                       F_Bit   EQU              0x40        ; when F bit is set
+                                                            , FIQ is disabled
+   36 00000000         
+   37 00000000         
+   38 00000000         ;----------------------- Memory Definitions ------------
+                       ------------------------
+   39 00000000         
+   40 00000000         ; Internal Memory Base Addresses
+   41 00000000 FFE00000 
+                       IRAM_BASE
+                               EQU              0xFFE00000
+   42 00000000         
+   43 00000000         ; External Memory Base Addresses
+   44 00000000 00000000 
+                       EROM_BASE
+                               EQU              0x00000000
+   45 00000000         
+   46 00000000         
+   47 00000000         ;----------------------- Stack and Heap Definitions ----
+                       ------------------------
+   48 00000000         
+   49 00000000         ;// <h> Stack Configuration (Stack Sizes in Bytes)
+   50 00000000         ;//   <o0> Undefined Mode      <0x0-0xFFFFFFFF:8>
+   51 00000000         ;//   <o1> Supervisor Mode     <0x0-0xFFFFFFFF:8>
+   52 00000000         ;//   <o2> Abort Mode          <0x0-0xFFFFFFFF:8>
+   53 00000000         ;//   <o3> Fast Interrupt Mode <0x0-0xFFFFFFFF:8>
+   54 00000000         ;//   <o4> Interrupt Mode      <0x0-0xFFFFFFFF:8>
+   55 00000000         ;//   <o5> User/System Mode    <0x0-0xFFFFFFFF:8>
+   56 00000000         ;// </h>
+   57 00000000         
+   58 00000000 00000000 
+                       UND_Stack_Size
+                               EQU              0x00000000
+   59 00000000 00000008 
+                       SVC_Stack_Size
+                               EQU              0x00000008
+   60 00000000 00000000 
+                       ABT_Stack_Size
+                               EQU              0x00000000
+   61 00000000 00000000 
+                       FIQ_Stack_Size
+                               EQU              0x00000000
+   62 00000000 00000080 
+                       IRQ_Stack_Size
+                               EQU              0x00000080
+   63 00000000 00000400 
+                       USR_Stack_Size
+                               EQU              0x00000400
+   64 00000000         
+   66 00000000 00000088 
+                       ISR_Stack_Size
+                               EQU              (UND_Stack_Size + SVC_Stack_Siz
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+e + ABT_Stack_Size +                           FIQ_Stack_Size + IRQ_Stack_Size
+)
+   67 00000000         
+   68 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
+=3
+   69 00000000         
+   70 00000000         Stack_Mem
+                               SPACE            USR_Stack_Size
+   71 00000400         __initial_sp
+                               SPACE            ISR_Stack_Size
+   72 00000488         Stack_Top
+   73 00000488         
+   74 00000488         
+   75 00000488         ;// <h> Heap Configuration
+   76 00000488         ;//   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF>
+   77 00000488         ;// </h>
+   78 00000488         
+   79 00000488 00000000 
+                       Heap_Size
+                               EQU              0x00000000
+   80 00000488         
+   81 00000488                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+3
+   82 00000000         __heap_base
+   83 00000000         Heap_Mem
+                               SPACE            Heap_Size
+   84 00000000         __heap_limit
+   85 00000000         
+   86 00000000         
+   87 00000000         ;----------------------- System Manager Control (SMC) De
+                       finitions --------------
+   88 00000000         
+   89 00000000         ; System Manager Control (SMC) User Interface
+   90 00000000 FFF00000 
+                       SMC_BASE
+                               EQU              0xFFF00000  ; SMC              
+                                                                   Base Address
+                                                            
+   91 00000000 00000000 
+                       PDID_OFS
+                               EQU              0x00        ; Product Identifie
+                                                            r Reg  Address Offs
+                                                            et
+   92 00000000 00000004 
+                       ARBCON_OFS
+                               EQU              0x04        ; Arbitration Contr
+                                                            ol Reg Address Offs
+                                                            et
+   93 00000000 00000008 
+                       PLLCON0_OFS
+                               EQU              0x08        ; PLL Control Regis
+                                                            ter 0  Address Offs
+                                                            et
+   94 00000000 0000000C 
+                       CLKSEL_OFS
+                               EQU              0x0C        ; Clock Select Regi
+                                                            ster   Address Offs
+                                                            et
+   95 00000000 00000010 
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+                       PLLCON1_OFS
+                               EQU              0x10        ; PLL Control Regis
+                                                            ter 1  Address Offs
+                                                            et
+   96 00000000 00000014 
+                       I2SCKCON_OFS
+                               EQU              0x14        ; Audio IIS Clock C
+                                                            trl R  Address Offs
+                                                            et
+   97 00000000 00000020 
+                       IRQWAKECON_OFS
+                               EQU              0x20        ; IRQ Wakeup Contro
+                                                            l Reg  Address Offs
+                                                            et
+   98 00000000 00000024 
+                       IRQWAKEFLAG_OFS
+                               EQU              0x24        ; IRQ Wakeup Flag R
+                                                            eg     Address Offs
+                                                            et
+   99 00000000 00000028 
+                       PMCON_OFS
+                               EQU              0x28        ; Power Management 
+                                                            Ctrl R Address Offs
+                                                            et
+  100 00000000 00000030 
+                       USBTXRCON_OFS
+                               EQU              0x30        ; USB Transciever C
+                                                            ontrol Address Offs
+                                                            et
+  101 00000000         
+  102 00000000         ; Constants
+  103 00000000 00000010 
+                       ECLKS_MSK
+                               EQU              (0x1 << 4)  ; PLLCON ECLKS bit 
+                                                            mask
+  104 00000000 0000000E 
+                       CLKS_MSK
+                               EQU              (0x7 << 1)  ; PLLCON CLKS field
+                                                             mask
+  105 00000000         
+  106 00000000         ;// <e> Clock Configuration
+  107 00000000 00000000 
+                       CLOCK_SETUP
+                               EQU              0
+  108 00000000         
+  109 00000000         ;//   <h> PLL Control Register 0 (PLLCON0)
+  110 00000000         ;//     <i> Fout = (Fin * NF) / (NR * NO)
+  111 00000000         ;//     <i> Fout - Output clock of Output Divider
+  112 00000000         ;//     <i> Fin  - External clock into the Input Divider
+                       
+  113 00000000         ;//     <i> NF   - Feedback divider value (NF = FBDV + 2
+                       )
+  114 00000000         ;//     <i> NO   - Output divider value (NO = OTDV)
+  115 00000000         ;//     <i> NR   - Input divider value (NR = INDV + 2)
+  116 00000000         ;//     <o0.16>     PWDEN: Power down mode enable
+  117 00000000         ;//     <o0.7..15>  NF (= FBDV + 2): PLL VCO output cloc
+                       k feedback divider 
+  118 00000000         ;//                     <2-513><#-2>
+  119 00000000         ;//     <o0.5..6>   NO (= OTDV): PLL output clock divide
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+                       r
+  120 00000000         ;//                     <0=> Divided by 1
+  121 00000000         ;//                     <1=> Divided by 2
+  122 00000000         ;//                     <2=> Divided by 2
+  123 00000000         ;//                     <3=> Divided by 4
+  124 00000000         ;//     <o0.0..4>   NR (= INDIV + 2): PLL input clock di
+                       vider <2-33><#-2>
+  125 00000000         ;//   </h>
+  126 00000000 00002F01 
+                       PLLCON0_Val
+                               EQU              0x00002F01
+  127 00000000         
+  128 00000000         ;//   <h> Clock Select Register (CLKSEL)
+  129 00000000         ;//     <o0.28>     PS2: PS2 controller clock enable
+  130 00000000         ;//     <o0.27>     KPI: Keypad controller clock enable
+  131 00000000         ;//     <o0.26>     SCH1: Smart Card Host controller 1 c
+                       lock enable
+  132 00000000         ;//     <o0.25>     SCH0: Smart Card Host controller 0 c
+                       lock enable
+  133 00000000         ;//     <o0.24>     USI: USI controller clock enable
+  134 00000000         ;//     <o0.23>     UART3: UART3 controller clock enable
+                       
+  135 00000000         ;//     <o0.22>     UART2: UART2 controller clock enable
+                       
+  136 00000000         ;//     <o0.21>     UART1: UART1 controller clock enable
+                       
+  137 00000000         ;//     <o0.20>     I2C1: I2C1 controller clock enable
+  138 00000000         ;//     <o0.19>     I2C0: I2C0 controller clock enable
+  139 00000000         ;//     <o0.18>     RTC: RTC unit clock enable
+  140 00000000         ;//     <o0.17>     PWM: PWM controller clock enable
+  141 00000000         ;//     <o0.16>     AC97: Audio controller clock enable
+  142 00000000         ;//     <o0.15>     USBCKS: USB host/device 48MHz clock 
+                       source select
+  143 00000000         ;//       <i> If USB clock 48MHz input from external GPI
+                       O0 pin is selected 
+  144 00000000         ;//       <i> pin direction must be set to input.
+  145 00000000         ;//                     <0=> USB clock 48MHz input from 
+                       internal PLL
+  146 00000000         ;//                     <1=> USB clock 48MHz input from 
+                       external GPIO0 pin
+  147 00000000         ;//     <o0.14>     USBD: USB device clock enable
+  148 00000000         ;//     <o0.13>     GDMA: GDMA controller clock enable
+  149 00000000         ;//     <o0.12>     SD: SD host controller clock enable
+  150 00000000         ;//     <o0.11>     LCD: LCD controller clock enable
+  151 00000000         ;//     <o0.10>     EMC: EMC controller clock enable
+  152 00000000         ;//     <o0.8>      WDT: WDT clock enable
+  153 00000000         ;//     <o0.7>      USBH: USB host clock enable
+  154 00000000         ;//     <o0.6>      TIMER: Timer clock enable
+  155 00000000         ;//     <o0.5>      UART0: UART0 controller clock enable
+                       
+  156 00000000         ;//     <o0.4>      ECLKS: External clock select
+  157 00000000         ;//                     <0=> External clock from EXTAL p
+                       in used as system clock
+  158 00000000         ;//                     <1=> PLL output clock is used as
+                        system clock
+  159 00000000         ;//     <o0.1..3>   CLKS: PLL output clock select
+  160 00000000         ;//       <i> These values are based on PLL output (FOUT
+                       ) of 480 MHz.
+  161 00000000         ;//                     <0=> 58.594 kHz
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  162 00000000         ;//                     <1=> 24 MHz
+  163 00000000         ;//                     <2=> 48 MHz
+  164 00000000         ;//                     <3=> 60 MHz
+  165 00000000         ;//                     <4=> 80 MHz
+  166 00000000         ;//   </h>
+  167 00000000 1FFF7FF8 
+                       CLKSEL_Val
+                               EQU              0x1FFF7FF8
+  168 00000000         
+  169 00000000         ;//   <h> PLL Control Register 1 (PLLCON1)
+  170 00000000         ;//     <i> Fout = (Fin * NF) / (NR * NO)
+  171 00000000         ;//     <i> Fout - Output clock of Output Divider
+  172 00000000         ;//     <i> Fin  - External clock into the Input Divider
+                       
+  173 00000000         ;//     <i> NF   - Feedback divider value (NF = FBDV1 + 
+                       2)
+  174 00000000         ;//     <i> NO   - Output divider value (NO = OTDV1)
+  175 00000000         ;//     <i> NR   - Input divider value (NR = INDV1 + 2)
+  176 00000000         ;//     <o0.16>     PWDEN: PLL1 Power down mode enable
+  177 00000000         ;//     <o0.7..15>  NF (= FBDV1 + 2): PLL1 VCO output cl
+                       ock feedback divider 
+  178 00000000         ;//                     <2-513><#-2>
+  179 00000000         ;//     <o0.5..6>   NO (= OTDV1): PLL1 output clock divi
+                       der
+  180 00000000         ;//                     <0=> Divided by 1
+  181 00000000         ;//                     <1=> Divided by 2
+  182 00000000         ;//                     <2=> Divided by 2
+  183 00000000         ;//                     <3=> Divided by 4
+  184 00000000         ;//     <o0.0..4>   NR (= INDIV1 + 2): PLL1 input clock 
+                       divider <2-33><#-2>
+  185 00000000         ;//   </h>
+  186 00000000 00010000 
+                       PLLCON1_Val
+                               EQU              0x00010000
+  187 00000000         
+  188 00000000         ;// </e> End of Clock Configuration
+  189 00000000         
+  190 00000000         
+  191 00000000         ;----------------------- External Bus Interface (EBI) De
+                       finitions --------------
+  192 00000000         
+  193 00000000         ; External Bus Interface (EBI) User Interface
+  194 00000000 FFF01000 
+                       EBI_BASE
+                               EQU              0xFFF01000  ; EBI Base Address
+  195 00000000 00000000 
+                       EBICON_OFS
+                               EQU              0x00        ; EBI Controller Re
+                                                            gister Address Offs
+                                                            et
+  196 00000000 00000004 
+                       ROMCON_OFS
+                               EQU              0x04        ; ROM/Flash Control
+                                                            ler R  Address Offs
+                                                            et
+  197 00000000 00000008 
+                       SDCCONF0_OFS
+                               EQU              0x08        ; SDRAM Bank 0 Conf
+                                                            ig Reg Address Offs
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+                                                            et
+  198 00000000 0000000C 
+                       SDCCONF1_OFS
+                               EQU              0x0C        ; SDRAM Bank 1 Conf
+                                                            ig Reg Address Offs
+                                                            et
+  199 00000000 00000010 
+                       SDTIME0_OFS
+                               EQU              0x10        ; SDRAM Bank 0 Timi
+                                                            ng Ctl Address Offs
+                                                            et
+  200 00000000 00000014 
+                       SDTIME1_OFS
+                               EQU              0x14        ; SDRAM Bank 1 Timi
+                                                            ng Ctl Address Offs
+                                                            et
+  201 00000000 00000018 
+                       EXT0CON_OFS
+                               EQU              0x18        ; External I/O 0 Co
+                                                            ntrol  Address Offs
+                                                            et
+  202 00000000 0000001C 
+                       EXT1CON_OFS
+                               EQU              0x1C        ; External I/O 1 Co
+                                                            ntrol  Address Offs
+                                                            et
+  203 00000000 00000020 
+                       EXT2CON_OFS
+                               EQU              0x20        ; External I/O 2 Co
+                                                            ntrol  Address Offs
+                                                            et
+  204 00000000 00000024 
+                       EXT3CON_OFS
+                               EQU              0x24        ; External I/O 3 Co
+                                                            ntrol  Address Offs
+                                                            et
+  205 00000000 00000F00 
+                       CKSKEW_OFS
+                               EQU              0xF00       ; Clock Skew Contro
+                                                            l Reg  Address Offs
+                                                            et
+  206 00000000         
+  207 00000000         ; Constants
+  208 00000000 00008000 
+                       MRSET_MSK
+                               EQU              (0x1 << 15) ; SDCONF0 MRSET bit
+                                                             mask
+  209 00000000 00000100 
+                       SWPON_MSK
+                               EQU              (0x1 <<  8) ; CKSKEW SWPON bit 
+                                                            mask
+  210 00000000         
+  211 00000000         ;// <e> External Bus Interface Configuration (EBI)
+  212 00000000 00000001 
+                       EBI_SETUP
+                               EQU              1
+  213 00000000         
+  214 00000000         ;//   <h> EBI Control Register (EBICON)
+  215 00000000         ;//     <o0.27>     EXBE3: External I/O bank 3 byte enab
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+                       le
+  216 00000000         ;//                     <0=> nWBE3 pin is by wr strobe s
+                       ignal
+  217 00000000         ;//                     <1=> nWBE3 pin is by en signal, 
+                       nWE is wr strobe signal
+  218 00000000         ;//     <o0.26>     EXBE2: External I/O bank 2 byte enab
+                       le
+  219 00000000         ;//                     <0=> nWBE2 pin is by wr strobe s
+                       ignal
+  220 00000000         ;//                     <1=> nWBE2 pin is by en signal, 
+                       nWE is wr strobe signal
+  221 00000000         ;//     <o0.25>     EXBE1: External I/O bank 1 byte enab
+                       le
+  222 00000000         ;//                     <0=> nWBE1 pin is by wr strobe s
+                       ignal
+  223 00000000         ;//                     <1=> nWBE1 pin is by en signal, 
+                       nWE is wr strobe signal
+  224 00000000         ;//     <o0.24>     EXBE0: External I/O bank 0 byte enab
+                       le
+  225 00000000         ;//                     <0=> nWBE0 pin is by wr strobe s
+                       ignal
+  226 00000000         ;//                     <1=> nWBE0 pin is by en signal, 
+                       nWE is wr strobe signal
+  227 00000000         ;//     <o0.18>     REFEN: SDRAM refresh cycle for SDRAM
+                        bank 0 and bank 1 enable
+  228 00000000         ;//     <o0.17>     REFMOD: Refresh mode of SDRAM for SD
+                       RAM bank
+  229 00000000         ;//                     <0=> Auto refresh mode
+  230 00000000         ;//                     <1=> Self refresh mode
+  231 00000000         ;//     <o0.16>     CLKEN: SDRAM clock enable
+  232 00000000         ;//     <o0.3..15>  REFRAT: Refresh count value for SDRA
+                       M <0-8191>
+  233 00000000         ;//       <i> Refresh period = REFRAT / fMCLK
+  234 00000000         ;//     <o0.1..2>   WAITVT: Valid time of nWAIT signal <
+                       1-4><#-1>
+  235 00000000         ;//       <i> nWAIT signal is recognized at the "nth" MC
+                       LK positive edge after 
+  236 00000000         ;//       <i> the nOE or nWBE active cycle.
+  237 00000000         ;//   </h>
+  238 00000000 080530C0 
+                       EBICON_Val
+                               EQU              0x080530C0
+  239 00000000         
+  240 00000000         ;//   <h> ROM/Flash Control Register (ROMCON)
+  241 00000000         ;//     <o0.19..31> BASADDR: Base address pointer of ROM
+                       /Flash bank 
+  242 00000000         ;//                     <0x0-0x7FFC0000:0x40000><#/0x400
+                       00>
+  243 00000000         ;//     <o0.16..18> SIZE: The size of ROM/Flash memory
+  244 00000000         ;//                     <0=> 256 kB   <1=> 512 kB   <2=>
+                        1 MB     <3=> 2 MB
+  245 00000000         ;//                     <4=> 4 MB     <5=> 8 MB     <6=>
+                        16 MB
+  246 00000000         ;//     <o0.8..11>  tPA: Page mode access cycle time
+  247 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  248 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  249 00000000         ;//                     <8=> 10 MCLK  <9=> 12 MCLK  <10=
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+                       > 14 MCLK <11=> 16 MCLK
+  250 00000000         ;//                     <12=> 18 MCLK <13=> 20 MCLK <14=
+                       > 22 MCLK <15=> 24 MCLK
+  251 00000000         ;//     <o0.4..7>   tACC: Access cycle time
+  252 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  253 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  254 00000000         ;//                     <8=> 10 MCLK  <9=> 12 MCLK  <10=
+                       > 14 MCLK <11=> 16 MCLK
+  255 00000000         ;//                     <12=> 18 MCLK <13=> 20 MCLK <14=
+                       > 22 MCLK <15=> 24 MCLK
+  256 00000000         ;//     <o0.2..3>   BTSIZE: Boot Rom/Flash data bus widt
+                       h
+  257 00000000         ;//                     <0=> 8-bit
+  258 00000000         ;//                     <1=> 16-bit
+  259 00000000         ;//                     <2=> 32-bit
+  260 00000000         ;//     <o0.0..1>   PGMODE: Page mode configuration
+  261 00000000         ;//                     <0=> Normal ROM
+  262 00000000         ;//                     <1=> 4 word page
+  263 00000000         ;//                     <2=> 8 word page
+  264 00000000         ;//                     <3=> 16 word page
+  265 00000000         ;//   </h>
+  266 00000000 00040080 
+                       ROMCON_Val
+                               EQU              0x00040080
+  267 00000000         
+  268 00000000         ;//   <h> SDRAM Bank 0 Configuration Register (SDCONF0)
+  269 00000000         ;//     <o0.19..31> BASADDR: Base address pointer of SDR
+                       AM bank 0 
+  270 00000000         ;//                     <0x0-0x7FFC0000:0x40000><#/0x400
+                       00>
+  271 00000000         ;//     <o0.13>     AUTOPR: SDRAM bank 0 autoprecharge e
+                       nable
+  272 00000000         ;//     <o0.11..12> LATENCY: The CAS latency of SDRAM ba
+                       nk 0
+  273 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK
+  274 00000000         ;//     <o0.7>      COMPBK: Number of component bank in 
+                       SDRAM bank 0
+  275 00000000         ;//                     <0=> 2 banks
+  276 00000000         ;//                     <1=> 4 banks
+  277 00000000         ;//     <o0.5..6>   DBWD: Data bus width for SDRAM bank 
+                       0
+  278 00000000         ;//                     <0=> Bank disable
+  279 00000000         ;//                     <1=> 8-bit
+  280 00000000         ;//                     <2=> 16-bit
+  281 00000000         ;//                     <3=> 32-bit
+  282 00000000         ;//     <o0.3..4>   COLUMN: Number of column address bit
+                       s in SDRAM bank 0
+  283 00000000         ;//                     <0=> 8
+  284 00000000         ;//                     <1=> 9
+  285 00000000         ;//                     <2=> 10
+  286 00000000         ;//     <o0.0..2>   SIZE: Size of SDRAM bank 0
+  287 00000000         ;//                     <0=> Bank disable <1=> 2 MB     
+                       <2=> 4 MB     <3=> 8 MB
+  288 00000000         ;//                     <4=> 16 MB        <5=> 32 MB    
+                       <6=> 64 MB
+  289 00000000         ;//   </h>
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+  290 00000000 FE0090E4 
+                       SDCONF0_Val
+                               EQU              0xFE0090E4
+  291 00000000         
+  292 00000000         ;//   <h> SDRAM Bank 0 Timing Control Register (SDTIME0)
+                       
+  293 00000000         ;//     <o0.8..10>  tRCD: RAS to CAS delay for SDRAM ban
+                       k 0
+  294 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  295 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  296 00000000         ;//     <o0.6..7>   tRDL: Last data in to precharge comm
+                       and for SDRAM bank 0
+  297 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  298 00000000         ;//     <o0.3..5>   tRP: Row precharge time for SDRAM ba
+                       nk 0
+  299 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  300 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  301 00000000         ;//     <o0.0..2>   tRAS: Row active time for SDRAM bank
+                        0
+  302 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  303 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  304 00000000         ;//   </h>
+  305 00000000 0000014B 
+                       SDTIME0_Val
+                               EQU              0x0000014B
+  306 00000000         
+  307 00000000         ;//   <h> SDRAM Bank 1 Configuration Register (SDCONF1)
+  308 00000000         ;//     <o0.19..31> BASADDR: Base address pointer of SDR
+                       AM bank 1 
+  309 00000000         ;//                     <0x0-0x7FFC0000:0x40000><#/0x400
+                       00>
+  310 00000000         ;//     <o0.13>     AUTOPR: SDRAM bank 1 autoprecharge e
+                       nable
+  311 00000000         ;//     <o0.11..12> LATENCY: The CAS latency of SDRAM ba
+                       nk 1
+  312 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK
+  313 00000000         ;//     <o0.7>      COMPBK: Number of component bank in 
+                       SDRAM bank 1
+  314 00000000         ;//                     <0=> 2 banks
+  315 00000000         ;//                     <1=> 4 banks
+  316 00000000         ;//     <o0.5..6>   DBWD: Data bus width for SDRAM bank 
+                       1
+  317 00000000         ;//                     <0=> Bank disable
+  318 00000000         ;//                     <1=> 8-bit
+  319 00000000         ;//                     <2=> 16-bit
+  320 00000000         ;//                     <3=> 32-bit
+  321 00000000         ;//     <o0.3..4>   COLUMN: Number of column address bit
+                       s in SDRAM bank 1
+  322 00000000         ;//                     <0=> 8
+  323 00000000         ;//                     <1=> 9
+  324 00000000         ;//                     <2=> 10
+
+
+
+ARM Macro Assembler    Page 11 
+
+
+  325 00000000         ;//     <o0.0..2>   SIZE: Size of SDRAM bank 1
+  326 00000000         ;//                     <0=> Bank disable <1=> 2 MB     
+                       <2=> 4 MB     <3=> 8 MB
+  327 00000000         ;//                     <4=> 16 MB        <5=> 32 MB    
+                       <6=> 64 MB
+  328 00000000         ;//   </h>
+  329 00000000 00000000 
+                       SDCONF1_Val
+                               EQU              0x00000000
+  330 00000000         
+  331 00000000         ;//   <h> SDRAM Bank 1 Timing Control Register (SDTIME1)
+                       
+  332 00000000         ;//     <o0.8..10>  tRCD: RAS to CAS delay for SDRAM ban
+                       k 1
+  333 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  334 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  335 00000000         ;//     <o0.6..7>   tRDL: Last data in to precharge comm
+                       and for SDRAM bank 1
+  336 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  337 00000000         ;//     <o0.3..5>   tRP: Row precharge time for SDRAM ba
+                       nk 1
+  338 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  339 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  340 00000000         ;//     <o0.0..2>   tRAS: Row active time for SDRAM bank
+                        1
+  341 00000000         ;//                     <0=> 1 MCLK   <1=> 2 MCLK   <2=>
+                        3 MCLK   <3=> 4 MCLK
+  342 00000000         ;//                     <4=> 5 MCLK   <5=> 6 MCLK   <6=>
+                        7 MCLK   <7=> 8 MCLK
+  343 00000000         ;//   </h>
+  344 00000000 00000000 
+                       SDTIME1_Val
+                               EQU              0x00000000
+  345 00000000         
+  346 00000000         ;//   <h> External I/O Bank 0 Control Register (EXT0CON)
+                       
+  347 00000000         ;//     <o0.19..31> BASADDR: Base address pointer of ext
+                       ernl I/O bank 0 
+  348 00000000         ;//                     <0x0-0x7FFC0000:0x40000><#/0x400
+                       00>
+  349 00000000         ;//     <o0.16..18> SIZE: Size of external I/O bank 0
+  350 00000000         ;//                     <0=> 256 kB   <1=> 512 kB   <2=>
+                        1 MB     <3=> 2 MB
+  351 00000000         ;//                     <4=> 4 MB     <5=> 8 MB     <6=>
+                        16 MB
+  352 00000000         ;//     <o0.15>     ADRS: Address bus alignment for exte
+                       rnal I/O bank 0
+  353 00000000         ;//     <o0.11..14> tACC: Access cycles of external I/O 
+                       bank 0
+  354 00000000         ;//                     <0=> Reserved <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  355 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  356 00000000         ;//                     <8=> 9 MCLK   <9=> 11 MCLK  <10=
+
+
+
+ARM Macro Assembler    Page 12 
+
+
+                       > 13 MCLK <11=> 15 MCLK
+  357 00000000         ;//                     <12=> 17 MCLK <13=> 19 MCLK <14=
+                       > 21 MCLK <15=> 23 MCLK
+  358 00000000         ;//     <o0.8..10>  tCOH: Chip selection hold time of ex
+                       ternal I/O bank 0
+  359 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  360 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  361 00000000         ;//     <o0.5..7>   tACS: Address setup before nECS of e
+                       xternal I/O bank 0
+  362 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  363 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  364 00000000         ;//     <o0.2..4>   tCOS: Chip select setup time of exte
+                       rnal I/O bank 0
+  365 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  366 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  367 00000000         ;//     <o0.0..1>   DBWD: Programmable data bus width fo
+                       r external I/O bank 0
+  368 00000000         ;//                     <0=> Disable bus
+  369 00000000         ;//                     <1=> 8-bit
+  370 00000000         ;//                     <2=> 16-bit
+  371 00000000         ;//                     <3=> 32-bit
+  372 00000000         ;//   </h>
+  373 00000000 F0078001 
+                       EXT0CON_Val
+                               EQU              0xF0078001
+  374 00000000         
+  375 00000000         ;//   <h> External I/O Bank 1 Control Register (EXT1CON)
+                       
+  376 00000000         ;//     <o0.19..31> BASADDR: Base address pointer of ext
+                       ernl I/O bank 1 
+  377 00000000         ;//                     <0x0-0x7FFC0000:0x40000><#/0x400
+                       00>
+  378 00000000         ;//     <o0.16..18> SIZE: Size of external I/O bank 1
+  379 00000000         ;//                     <0=> 256 kB   <1=> 512 kB   <2=>
+                        1 MB     <3=> 2 MB
+  380 00000000         ;//                     <4=> 4 MB     <5=> 8 MB     <6=>
+                        16 MB
+  381 00000000         ;//     <o0.15>     ADRS: Address bus alignment for exte
+                       rnal I/O bank 1
+  382 00000000         ;//     <o0.11..14> tACC: Access cycles of external I/O 
+                       bank 1
+  383 00000000         ;//                     <0=> Reserved <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  384 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  385 00000000         ;//                     <8=> 9 MCLK   <9=> 11 MCLK  <10=
+                       > 13 MCLK <11=> 15 MCLK
+  386 00000000         ;//                     <12=> 17 MCLK <13=> 19 MCLK <14=
+                       > 21 MCLK <15=> 23 MCLK
+  387 00000000         ;//     <o0.8..10>  tCOH: Chip selection hold time of ex
+                       ternal I/O bank 1
+  388 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+
+
+
+ARM Macro Assembler    Page 13 
+
+
+  389 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  390 00000000         ;//     <o0.5..7>   tACS: Address setup before nECS of e
+                       xternal I/O bank 1
+  391 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  392 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  393 00000000         ;//     <o0.2..4>   tCOS: Chip select setup time of exte
+                       rnal I/O bank 1
+  394 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  395 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  396 00000000         ;//     <o0.0..1>   DBWD: Programmable data bus width fo
+                       r external I/O bank 1
+  397 00000000         ;//                     <0=> Disable bus
+  398 00000000         ;//                     <1=> 8-bit
+  399 00000000         ;//                     <2=> 16-bit
+  400 00000000         ;//                     <3=> 32-bit
+  401 00000000         ;//   </h>
+  402 00000000 00000000 
+                       EXT1CON_Val
+                               EQU              0x00000000
+  403 00000000         
+  404 00000000         ;//   <h> External I/O Bank 2 Control Register (EXT2CON)
+                       
+  405 00000000         ;//     <o0.19..31> BASADDR: Base address pointer of ext
+                       ernl I/O bank 2 
+  406 00000000         ;//                     <0x0-0x7FFC0000:0x40000><#/0x400
+                       00>
+  407 00000000         ;//     <o0.16..18> SIZE: Size of external I/O bank 2
+  408 00000000         ;//                     <0=> 256 kB   <1=> 512 kB   <2=>
+                        1 MB     <3=> 2 MB
+  409 00000000         ;//                     <4=> 4 MB     <5=> 8 MB     <6=>
+                        16 MB
+  410 00000000         ;//     <o0.15>     ADRS: Address bus alignment for exte
+                       rnal I/O bank 2
+  411 00000000         ;//     <o0.11..14> tACC: Access cycles of external I/O 
+                       bank 2
+  412 00000000         ;//                     <0=> Reserved <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  413 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  414 00000000         ;//                     <8=> 9 MCLK   <9=> 11 MCLK  <10=
+                       > 13 MCLK <11=> 15 MCLK
+  415 00000000         ;//                     <12=> 17 MCLK <13=> 19 MCLK <14=
+                       > 21 MCLK <15=> 23 MCLK
+  416 00000000         ;//     <o0.8..10>  tCOH: Chip selection hold time of ex
+                       ternal I/O bank 2
+  417 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  418 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  419 00000000         ;//     <o0.5..7>   tACS: Address setup before nECS of e
+                       xternal I/O bank 2
+  420 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  421 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+
+
+
+ARM Macro Assembler    Page 14 
+
+
+                        6 MCLK   <7=> 7 MCLK
+  422 00000000         ;//     <o0.2..4>   tCOS: Chip select setup time of exte
+                       rnal I/O bank 2
+  423 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  424 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  425 00000000         ;//     <o0.0..1>   DBWD: Programmable data bus width fo
+                       r external I/O bank 2
+  426 00000000         ;//                     <0=> Disable bus
+  427 00000000         ;//                     <1=> 8-bit
+  428 00000000         ;//                     <2=> 16-bit
+  429 00000000         ;//                     <3=> 32-bit
+  430 00000000         ;//   </h>
+  431 00000000 00000000 
+                       EXT2CON_Val
+                               EQU              0x00000000
+  432 00000000         
+  433 00000000         ;//   <h> External I/O Bank 3 Control Register (EXT3CON)
+                       
+  434 00000000         ;//     <o0.19..31> BASADDR: Base address pointer of ext
+                       ernl I/O bank 3 
+  435 00000000         ;//                     <0x0-0x7FFC0000:0x40000><#/0x400
+                       00>
+  436 00000000         ;//     <o0.16..18> SIZE: Size of external I/O bank 3
+  437 00000000         ;//                     <0=> 256 kB   <1=> 512 kB   <2=>
+                        1 MB     <3=> 2 MB
+  438 00000000         ;//                     <4=> 4 MB     <5=> 8 MB     <6=>
+                        16 MB
+  439 00000000         ;//     <o0.15>     ADRS: Address bus alignment for exte
+                       rnal I/O bank 3
+  440 00000000         ;//     <o0.11..14> tACC: Access cycles of external I/O 
+                       bank 3
+  441 00000000         ;//                     <0=> Reserved <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  442 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  443 00000000         ;//                     <8=> 9 MCLK   <9=> 11 MCLK  <10=
+                       > 13 MCLK <11=> 15 MCLK
+  444 00000000         ;//                     <12=> 17 MCLK <13=> 19 MCLK <14=
+                       > 21 MCLK <15=> 23 MCLK
+  445 00000000         ;//     <o0.8..10>  tCOH: Chip selection hold time of ex
+                       ternal I/O bank 3
+  446 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  447 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  448 00000000         ;//     <o0.5..7>   tACS: Address setup before nECS of e
+                       xternal I/O bank 3
+  449 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  450 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+  451 00000000         ;//     <o0.2..4>   tCOS: Chip select setup time of exte
+                       rnal I/O bank 3
+  452 00000000         ;//                     <0=> 0 MCLK   <1=> 1 MCLK   <2=>
+                        2 MCLK   <3=> 3 MCLK
+  453 00000000         ;//                     <4=> 4 MCLK   <5=> 5 MCLK   <6=>
+                        6 MCLK   <7=> 7 MCLK
+
+
+
+ARM Macro Assembler    Page 15 
+
+
+  454 00000000         ;//     <o0.0..1>   DBWD: Programmable data bus width fo
+                       r external I/O bank 3
+  455 00000000         ;//                     <0=> Disable bus
+  456 00000000         ;//                     <1=> 8-bit
+  457 00000000         ;//                     <2=> 16-bit
+  458 00000000         ;//                     <3=> 32-bit
+  459 00000000         ;//   </h>
+  460 00000000 00000000 
+                       EXT3CON_Val
+                               EQU              0x00000000
+  461 00000000         
+  462 00000000         ;//   <h> Clock Skew Control Register (CKSKEW)
+  463 00000000         ;//     <o0.16..31> Latch DLH_CLK clock tree by HCLK pos
+                       itive edge <0x0-0xFFFF>
+  464 00000000         ;//       <i> SDRAM MCLK is generated by inserting a del
+                       ay (XOR2) chain on the 
+  465 00000000         ;//       <i> HCLK positive or negative edge to adjust f
+                       or MCLK skew. So 
+  466 00000000         ;//       <i> software can read these bits and explore t
+                       he MCLK and HCLK 
+  467 00000000         ;//       <i> relationship, [31:24] is used for the posi
+                       tive edge and [23:16]
+  468 00000000         ;//       <i> is used for the negative edge.
+  469 00000000         ;//     <o0.4..7>   DLH_CLK_SKEW: Data latch clock skew 
+                       adjustment
+  470 00000000         ;//       <i> P-x means Data lached Clock shift "x" gate
+                       s delays by refering to 
+  471 00000000         ;//       <i> the MCLKO positive edge, N-x means Data la
+                       tched Clock shift "x" 
+  472 00000000         ;//       <i> gates delays by referring to the MCLKO neg
+                       ative edge.
+  473 00000000         ;//                     <0=> P-0      <1=> P-1      <2=>
+                        P-2      <3=> P-3
+  474 00000000         ;//                     <4=> P-4      <5=> P-5      <6=>
+                        P-6      <7=> P-7
+  475 00000000         ;//                     <8=> N-0      <9=> N-1      <10=
+                       > N-2     <11=> N-3
+  476 00000000         ;//                     <12=> N-4     <13=> N-5     <14=
+                       > N-6     <15=> N-7
+  477 00000000         ;//     <o0.0..3>   MCLK_O_D: MCLK output delay adjustme
+                       nt
+  478 00000000         ;//       <i> P-x means MCLKO shift "x" gates delays by 
+                       refering to HCLK 
+  479 00000000         ;//       <i> positive edge, N-x means MCLKO shift "x" g
+                       ates delays by 
+  480 00000000         ;//       <i> referring to the HCLK negative edge. MCLKO
+                        is the output
+  481 00000000         ;//       <i> pin of MCLKO which is an internal signal o
+                       n chip.
+  482 00000000         ;//   </h>
+  483 00000000 00FF0039 
+                       CKSKEW_Val
+                               EQU              0x00FF0039
+  484 00000000         
+  485 00000000         ;// </e> End of External Bus Interface Configuration (EB
+                       I)
+  486 00000000         
+  487 00000000         
+  488 00000000         ;----------------------- Cache Controller Definitions --
+
+
+
+ARM Macro Assembler    Page 16 
+
+
+                       ------------------------
+  489 00000000         
+  490 00000000         ; Cache Controller User Interface
+  491 00000000 FFF02000 
+                       CAH_BASE
+                               EQU              0xFFF02000  ; Cache Controller 
+                                                            Base Address
+  492 00000000 00000000 
+                       CAHCNF_OFS
+                               EQU              0x00        ; Cache Configurati
+                                                            on Reg Address Offs
+                                                            et
+  493 00000000 00000004 
+                       CAHCON_OFS
+                               EQU              0x04        ; Cache Control Reg
+                                                            ister  Address Offs
+                                                            et
+  494 00000000 00000008 
+                       CAHADR_OFS
+                               EQU              0x08        ; Cache Address Reg
+                                                            ister  Address Offs
+                                                            et
+  495 00000000 0000000C 
+                       CTEST0_OFS
+                               EQU              0x0C        ; Cache Test Regist
+                                                            er 0   Address Offs
+                                                            et
+  496 00000000 00000010 
+                       CTEST1_OFS
+                               EQU              0x10        ; Cache Test Regist
+                                                            er 1   Address Offs
+                                                            et
+  497 00000000         
+  498 00000000         ; Constants
+  499 00000000 00000004 
+                       WRBEN_MSK
+                               EQU              (0x1 << 2)  ; CAHCNF WRBEN bit 
+                                                            mask
+  500 00000000 00000002 
+                       DCAEN_MSK
+                               EQU              (0x1 << 1)  ; CAHCNF DCAEN bit 
+                                                            mask
+  501 00000000 00000001 
+                       ICAEN_MSK
+                               EQU              (0x1 << 0)  ; CAHCNF ICAEN bit 
+                                                            mask
+  502 00000000 00000080 
+                       DRWB_MSK
+                               EQU              (0x1 << 7)  ; CAHCON DRWB bit m
+                                                            ask
+  503 00000000 00000040 
+                       ULKS_MSK
+                               EQU              (0x1 << 6)  ; CAHCON ULKS bit m
+                                                            ask
+  504 00000000 00000020 
+                       ULKA_MSK
+                               EQU              (0x1 << 5)  ; CAHCON ULKA bit m
+                                                            ask
+  505 00000000 00000010 
+
+
+
+ARM Macro Assembler    Page 17 
+
+
+                       LDLK_MSK
+                               EQU              (0x1 << 4)  ; CAHCON LDLK bit m
+                                                            ask
+  506 00000000 00000008 
+                       FLHS_MSK
+                               EQU              (0x1 << 3)  ; CAHCON FLHS bit m
+                                                            ask
+  507 00000000 00000004 
+                       FLHA_MSK
+                               EQU              (0x1 << 2)  ; CAHCON FLHA bit m
+                                                            ask
+  508 00000000 00000002 
+                       DCAH_MSK
+                               EQU              (0x1 << 1)  ; CAHCON DCAH bit m
+                                                            ask
+  509 00000000 00000001 
+                       ICAH_MSK
+                               EQU              (0x1 << 0)  ; CAHCON ICAH bit m
+                                                            ask
+  510 00000000         
+  511 00000000         ;// <e> Cache Configuration
+  512 00000000         ;//   <h> Cache Configuration Register (CAHCNF)
+  513 00000000         ;//     <o1.2> Write buffer enable
+  514 00000000         ;//     <o1.1> Data cache enable
+  515 00000000         ;//     <o1.0> Instruction cache enable
+  516 00000000         ;//   </h>
+  517 00000000         ;// </e>
+  518 00000000 00000000 
+                       CACHE_SETUP
+                               EQU              0
+  519 00000000 00000000 
+                       CAHCNF_Val
+                               EQU              0x00000000
+  520 00000000         
+  521 00000000         
+  522 00000000         ;----------------------- CODE --------------------------
+                       ------------------------
+  523 00000000         
+  524 00000000                 PRESERVE8
+  525 00000000         
+  526 00000000         
+  527 00000000         ; Area Definition and Entry Point
+  528 00000000         ;  Startup Code must be linked first at Address at which
+                        it expects to run.
+  529 00000000         
+  530 00000000                 AREA             RESET, CODE, READONLY
+  531 00000000                 ARM
+  532 00000000         
+  533 00000000                 IF               :DEF:__RTX
+  535                          ENDIF
+  536 00000000         
+  537 00000000         ; Exception Vectors
+  538 00000000         ;  Mapped to Address 0.
+  539 00000000         ;  Absolute addressing mode must be used.
+  540 00000000         ;  Dummy Handlers are implemented as infinite loops whic
+                       h can be modified.
+  541 00000000         
+  542 00000000 E59FF018 
+                       Vectors LDR              PC,Reset_Addr
+
+
+
+ARM Macro Assembler    Page 18 
+
+
+  543 00000004 E59FF018        LDR              PC,Undef_Addr
+  544 00000008 E59FF018        LDR              PC,SWI_Addr
+  545 0000000C E59FF018        LDR              PC,PAbt_Addr
+  546 00000010 E59FF018        LDR              PC,DAbt_Addr
+  547 00000014 E1A00000        NOP
+  548 00000018 E59FF018        LDR              PC,IRQ_Addr
+  549 0000001C E59FF018        LDR              PC,FIQ_Addr
+  550 00000020         
+  551 00000020 00000000 
+                       Reset_Addr
+                               DCD              Reset_Handler
+  552 00000024 00000000 
+                       Undef_Addr
+                               DCD              Undef_Handler
+  553 00000028 00000000 
+                       SWI_Addr
+                               DCD              SWI_Handler
+  554 0000002C 00000000 
+                       PAbt_Addr
+                               DCD              PAbt_Handler
+  555 00000030 00000000 
+                       DAbt_Addr
+                               DCD              DAbt_Handler
+  556 00000034 00000000        DCD              0           ; Reserved Address
+  557 00000038                 IF               :DEF:__RTX
+  560 00000038 00000000 
+                       IRQ_Addr
+                               DCD              IRQ_Handler
+  561 0000003C                 ENDIF
+  562 0000003C 00000000 
+                       FIQ_Addr
+                               DCD              FIQ_Handler
+  563 00000040         
+  564 00000040 EAFFFFFE 
+                       Undef_Handler
+                               B                Undef_Handler
+  565 00000044         SWI_Handler
+                               PROC
+  566 00000044                 EXPORT           SWI_Handler               [WEAK
+]
+  567 00000044 EAFFFFFE        B                .
+  568 00000048                 ENDP
+  569 00000048 EAFFFFFE 
+                       PAbt_Handler
+                               B                PAbt_Handler
+  570 0000004C EAFFFFFE 
+                       DAbt_Handler
+                               B                DAbt_Handler
+  571 00000050         IRQ_Handler
+                               PROC
+  572 00000050                 EXPORT           IRQ_Handler               [WEAK
+]
+  573 00000050 EAFFFFFE        B                .
+  574 00000054                 ENDP
+  575 00000054         FIQ_Handler
+                               PROC
+  576 00000054                 EXPORT           FIQ_Handler               [WEAK
+]
+  577 00000054 EAFFFFFE        B                .
+
+
+
+ARM Macro Assembler    Page 19 
+
+
+  578 00000058                 ENDP
+  579 00000058         
+  580 00000058         
+  581 00000058         ; Reset Handler
+  582 00000058         
+  583 00000058                 EXPORT           Reset_Handler
+  584 00000058         Reset_Handler
+  585 00000058         
+  586 00000058         
+  587 00000058         ; Clock Setup ------------------------------------------
+                       ------------------------
+  588 00000058         
+  589 00000058                 IF               CLOCK_SETUP != 0
+  605                          ENDIF                        ; of IF      CLOCK_
+                                                            SETUP != 0
+  606 00000058         
+  607 00000058         
+  608 00000058         ; External Bus Interface Setup -------------------------
+                       ------------------------
+  609 00000058         
+  610 00000058                 IF               (EBI_SETUP != 0):LAND:(:LNOT::D
+EF:EBI_NOINIT)
+  634                          ENDIF                        ; of IF      (EBI_S
+                                                            ETUP != 0):LAND:(:L
+                                                            NOT::DEF:EBI_NOINIT
+                                                            )
+  635 00000058         
+  636 00000058         
+  637 00000058         ; Cache Setup ------------------------------------------
+                       ------------------------
+  638 00000058         
+  639 00000058                 IF               CACHE_SETUP != 0
+  655                          ENDIF                        ; of IF      CACHE_
+                                                            SETUP != 0
+  656 00000058         
+  657 00000058         
+  658 00000058         ; Setup Stack for each mode ----------------------------
+                       ------------------------
+  659 00000058         
+  660 00000058 E59F004C        LDR              R0, =Stack_Top
+  661 0000005C         
+  662 0000005C         ;  Enter Undefined Instruction Mode and set its Stack Po
+                       inter
+  663 0000005C E321F0DB        MSR              CPSR_c, #Mode_UND:OR:I_Bit:OR:F
+_Bit
+  664 00000060 E1A0D000        MOV              SP, R0
+  665 00000064 E2400000        SUB              R0, R0, #UND_Stack_Size
+  666 00000068         
+  667 00000068         ;  Enter Abort Mode and set its Stack Pointer
+  668 00000068 E321F0D7        MSR              CPSR_c, #Mode_ABT:OR:I_Bit:OR:F
+_Bit
+  669 0000006C E1A0D000        MOV              SP, R0
+  670 00000070 E2400000        SUB              R0, R0, #ABT_Stack_Size
+  671 00000074         
+  672 00000074         ;  Enter FIQ Mode and set its Stack Pointer
+  673 00000074 E321F0D1        MSR              CPSR_c, #Mode_FIQ:OR:I_Bit:OR:F
+_Bit
+  674 00000078 E1A0D000        MOV              SP, R0
+  675 0000007C E2400000        SUB              R0, R0, #FIQ_Stack_Size
+
+
+
+ARM Macro Assembler    Page 20 
+
+
+  676 00000080         
+  677 00000080         ;  Enter IRQ Mode and set its Stack Pointer
+  678 00000080 E321F0D2        MSR              CPSR_c, #Mode_IRQ:OR:I_Bit:OR:F
+_Bit
+  679 00000084 E1A0D000        MOV              SP, R0
+  680 00000088 E2400080        SUB              R0, R0, #IRQ_Stack_Size
+  681 0000008C         
+  682 0000008C         ;  Enter Supervisor Mode and set its Stack Pointer
+  683 0000008C E321F0D3        MSR              CPSR_c, #Mode_SVC:OR:I_Bit:OR:F
+_Bit
+  684 00000090 E1A0D000        MOV              SP, R0
+  685 00000094 E2400008        SUB              R0, R0, #SVC_Stack_Size
+  686 00000098         
+  687 00000098         ;  Enter User Mode and set its Stack Pointer
+  688 00000098 E321F010        MSR              CPSR_c, #Mode_USR
+  689 0000009C                 IF               :DEF:__MICROLIB
+  694 0000009C         
+  695 0000009C E1A0D000        MOV              SP, R0
+  696 000000A0 E24DAB01        SUB              SL, SP, #USR_Stack_Size
+  697 000000A4         
+  698 000000A4                 ENDIF
+  699 000000A4         
+  700 000000A4         
+  701 000000A4         ; Enter the C code
+  702 000000A4         
+  703 000000A4                 IMPORT           __main
+  704 000000A4 E59F0004        LDR              R0, =__main
+  705 000000A8 E12FFF10        BX               R0
+  706 000000AC         
+  707 000000AC                 IF               :DEF:__MICROLIB
+  713 000000AC         ; User Initial Stack & Heap
+  714 000000AC 00000000 
+              00000000         AREA             |.text|, CODE, READONLY
+  715 00000000         
+  716 00000000                 IMPORT           __use_two_region_memory
+  717 00000000                 EXPORT           __user_initial_stackheap
+  718 00000000         __user_initial_stackheap
+  719 00000000         
+  720 00000000 E59F000C        LDR              R0, =  Heap_Mem
+  721 00000004 E59F100C        LDR              R1, =(Stack_Mem + USR_Stack_Siz
+e)
+  722 00000008 E59F2004        LDR              R2, = (Heap_Mem +      Heap_Siz
+e)
+  723 0000000C E59F3008        LDR              R3, = Stack_Mem
+  724 00000010 E12FFF1E        BX               LR
+  725 00000014                 ENDIF
+  726 00000014         
+  727 00000014         
+  728 00000014                 END
+              00000000 
+              00000400 
+              00000000 
+Command Line: --debug --xref --device=DARMP --apcs=interwork --depend=W90P710.d
+ -oW90P710.o -Id:\Keil1\ARM\CMSIS\Include -Id:\Keil1\ARM\INC\Winbond\W90P710 --
+predefine="EBI_NOINIT SETA 1" --list=W90P710.lst W90P710.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+STACK 00000000
+
+Symbol: STACK
+   Definitions
+      At line 68 in file W90P710.s
+   Uses
+      None
+Comment: STACK unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 70 in file W90P710.s
+   Uses
+      At line 721 in file W90P710.s
+      At line 723 in file W90P710.s
+
+Stack_Top 00000488
+
+Symbol: Stack_Top
+   Definitions
+      At line 72 in file W90P710.s
+   Uses
+      At line 660 in file W90P710.s
+Comment: Stack_Top used once
+__initial_sp 00000400
+
+Symbol: __initial_sp
+   Definitions
+      At line 71 in file W90P710.s
+   Uses
+      None
+Comment: __initial_sp unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+HEAP 00000000
+
+Symbol: HEAP
+   Definitions
+      At line 81 in file W90P710.s
+   Uses
+      None
+Comment: HEAP unused
+Heap_Mem 00000000
+
+Symbol: Heap_Mem
+   Definitions
+      At line 83 in file W90P710.s
+   Uses
+      At line 720 in file W90P710.s
+      At line 722 in file W90P710.s
+
+__heap_base 00000000
+
+Symbol: __heap_base
+   Definitions
+      At line 82 in file W90P710.s
+   Uses
+      None
+Comment: __heap_base unused
+__heap_limit 00000000
+
+Symbol: __heap_limit
+   Definitions
+      At line 84 in file W90P710.s
+   Uses
+      None
+Comment: __heap_limit unused
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+DAbt_Addr 00000030
+
+Symbol: DAbt_Addr
+   Definitions
+      At line 555 in file W90P710.s
+   Uses
+      At line 546 in file W90P710.s
+Comment: DAbt_Addr used once
+DAbt_Handler 0000004C
+
+Symbol: DAbt_Handler
+   Definitions
+      At line 570 in file W90P710.s
+   Uses
+      At line 555 in file W90P710.s
+      At line 570 in file W90P710.s
+
+FIQ_Addr 0000003C
+
+Symbol: FIQ_Addr
+   Definitions
+      At line 562 in file W90P710.s
+   Uses
+      At line 549 in file W90P710.s
+Comment: FIQ_Addr used once
+FIQ_Handler 00000054
+
+Symbol: FIQ_Handler
+   Definitions
+      At line 575 in file W90P710.s
+   Uses
+      At line 562 in file W90P710.s
+      At line 576 in file W90P710.s
+
+IRQ_Addr 00000038
+
+Symbol: IRQ_Addr
+   Definitions
+      At line 560 in file W90P710.s
+   Uses
+      At line 548 in file W90P710.s
+Comment: IRQ_Addr used once
+IRQ_Handler 00000050
+
+Symbol: IRQ_Handler
+   Definitions
+      At line 571 in file W90P710.s
+   Uses
+      At line 560 in file W90P710.s
+      At line 572 in file W90P710.s
+
+PAbt_Addr 0000002C
+
+Symbol: PAbt_Addr
+   Definitions
+      At line 554 in file W90P710.s
+   Uses
+      At line 545 in file W90P710.s
+Comment: PAbt_Addr used once
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+PAbt_Handler 00000048
+
+Symbol: PAbt_Handler
+   Definitions
+      At line 569 in file W90P710.s
+   Uses
+      At line 554 in file W90P710.s
+      At line 569 in file W90P710.s
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 530 in file W90P710.s
+   Uses
+      None
+Comment: RESET unused
+Reset_Addr 00000020
+
+Symbol: Reset_Addr
+   Definitions
+      At line 551 in file W90P710.s
+   Uses
+      At line 542 in file W90P710.s
+Comment: Reset_Addr used once
+Reset_Handler 00000058
+
+Symbol: Reset_Handler
+   Definitions
+      At line 584 in file W90P710.s
+   Uses
+      At line 551 in file W90P710.s
+      At line 583 in file W90P710.s
+
+SWI_Addr 00000028
+
+Symbol: SWI_Addr
+   Definitions
+      At line 553 in file W90P710.s
+   Uses
+      At line 544 in file W90P710.s
+Comment: SWI_Addr used once
+SWI_Handler 00000044
+
+Symbol: SWI_Handler
+   Definitions
+      At line 565 in file W90P710.s
+   Uses
+      At line 553 in file W90P710.s
+      At line 566 in file W90P710.s
+
+Undef_Addr 00000024
+
+Symbol: Undef_Addr
+   Definitions
+      At line 552 in file W90P710.s
+   Uses
+      At line 543 in file W90P710.s
+Comment: Undef_Addr used once
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+Undef_Handler 00000040
+
+Symbol: Undef_Handler
+   Definitions
+      At line 564 in file W90P710.s
+   Uses
+      At line 552 in file W90P710.s
+      At line 564 in file W90P710.s
+
+Vectors 00000000
+
+Symbol: Vectors
+   Definitions
+      At line 542 in file W90P710.s
+   Uses
+      None
+Comment: Vectors unused
+16 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 714 in file W90P710.s
+   Uses
+      None
+Comment: .text unused
+__user_initial_stackheap 00000000
+
+Symbol: __user_initial_stackheap
+   Definitions
+      At line 718 in file W90P710.s
+   Uses
+      At line 717 in file W90P710.s
+Comment: __user_initial_stackheap used once
+2 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+ABT_Stack_Size 00000000
+
+Symbol: ABT_Stack_Size
+   Definitions
+      At line 60 in file W90P710.s
+   Uses
+      At line 66 in file W90P710.s
+      At line 670 in file W90P710.s
+
+ARBCON_OFS 00000004
+
+Symbol: ARBCON_OFS
+   Definitions
+      At line 92 in file W90P710.s
+   Uses
+      None
+Comment: ARBCON_OFS unused
+CACHE_SETUP 00000000
+
+Symbol: CACHE_SETUP
+   Definitions
+      At line 518 in file W90P710.s
+   Uses
+      At line 639 in file W90P710.s
+Comment: CACHE_SETUP used once
+CAHADR_OFS 00000008
+
+Symbol: CAHADR_OFS
+   Definitions
+      At line 494 in file W90P710.s
+   Uses
+      None
+Comment: CAHADR_OFS unused
+CAHCNF_OFS 00000000
+
+Symbol: CAHCNF_OFS
+   Definitions
+      At line 492 in file W90P710.s
+   Uses
+      None
+Comment: CAHCNF_OFS unused
+CAHCNF_Val 00000000
+
+Symbol: CAHCNF_Val
+   Definitions
+      At line 519 in file W90P710.s
+   Uses
+      None
+Comment: CAHCNF_Val unused
+CAHCON_OFS 00000004
+
+Symbol: CAHCON_OFS
+   Definitions
+      At line 493 in file W90P710.s
+   Uses
+      None
+Comment: CAHCON_OFS unused
+CAH_BASE FFF02000
+
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: CAH_BASE
+   Definitions
+      At line 491 in file W90P710.s
+   Uses
+      None
+Comment: CAH_BASE unused
+CKSKEW_OFS 00000F00
+
+Symbol: CKSKEW_OFS
+   Definitions
+      At line 205 in file W90P710.s
+   Uses
+      None
+Comment: CKSKEW_OFS unused
+CKSKEW_Val 00FF0039
+
+Symbol: CKSKEW_Val
+   Definitions
+      At line 483 in file W90P710.s
+   Uses
+      None
+Comment: CKSKEW_Val unused
+CLKSEL_OFS 0000000C
+
+Symbol: CLKSEL_OFS
+   Definitions
+      At line 94 in file W90P710.s
+   Uses
+      None
+Comment: CLKSEL_OFS unused
+CLKSEL_Val 1FFF7FF8
+
+Symbol: CLKSEL_Val
+   Definitions
+      At line 167 in file W90P710.s
+   Uses
+      None
+Comment: CLKSEL_Val unused
+CLKS_MSK 0000000E
+
+Symbol: CLKS_MSK
+   Definitions
+      At line 104 in file W90P710.s
+   Uses
+      None
+Comment: CLKS_MSK unused
+CLOCK_SETUP 00000000
+
+Symbol: CLOCK_SETUP
+   Definitions
+      At line 107 in file W90P710.s
+   Uses
+      At line 589 in file W90P710.s
+Comment: CLOCK_SETUP used once
+CTEST0_OFS 0000000C
+
+Symbol: CTEST0_OFS
+   Definitions
+      At line 495 in file W90P710.s
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      None
+Comment: CTEST0_OFS unused
+CTEST1_OFS 00000010
+
+Symbol: CTEST1_OFS
+   Definitions
+      At line 496 in file W90P710.s
+   Uses
+      None
+Comment: CTEST1_OFS unused
+DCAEN_MSK 00000002
+
+Symbol: DCAEN_MSK
+   Definitions
+      At line 500 in file W90P710.s
+   Uses
+      None
+Comment: DCAEN_MSK unused
+DCAH_MSK 00000002
+
+Symbol: DCAH_MSK
+   Definitions
+      At line 508 in file W90P710.s
+   Uses
+      None
+Comment: DCAH_MSK unused
+DRWB_MSK 00000080
+
+Symbol: DRWB_MSK
+   Definitions
+      At line 502 in file W90P710.s
+   Uses
+      None
+Comment: DRWB_MSK unused
+EBICON_OFS 00000000
+
+Symbol: EBICON_OFS
+   Definitions
+      At line 195 in file W90P710.s
+   Uses
+      None
+Comment: EBICON_OFS unused
+EBICON_Val 080530C0
+
+Symbol: EBICON_Val
+   Definitions
+      At line 238 in file W90P710.s
+   Uses
+      None
+Comment: EBICON_Val unused
+EBI_BASE FFF01000
+
+Symbol: EBI_BASE
+   Definitions
+      At line 194 in file W90P710.s
+   Uses
+      None
+Comment: EBI_BASE unused
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+EBI_SETUP 00000001
+
+Symbol: EBI_SETUP
+   Definitions
+      At line 212 in file W90P710.s
+   Uses
+      At line 610 in file W90P710.s
+Comment: EBI_SETUP used once
+ECLKS_MSK 00000010
+
+Symbol: ECLKS_MSK
+   Definitions
+      At line 103 in file W90P710.s
+   Uses
+      None
+Comment: ECLKS_MSK unused
+EROM_BASE 00000000
+
+Symbol: EROM_BASE
+   Definitions
+      At line 44 in file W90P710.s
+   Uses
+      None
+Comment: EROM_BASE unused
+EXT0CON_OFS 00000018
+
+Symbol: EXT0CON_OFS
+   Definitions
+      At line 201 in file W90P710.s
+   Uses
+      None
+Comment: EXT0CON_OFS unused
+EXT0CON_Val F0078001
+
+Symbol: EXT0CON_Val
+   Definitions
+      At line 373 in file W90P710.s
+   Uses
+      None
+Comment: EXT0CON_Val unused
+EXT1CON_OFS 0000001C
+
+Symbol: EXT1CON_OFS
+   Definitions
+      At line 202 in file W90P710.s
+   Uses
+      None
+Comment: EXT1CON_OFS unused
+EXT1CON_Val 00000000
+
+Symbol: EXT1CON_Val
+   Definitions
+      At line 402 in file W90P710.s
+   Uses
+      None
+Comment: EXT1CON_Val unused
+EXT2CON_OFS 00000020
+
+Symbol: EXT2CON_OFS
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 203 in file W90P710.s
+   Uses
+      None
+Comment: EXT2CON_OFS unused
+EXT2CON_Val 00000000
+
+Symbol: EXT2CON_Val
+   Definitions
+      At line 431 in file W90P710.s
+   Uses
+      None
+Comment: EXT2CON_Val unused
+EXT3CON_OFS 00000024
+
+Symbol: EXT3CON_OFS
+   Definitions
+      At line 204 in file W90P710.s
+   Uses
+      None
+Comment: EXT3CON_OFS unused
+EXT3CON_Val 00000000
+
+Symbol: EXT3CON_Val
+   Definitions
+      At line 460 in file W90P710.s
+   Uses
+      None
+Comment: EXT3CON_Val unused
+FIQ_Stack_Size 00000000
+
+Symbol: FIQ_Stack_Size
+   Definitions
+      At line 61 in file W90P710.s
+   Uses
+      At line 66 in file W90P710.s
+      At line 675 in file W90P710.s
+
+FLHA_MSK 00000004
+
+Symbol: FLHA_MSK
+   Definitions
+      At line 507 in file W90P710.s
+   Uses
+      None
+Comment: FLHA_MSK unused
+FLHS_MSK 00000008
+
+Symbol: FLHS_MSK
+   Definitions
+      At line 506 in file W90P710.s
+   Uses
+      None
+Comment: FLHS_MSK unused
+F_Bit 00000040
+
+Symbol: F_Bit
+   Definitions
+      At line 35 in file W90P710.s
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Absolute symbols
+
+   Uses
+      At line 663 in file W90P710.s
+      At line 668 in file W90P710.s
+      At line 673 in file W90P710.s
+      At line 678 in file W90P710.s
+      At line 683 in file W90P710.s
+
+Heap_Size 00000000
+
+Symbol: Heap_Size
+   Definitions
+      At line 79 in file W90P710.s
+   Uses
+      At line 83 in file W90P710.s
+      At line 722 in file W90P710.s
+
+I2SCKCON_OFS 00000014
+
+Symbol: I2SCKCON_OFS
+   Definitions
+      At line 96 in file W90P710.s
+   Uses
+      None
+Comment: I2SCKCON_OFS unused
+ICAEN_MSK 00000001
+
+Symbol: ICAEN_MSK
+   Definitions
+      At line 501 in file W90P710.s
+   Uses
+      None
+Comment: ICAEN_MSK unused
+ICAH_MSK 00000001
+
+Symbol: ICAH_MSK
+   Definitions
+      At line 509 in file W90P710.s
+   Uses
+      None
+Comment: ICAH_MSK unused
+IRAM_BASE FFE00000
+
+Symbol: IRAM_BASE
+   Definitions
+      At line 41 in file W90P710.s
+   Uses
+      None
+Comment: IRAM_BASE unused
+IRQWAKECON_OFS 00000020
+
+Symbol: IRQWAKECON_OFS
+   Definitions
+      At line 97 in file W90P710.s
+   Uses
+      None
+Comment: IRQWAKECON_OFS unused
+IRQWAKEFLAG_OFS 00000024
+
+Symbol: IRQWAKEFLAG_OFS
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 98 in file W90P710.s
+   Uses
+      None
+Comment: IRQWAKEFLAG_OFS unused
+IRQ_Stack_Size 00000080
+
+Symbol: IRQ_Stack_Size
+   Definitions
+      At line 62 in file W90P710.s
+   Uses
+      At line 66 in file W90P710.s
+      At line 680 in file W90P710.s
+
+ISR_Stack_Size 00000088
+
+Symbol: ISR_Stack_Size
+   Definitions
+      At line 66 in file W90P710.s
+   Uses
+      At line 71 in file W90P710.s
+Comment: ISR_Stack_Size used once
+I_Bit 00000080
+
+Symbol: I_Bit
+   Definitions
+      At line 34 in file W90P710.s
+   Uses
+      At line 663 in file W90P710.s
+      At line 668 in file W90P710.s
+      At line 673 in file W90P710.s
+      At line 678 in file W90P710.s
+      At line 683 in file W90P710.s
+
+LDLK_MSK 00000010
+
+Symbol: LDLK_MSK
+   Definitions
+      At line 505 in file W90P710.s
+   Uses
+      None
+Comment: LDLK_MSK unused
+MRSET_MSK 00008000
+
+Symbol: MRSET_MSK
+   Definitions
+      At line 208 in file W90P710.s
+   Uses
+      None
+Comment: MRSET_MSK unused
+Mode_ABT 00000017
+
+Symbol: Mode_ABT
+   Definitions
+      At line 30 in file W90P710.s
+   Uses
+      At line 668 in file W90P710.s
+Comment: Mode_ABT used once
+Mode_FIQ 00000011
+
+
+
+ARM Macro Assembler    Page 8 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: Mode_FIQ
+   Definitions
+      At line 27 in file W90P710.s
+   Uses
+      At line 673 in file W90P710.s
+Comment: Mode_FIQ used once
+Mode_IRQ 00000012
+
+Symbol: Mode_IRQ
+   Definitions
+      At line 28 in file W90P710.s
+   Uses
+      At line 678 in file W90P710.s
+Comment: Mode_IRQ used once
+Mode_SVC 00000013
+
+Symbol: Mode_SVC
+   Definitions
+      At line 29 in file W90P710.s
+   Uses
+      At line 683 in file W90P710.s
+Comment: Mode_SVC used once
+Mode_SYS 0000001F
+
+Symbol: Mode_SYS
+   Definitions
+      At line 32 in file W90P710.s
+   Uses
+      None
+Comment: Mode_SYS unused
+Mode_UND 0000001B
+
+Symbol: Mode_UND
+   Definitions
+      At line 31 in file W90P710.s
+   Uses
+      At line 663 in file W90P710.s
+Comment: Mode_UND used once
+Mode_USR 00000010
+
+Symbol: Mode_USR
+   Definitions
+      At line 26 in file W90P710.s
+   Uses
+      At line 688 in file W90P710.s
+Comment: Mode_USR used once
+PDID_OFS 00000000
+
+Symbol: PDID_OFS
+   Definitions
+      At line 91 in file W90P710.s
+   Uses
+      None
+Comment: PDID_OFS unused
+PLLCON0_OFS 00000008
+
+Symbol: PLLCON0_OFS
+   Definitions
+
+
+
+ARM Macro Assembler    Page 9 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 93 in file W90P710.s
+   Uses
+      None
+Comment: PLLCON0_OFS unused
+PLLCON0_Val 00002F01
+
+Symbol: PLLCON0_Val
+   Definitions
+      At line 126 in file W90P710.s
+   Uses
+      None
+Comment: PLLCON0_Val unused
+PLLCON1_OFS 00000010
+
+Symbol: PLLCON1_OFS
+   Definitions
+      At line 95 in file W90P710.s
+   Uses
+      None
+Comment: PLLCON1_OFS unused
+PLLCON1_Val 00010000
+
+Symbol: PLLCON1_Val
+   Definitions
+      At line 186 in file W90P710.s
+   Uses
+      None
+Comment: PLLCON1_Val unused
+PMCON_OFS 00000028
+
+Symbol: PMCON_OFS
+   Definitions
+      At line 99 in file W90P710.s
+   Uses
+      None
+Comment: PMCON_OFS unused
+ROMCON_OFS 00000004
+
+Symbol: ROMCON_OFS
+   Definitions
+      At line 196 in file W90P710.s
+   Uses
+      None
+Comment: ROMCON_OFS unused
+ROMCON_Val 00040080
+
+Symbol: ROMCON_Val
+   Definitions
+      At line 266 in file W90P710.s
+   Uses
+      None
+Comment: ROMCON_Val unused
+SDCCONF0_OFS 00000008
+
+Symbol: SDCCONF0_OFS
+   Definitions
+      At line 197 in file W90P710.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 10 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: SDCCONF0_OFS unused
+SDCCONF1_OFS 0000000C
+
+Symbol: SDCCONF1_OFS
+   Definitions
+      At line 198 in file W90P710.s
+   Uses
+      None
+Comment: SDCCONF1_OFS unused
+SDCONF0_Val FE0090E4
+
+Symbol: SDCONF0_Val
+   Definitions
+      At line 290 in file W90P710.s
+   Uses
+      None
+Comment: SDCONF0_Val unused
+SDCONF1_Val 00000000
+
+Symbol: SDCONF1_Val
+   Definitions
+      At line 329 in file W90P710.s
+   Uses
+      None
+Comment: SDCONF1_Val unused
+SDTIME0_OFS 00000010
+
+Symbol: SDTIME0_OFS
+   Definitions
+      At line 199 in file W90P710.s
+   Uses
+      None
+Comment: SDTIME0_OFS unused
+SDTIME0_Val 0000014B
+
+Symbol: SDTIME0_Val
+   Definitions
+      At line 305 in file W90P710.s
+   Uses
+      None
+Comment: SDTIME0_Val unused
+SDTIME1_OFS 00000014
+
+Symbol: SDTIME1_OFS
+   Definitions
+      At line 200 in file W90P710.s
+   Uses
+      None
+Comment: SDTIME1_OFS unused
+SDTIME1_Val 00000000
+
+Symbol: SDTIME1_Val
+   Definitions
+      At line 344 in file W90P710.s
+   Uses
+      None
+Comment: SDTIME1_Val unused
+SMC_BASE FFF00000
+
+
+
+
+ARM Macro Assembler    Page 11 Alphabetic symbol ordering
+Absolute symbols
+
+Symbol: SMC_BASE
+   Definitions
+      At line 90 in file W90P710.s
+   Uses
+      None
+Comment: SMC_BASE unused
+SVC_Stack_Size 00000008
+
+Symbol: SVC_Stack_Size
+   Definitions
+      At line 59 in file W90P710.s
+   Uses
+      At line 66 in file W90P710.s
+      At line 685 in file W90P710.s
+
+SWPON_MSK 00000100
+
+Symbol: SWPON_MSK
+   Definitions
+      At line 209 in file W90P710.s
+   Uses
+      None
+Comment: SWPON_MSK unused
+ULKA_MSK 00000020
+
+Symbol: ULKA_MSK
+   Definitions
+      At line 504 in file W90P710.s
+   Uses
+      None
+Comment: ULKA_MSK unused
+ULKS_MSK 00000040
+
+Symbol: ULKS_MSK
+   Definitions
+      At line 503 in file W90P710.s
+   Uses
+      None
+Comment: ULKS_MSK unused
+UND_Stack_Size 00000000
+
+Symbol: UND_Stack_Size
+   Definitions
+      At line 58 in file W90P710.s
+   Uses
+      At line 66 in file W90P710.s
+      At line 665 in file W90P710.s
+
+USBTXRCON_OFS 00000030
+
+Symbol: USBTXRCON_OFS
+   Definitions
+      At line 100 in file W90P710.s
+   Uses
+      None
+Comment: USBTXRCON_OFS unused
+USR_Stack_Size 00000400
+
+Symbol: USR_Stack_Size
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 63 in file W90P710.s
+   Uses
+      At line 70 in file W90P710.s
+      At line 696 in file W90P710.s
+      At line 721 in file W90P710.s
+
+WRBEN_MSK 00000004
+
+Symbol: WRBEN_MSK
+   Definitions
+      At line 499 in file W90P710.s
+   Uses
+      None
+Comment: WRBEN_MSK unused
+81 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 703 in file W90P710.s
+   Uses
+      At line 704 in file W90P710.s
+Comment: __main used once
+__use_two_region_memory 00000000
+
+Symbol: __use_two_region_memory
+   Definitions
+      At line 716 in file W90P710.s
+   Uses
+      None
+Comment: __use_two_region_memory unused
+2 symbols
+452 symbols in table

@@ -1,0 +1,41 @@
+C51 COMPILER V9.52.0.0   LCD                                                               07/19/2019 14:37:43 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LCD
+OBJECT MODULE PLACED IN LCD.OBJ
+COMPILER INVOKED BY: d:\Keil1\C51\BIN\C51.EXE LCD.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #include<intrins.h>
+   3          #define uint unsigned int
+   4          #define uchar unsigned char
+   5          void Initiallize_LCD();//
+   6          void ShowString(uchar x,uchar y,uchar *str);
+   7          uchar code Display[32]="0123456789abcdef 123456789abcdef";
+   8          
+   9           //字符要用双引号括起来，空格也算-一个字符，共32个字符(0~31)。
+  10          
+  11           void main()
+  12          {
+  13   1       Initiallize_LCD();
+  14   1       ShowString(0,0,Display); //从第一个符幵始湿示
+  15   1       ShowString(0,1,Display+16);//第ニ行从第17个字符写起，0是第一个字符
+  16   1       while(1);
+  17   1      }
+  18           
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     30    ----
+   CONSTANT SIZE    =     32    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

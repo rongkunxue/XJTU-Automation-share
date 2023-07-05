@@ -1,0 +1,185 @@
+:Base AGIF.HLP>main
+:Title Welcome to GIF Animator
+1 Introduction
+2 Welcome to Ulead GIF Animator=welcome_to_ga@AGIF.hlp>main
+2 What's New in Ulead GIF Animator 5=v40_whats_new@AGIF.hlp>gif
+2 Getting started=Getting_Started@AGIF.hlp>gif
+2 Workspace=workspace@AGIF.hlp>gif
+2 Reading this help=read_help@AGIF.hlp>main
+1 Using GIF Animator
+2 GIF Animation
+3 About GIF=About_GIF@AGIF.hlp>gif
+3 Animation basics=Animation_Basics@AGIF.hlp>gif
+3 How GIF animation works=How_GIF_animation_works@AGIF.hlp>gif
+2 Color Palettes
+3 About GIF color palettes=About_GIF_color_palettes@AGIF.hlp>gif
+3 Defining your palette=Using_palettes@AGIF.hlp>gif
+3 Using the Color Palette=Using_the_Color_Palette@AGIF.hlp>gif
+2 Low Bandwidth Animation
+3 Creating compact GIF animation files=Creating_compact_GIF_animation@AGIF.hlp>gif
+3 GIF Optimization=GIF_Optimization_feature@AGIF.hlp>gif
+1 Procedures
+2 Manage Images
+3 Adding image objects=Adding_Image_Objects@AGIF.hlp>gif
+3 Adding video=Adding_Video@AGIF.hlp>gif
+3 Exporting image frames=Exporting_Images@AGIF.hlp>gif
+3 Exporting videos=Exporting_videos@AGIF.hlp>gif
+3 Use the Windows Clipboard with GIF Animator=Use_the_Windows_Clipboard_with_GIF_Animator@AGIF.hlp>gif
+3 Exporting an animation=exporting_an_animation@AGIF.hlp>gif
+3 Creating HTML=Creating_HTML@AGIF.hlp>gif
+3 Removing objects and frames=Removing_objects_frames@AGIF.hlp>gif
+3 Previewing animations=Previewing_animations@AGIF.hlp>gif
+2 Edit Images
+3 Editing objects=Editing_objects@AGIF.hlp>gif
+3 Changing object properties=Changing_object_properties@AGIF.hlp>gif
+3 Duplicating objects and frames=Duplicating_Images@AGIF.hlp>gif
+3 Positioning objects=Positioning_objects@AGIF.hlp>gif
+3 Changing object attributes globally=Changing_Attributes_Globally@AGIF.hlp>gif
+3 Merging images=Merging_Images@AGIF.hlp>gif
+3 Tweening frames=Tweening_frames@AGIF.hlp>gif
+3 Adding an animated file into the current animation=merging_animations@AGIF.hlp>defs
+3 Animation Wizard=Animation_Wizard_pro@AGIF.hlp>gif
+3 Optimization Wizard=Optimization_Wizard_pro@AGIF.hlp>gif
+3 Startup Wizard=Startup_Wizard_pro@AGIF.hlp>gif
+2 Add Special Effects
+3 Adding banner text=Adding_Banner_Text@AGIF.hlp>gif
+3 Adding a neon banner=adding_neon_banner@AGIF.hlp>defs
+3 Adding video transition effects=Adding_Transition_Effects@AGIF.hlp>gif
+3 Adding video filter effects=Adding_Filter_Effects@AGIF.hlp>gif
+3 Adding additional plug-in filters=Adding_additional_plug_in_filters@AGIF.hlp>gif
+1 Program Reference
+2 Main Window
+3 Standard Toolbar=Standard_toolbar@AGIF.hlp>defs
+3 Attribute Toolbar=Attribute_toolbar@AGIF.hlp>defs
+3 Tool Panel=Tool_panel_menu@AGIF.hlp>defs
+3 Object Manager Panel=Object_manager_menu@AGIF.hlp>defs
+3 Frame Panel=Frame_panel_menu@AGIF.hlp>defs
+3 Status Bar=Status_Bar@AGIF.hlp>defs
+3 Optimize Panel=Optimize_panel_menu@AGIF.hlp>defs
+3 Color Palette=view_palette_toolbar@AGIF.hlp>defs
+2 Menu Commands
+3 File
+4 New=New_menu@AGIF.hlp>defs
+4 Open Image=Open_Image_menu@AGIF.hlp>defs
+4 Open Video=Open_Video@AGIF.hlp>defs
+4 Animation Wizard=Animation_Wizard_menu@AGIF.hlp>defs
+4 Restore=Restore@AGIF.hlp>defs
+4 Save=Save@AGIF.hlp>defs
+4 Save As=Save_As@AGIF.hlp>defs
+4 Add Image=Add_Images@AGIF.hlp>defs
+4 Add Video=Add_Video@AGIF.hlp>defs
+4 Optimization Wizard=GIF_Optimization@AGIF.hlp>defs
+4 Batch Process=batch_process@AGIF.hlp>defs
+4 Export=Export_command@AGIF.hlp>defs
+4 Preferences=Preferences@AGIF.hlp>defs
+4 History List=History_List@AGIF.hlp>defs
+4 Exit=Exit@AGIF.hlp>defs
+3 Edit
+4 Undo=Undo@AGIF.hlp
+4 Cut=Cut@AGIF.hlp>defs
+4 Copy=Copy@AGIF.hlp>defs
+4 Copy Merged=Copy_merged_menu@AGIF.hlp>defs
+4 Paste=Paste@AGIF.hlp>defs
+4 Make Selection Area Transparent=Clear_selection_transparency@AGIF.hlp>defs
+4 Favorite Image Editor=favorite_image_editor_menu@AGIF.hlp>defs
+4 Resize Image=Resize_image_menu@AGIF.hlp>defs
+4 Canvas Size=Canvas_size_menu@AGIF.hlp>defs
+4 Crop Canvas=Crop@AGIF.hlp>defs
+4 Global Information=Global_Information@AGIF.hlp>defs
+3 View
+4 Actual View=Actual_View@AGIF.hlp>defs
+4 Zoom In/Out=Zoom_In_Out@AGIF.hlp>defs
+4 Play Animation=Play_animation_menu@AGIF.hlp>defs
+4 Stop Animation=Stop_animation_menu@AGIF.hlp>defs
+4 Browser/Stop Preview=Start_Stop_Preview@AGIF.hlp>defs
+4 Standard Toolbar=Standard_toolbar@AGIF.hlp>defs
+4 Attribute Toolbar=Attribute_toolbar@AGIF.hlp>defs
+4 Tool Panel=Tool_panel_menu@AGIF.hlp>defs
+4 Object Manager Panel=Object_manager_menu@AGIF.hlp>defs
+4 Frame Panel=Frame_panel_menu@AGIF.hlp>defs
+4 Status Bar=Status_Bar@AGIF.hlp>defs
+4 Optimize Panel=Optimize_panel_menu@AGIF.hlp>defs
+4 Color Palette=view_palette_toolbar@AGIF.hlp>defs
+3 Object
+4 Delete Object(s)=Delete_object_menu@AGIF.hlp>defs
+4 New Blank Object=New_blank_object_menu@AGIF.hlp>defs
+4 Duplicate Object(s)=Duplicate_object_menu@AGIF.hlp>defs
+4 Trim Object(s)=Trim_object_menu@AGIF.hlp>defs
+4 Combine as Single Object=Combine_single_object_menu@AGIF.hlp>defs
+4 Distribute to Frames=Distribute_frames_menu@AGIF.hlp>defs
+4 Text=Text_menu@AGIF.hlp>defs
+4 Convert to Image=Convert_image_object_menu@AGIF.hlp>defs
+4 Split Banner Text=Split_banner_object_menu@AGIF.hlp>defs
+4 Selection=select_operation1@AGIF.hlp>defs
+4 Shadow=Shadow_menu@AGIF.hlp>defs
+4 Split Shadow=Split_shadow_menu@AGIF.hlp>defs
+4 Object Properties=Object_property_menu@AGIF.hlp>defs
+3 Frame
+4 Add Banner Text=add_banner_text@AGIF.hlp>defs
+4 Edit Banner Text=Edit_banner_object_menu@AGIF.hlp>defs
+4 Tween=Tween_menu@AGIF.hlp>defs
+4 Synchronize Objects Across Frames=Synchronize_objects_menu@AGIF.hlp>defs
+4 Flatten Frames as Single Object=Flatten_frames_menu@AGIF.hlp>defs
+4 Add Frame=Add_frame_menu@AGIF.hlp>defs
+4 Delete Frame(s)=Delete_frame_menu@AGIF.hlp>defs
+4 Duplicate Frame(s)=Duplicate_frame_menu@AGIF.hlp>defs
+4 Reverse Frame Order=reverse_frame_order@AGIF.hlp>defs
+4 Change Frame Order=frame_order@AGIF.hlp>defs
+4 Frame Properties=Frame_property_menu@AGIF.hlp>defs
+3 Filter
+4 About Filters=About_Filters@AGIF.hlp>gif
+3 Video F/X
+4 About Video F/X=About_Video_F/X@AGIF.hlp>gif
+3 Help
+4 Help=Help@AGIF.hlp>defs
+4 What's New=v40_whats_new@AGIF.hlp>gif
+4 Getting Started=Getting_Started@AGIF.hlp>defs
+4 Online Tutorials=online_tutorials_menu@AGIF.hlp>defs
+4 Ulead On The Web=Ulead_Web@AGIF.hlp>defs
+4 Online Registration=Online_reg@AGIF.hlp>defs
+4 Startup Wizard=Startup_Wizard_2@AGIF.hlp>defs
+4 About=About@AGIF.hlp>defs
+2 Dialog Boxes
+3 File Menu dialog boxes
+4 New=New_db1@AGIF.hlp>gif
+4 Open Video=Open_video_db@AGIF.hlp>gif
+4 Add Video=Open_video_db@AGIF.hlp>gif
+4 Batch Process=batch_process_DB@AGIF.hlp>gif
+4 Active Desktop Item=active_desktop_db@AGIF.hlp>gif
+4 Export Animation Package=export_animation@AGIF.hlp>gif
+4 Preferences=general_preferences@AGIF.hlp>gif
+3 Edit Menu dialog boxes
+4 Organize Favorite Image Editor=Default_editor_db@AGIF.hlp>gif
+4 Update from Favorite Image Editor=update_editor_db@AGIF.hlp>gif
+4 Resize Image=resize_image_db@AGIF.hlp>gif
+4 Canvas Size=canvas_size_db@AGIF.hlp>gif
+4 Global Information=global_info_db@AGIF.hlp>gif
+3 Object Menu dialog boxes
+4 Text Entry Box=text_entry_db@AGIF.hlp>gif
+4 Neon Settings=banner_neon_db@AGIF.hlp>gif
+4 Shadow=Shadow_db@AGIF.hlp>gif
+4 Object Properties=General_prop_db@AGIF.hlp>gif
+3 Frame Menu dialog boxes
+4 Add Banner Text=banner_text_db@AGIF.hlp>gif
+4 Edit Banner Text=banner_text_db@AGIF.hlp>gif
+4 Tween=Tween_frame_db@AGIF.hlp>gif
+4 Synchronize Objects Across Frames=Synchronize_object_db@AGIF.hlp>gif
+4 Frame Properties=Frame_prop_db@AGIF.hlp>gif
+3 Video F/X Menu dialog boxes
+4 Video FX=Transitions_effects_db@AGIF.hlp>gif
+3 Nested dialog boxes
+4 Add to/Edit Favorite Image Editor List=add_editor_db@AGIF.hlp>gif
+4 Select Files=select_files_db@AGIF.hlp>gif
+4 Advanced Options=advanced_options_matte@AGIF.hlp>gif
+4 Compress by Size=compress_size_db@AGIF.hlp>gif
+4 Save Optimization Preset=save_optimizate_preset@aAGIF.hlp>gif
+4 Gradient Fill=gradient_fill_db@AGIF.hlp>gif
+4 Insert Frame Options=drag_drop_db@AGIF.hlp>gif
+2 Shortcuts
+3 Shortcuts List=shortcuts_file@AGIF.hlp>main
+2 Glossary
+3 Glossary=Glossary@AGIF.hlp>gif
+1 Contacting Ulead
+2 How to contact us=GA_Contact_Ulead@AGIF.hlp>main
+2 Technical Support=Technical_Support@AGIF.hlp>main
+

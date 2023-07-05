@@ -1,0 +1,4 @@
+--device DARMP "w90p710.o" "glcd.o" "lcd.o" "background.o" "arm_ani.o" "irq.o" "bz001.o" "bz002.o" "bz003.o" "bz004.o" "bz005.o" "bz006.o" "bz007.o" "bz008.o" "bz009.o" "bz010.o" "bz011.o" "bz012.o" "bz013.o" "bz014.o" "bz015.o" "bz016.o" "bz017.o" "bz018.o" "bz019.o" --strict --scatter "lcd.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\lcd.map" -o "lcd.axf"

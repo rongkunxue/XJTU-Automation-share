@@ -1,0 +1,65 @@
+<RfpProject>
+  <ProductVersion>2.01.00.00</ProductVersion>
+  <Class Guid="7b634d76-252e-4043-850a-eb471438cc19">
+    <Instance Guid="482908f5-78ac-4466-9c14-dad044d95a43">
+      <FormatVersion>1.02</FormatVersion>
+      <TargetDeviceType>132</TargetDeviceType>
+      <IsE1E20Emulator>True</IsE1E20Emulator>
+      <ParameterFileName>.\Device\RL78\R5F100LG.pr5</ParameterFileName>
+      <SelectToolName>E1</SelectToolName>
+      <DeviceName />
+      <DeviceProductName>R5F100LG</DeviceProductName>
+      <Port>Uart</Port>
+      <CommunicationSpeed>Speed1000000Bps</CommunicationSpeed>
+      <SupplyPower_E1>Supply3V</SupplyPower_E1>
+      <SupplyOscillator>Target</SupplyOscillator>
+      <OscillatingFrequencyTarget>32.00</OscillatingFrequencyTarget>
+      <OscillatingFrequencyMini2>Osc4Mhz</OscillatingFrequencyMini2>
+      <MultiplyRate>1.00</MultiplyRate>
+      <OperationMode>Chip</OperationMode>
+      <StartBlock>000</StartBlock>
+      <EndBlock>127</EndBlock>
+      <StartBlockDataF>000</StartBlockDataF>
+      <EndBlockDataF>007</EndBlockDataF>
+      <UserTargetVoltage />
+      <IsCheckingBlank>True</IsCheckingBlank>
+      <IsVerifying>False</IsVerifying>
+      <IsSettingSecurityFlags>False</IsSettingSecurityFlags>
+      <IsVerifyingChecksum>False</IsVerifyingChecksum>
+      <IsSetOptionByte>False</IsSetOptionByte>
+      <IsSetSecuritId>False</IsSetSecuritId>
+      <IsResetPortHiZ>False</IsResetPortHiZ>
+      <IsTargetResetMessage>False</IsTargetResetMessage>
+      <IsWideVoltageMode>False</IsWideVoltageMode>
+      <IsHexCheckRomSize>False</IsHexCheckRomSize>
+      <IsDisableChipErasing>False</IsDisableChipErasing>
+      <IsDisableBlockErasing>False</IsDisableBlockErasing>
+      <IsDisableProgramming>False</IsDisableProgramming>
+      <IsDisableReading>False</IsDisableReading>
+      <IsDisableBootBlockClusterReprogramming>False</IsDisableBootBlockClusterReprogramming>
+      <EndBootBlock>003</EndBootBlock>
+      <ResetVectorAddress>000000</ResetVectorAddress>
+      <StartFlashSelfBlock>000</StartFlashSelfBlock>
+      <EndFlashSelfBlock>127</EndFlashSelfBlock>
+      <OptionByte0>FFFFFFFF</OptionByte0>
+      <OptionByte1>FFFFFFFF</OptionByte1>
+      <OptionByte2>FFFFFFFF</OptionByte2>
+      <OptionByte3>FFFFFFFF</OptionByte3>
+      <OptionByte4>FFFFFFFF</OptionByte4>
+      <OptionByte5>FFFFFFFF</OptionByte5>
+      <OptionByte6>FFFFFFFF</OptionByte6>
+      <OptionByte7>FFFFFFFF</OptionByte7>
+      <OptionByte8>FFFFFFFF</OptionByte8>
+      <SecurityId>FFFFFFFFFFFFFFFFFFFFFFFF</SecurityId>
+      <CommandType>Autoprocedure</CommandType>
+      <HexaFileName>C:\Users\Administrator\Desktop\Sample_Key&amp;LED_100LG\Sample_Key&amp;LED_100LG\DefaultBuild\Sample_Key&amp;LED_100LG.hex</HexaFileName>
+      <HexaFileChecksumType>Arithmetic</HexaFileChecksumType>
+      <HexaFileChecksumAreaType>Hexfile</HexaFileChecksumAreaType>
+      <HexaFileChecksumAreaStart>00000000</HexaFileChecksumAreaStart>
+      <HexaFileChecksumAreaEnd>0001FFFF</HexaFileChecksumAreaEnd>
+      <HexaFileChecksumAreaStartDataF>--------</HexaFileChecksumAreaStartDataF>
+      <HexaFileChecksumAreaEndDataF>--------</HexaFileChecksumAreaEndDataF>
+      <UcpSettings>Enabled=FALSE | FilePath= | AllData=TRUE | StartPoint=0 | EndPoint=0 | Overwrite=FALSE</UcpSettings>
+    </Instance>
+  </Class>
+</RfpProject>

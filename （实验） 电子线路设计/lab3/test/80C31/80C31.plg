@@ -1,0 +1,33 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\大三上\（实验） 电子线路设计\lab3\test\80C31\80C31.uvproj
+Project File Date:  10/16/2019
+
+<h2>Output:</h2>
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling test.c...
+test.c(214): warning C290: missing return value
+test.c(223): warning C290: missing return value
+test.c(232): warning C290: missing return value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDDISPLAY12?TEST
+Program Size: data=25.0 xdata=0 code=2403
+creating hex file from "80C31"...
+"80C31" - 0 Error(s), 4 Warning(s).
+Rebuild target 'Target 1'
+assembling STARTUP.A51...
+compiling test.c...
+test.c(214): warning C290: missing return value
+test.c(223): warning C290: missing return value
+test.c(232): warning C290: missing return value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCDDISPLAY12?TEST
+Program Size: data=25.0 xdata=0 code=2403
+creating hex file from "80C31"...
+"80C31" - 0 Error(s), 4 Warning(s).

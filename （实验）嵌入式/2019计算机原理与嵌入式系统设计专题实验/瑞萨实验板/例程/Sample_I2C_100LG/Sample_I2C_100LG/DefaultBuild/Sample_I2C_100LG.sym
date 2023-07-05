@@ -1,0 +1,103 @@
+#05
+;FF     PUBLIC
+02FFED8@@CPR1
+02FFEDE@@FPRF1
+02FFEDF@@FPRF2
+02FFEDE@@FPRFP
+02FFED8@@FPRS
+02FFEDC@@FPRXD
+02FFEDC@@FPRXP
+02FFEDD@@FPRXS
+0100185@@lscmp
+02FCFC8_?DATA
+02FCFD6_?DATAL
+02FCFD6_?DATS
+02FCFD6_?INIS
+02FCFD6_?INIT
+02FCFD6_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+0100014_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+02FFED8_@RTARG0
+02FFED9_@RTARG1
+02FFEDA_@RTARG2
+02FFEDB_@RTARG3
+02FFEDC_@RTARG4
+02FFEDD_@RTARG5
+02FFEDE_@RTARG6
+02FFEDF_@RTARG7
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+02FFED4_@SEGAX
+02FFED5_@SEGBC
+02FFED6_@SEGDE
+02FFED7_@SEGHL
+00FFED4_@STBEG
+00FCFD6_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+0100024_@vect24
+0100306_R_CGC_Create
+010032F_R_CGC_Get_ResetSource
+010034A_R_IIC10_Create
+01003CB_R_IIC10_Master_Receive
+0100392_R_IIC10_Master_Send
+010041A_R_IIC10_StartCondition
+0100409_R_IIC10_Stop
+0100457_R_IIC10_StopCondition
+0100334_R_PORT_Create
+0100339_R_SAU0_Create
+01002E3_R_Systeminit
+01004A6_R_WDT_Create
+01004B6_R_WDT_Restart
+02FCFCF_a_rxdata
+02FCFCA_a_txdata
+02FCFC6_end_if
+02FCFC7_end_rxif
+02FCF96_errno
+01004FE_exit
+02FCFBA_g_iic10_master_status_flag
+02FCFC2_g_iic10_rx_count
+02FCFC4_g_iic10_rx_length
+02FCFBE_g_iic10_tx_count
+02FCFC0_gp_iic10_rx_address
+02FCFBC_gp_iic10_tx_address
+01002FE_hdwinit
+02FCFC8_ip
+0100267_main
+01004BA_stkinit
+02FCFD4_teststatic
+;FF     @cstart
+;FF     r_main
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     r_cg_serial
+;FF     r_cg_serial_user
+<010049E_r_iic10_callback_master_receiveend
+01004A2_r_iic10_callback_master_sendend
+0100199_r_iic10_interrupt
+;FF     r_cg_wdt
+;FF     r_cg_wdt_user
+<0100265_r_wdt_interrupt
+;FF     @lscmp
+;FF     @SEGREG
+;FF     @stkinit
+;FF     @RTARG0
+;FF     exit
+;FF     @rom
+=
+

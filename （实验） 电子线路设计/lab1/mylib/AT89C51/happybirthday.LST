@@ -1,0 +1,61 @@
+C51 COMPILER V9.52.0.0   HAPPYBIRTHDAY                                                     09/22/2019 23:50:40 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE HAPPYBIRTHDAY
+OBJECT MODULE PLACED IN happybirthday.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE happybirthday.c BROWSE DEBUG OBJECTEXTEND TABS(2)
+
+line level    source
+
+   1          #include <reg51.h>
+   2          sbit K0=P1^0;
+   3          sbit SOND=P1^7;
+   4          unsigned char i,j;
+   5          unsigned char code  th[22]={
+   6            0,196,202,208,211,216,220,224,226,229,232,233,236,238,240,241,242,244,244,246,247,248};
+   7          unsigned char code  tl[22]={
+   8            0,12,27,21,7,4,16,12,4,12,9,20,2,8,6,2,22,5,26,1,4,3};
+   9          unsigned char code  s[26]={
+  10            12,12,13,12,15,14,12,12,13,12,16,15,12,12,19,17,15,14,13,0,18,18,17,15,16,15};
+  11          unsigned char code  L[26]={
+  12            4,4,8,8,8,16,4,4,8,8,8,16,4,4,8,8,8,8,16,8,4,4,8,8,8,16};
+  13          void main(){
+  14   1        unsigned int  t;
+  15   1        TMOD =0x10;
+  16   1        TH1 =0x3c;TL1=0xb0;
+  17   1        IP =0x02;
+  18   1        IE =0x8a;
+  19   1        while(1){
+  20   2          while(K0==1);
+  21   2          while(K0==0);
+  22   2          for(i=0;i<26;i++){
+  23   3          if(s[i]==0) {SOND=0;
+  24   4            TR0=0;}
+  25   3          else  {TH0=th[s[i]];
+  26   4            TL0=tl[s[i]];
+  27   4          TR0=1;}
+  28   3          j=L[i];TR1=1;
+  29   3          while(TR1==1);
+  30   3          TR0=0;
+  31   3          SOND=0;
+  32   3          for(t=0;t<2000;t++);}}}
+  33          void t0()  interrupt 1{
+  34   1        SOND=~SOND;
+  35   1        TH0=th[s[i]];TL0=tl[s[i]];}
+  36          void t1()  interrupt 3{
+  37   1        TH1=0x3c;TL1=0xb0;
+  38   1        if((j--)==0) TR1=0;}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    179    ----
+   CONSTANT SIZE    =     96    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

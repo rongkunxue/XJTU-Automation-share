@@ -1,0 +1,3 @@
+Dependencies for Project 'keyboard', Target 'Target 1': (DO NOT MODIFY !)
+F (.\W90P710.s)(0x4E3FB9DC)(--device DARMP -g --apcs=interwork -I "d:\Keil1\ARM\CMSIS\Include" -I "d:\Keil1\ARM\INC\Winbond\W90P710" --pd "EBI_NOINIT SETA 1" --list "W90P710.lst" --xref -o "W90P710.o" --depend "W90P710.d")
+F (.\keyscan.c)(0x5DE9AB9F)(-c --device DARMP -g -O0 --apcs=interwork -I "d:\Keil1\ARM\CMSIS\Include" -I "d:\Keil1\ARM\INC\Winbond\W90P710" -o "keyscan.o" --omf_browse "keyscan.crf" --depend "keyscan.d")

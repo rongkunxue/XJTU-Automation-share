@@ -1,0 +1,20 @@
+*** Creating Trace Output File 'keyboard.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"w90p710.o"'
+### List of Objects: adding '"keyscan.o"'
+### ADS-LD Command completed:
+--device DARMP "w90p710.o" "keyscan.o" --strict --scatter "keyboard.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\keyboard.map" -o "keyboard.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'keyboard.axf'
+### ADS-LD Command File: 'keyboard.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'keyboard.lnp', Handle=0x00000964
+### Writing '.lnp' file
+### ADS-LD Command file 'keyboard.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

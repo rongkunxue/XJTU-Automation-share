@@ -1,0 +1,43 @@
+C51 COMPILER V9.52.0.0   LED                                                               08/26/2019 21:06:19 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN led.OBJ
+COMPILER INVOKED BY: d:\Keil1\C51\BIN\C51.EXE led.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include<reg51.h>
+   2          sbit P1_0=P1^0;
+   3          void delay (unsigned char time)
+   4          {
+   5   1       unsigned char j=1500;
+   6   1       for (;time>0; time--)
+   7   1        for(;j>0;j--);
+   8   1      }
+   9          
+  10          void main(void)
+  11          {
+  12   1           while(1)     
+  13   1               {
+  14   2                P1_0=0;
+  15   2                delay(1000);
+  16   2                P1_0=1;
+  17   2                delay(1000);                  
+  18   2                }
+  19   1      }        
+  20          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     37    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

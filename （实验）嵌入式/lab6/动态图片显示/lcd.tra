@@ -1,0 +1,42 @@
+*** Creating Trace Output File 'lcd.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"w90p710.o"'
+### List of Objects: adding '"glcd.o"'
+### List of Objects: adding '"lcd.o"'
+### List of Objects: adding '"background.o"'
+### List of Objects: adding '"arm_ani.o"'
+### List of Objects: adding '"irq.o"'
+### List of Objects: adding '"ren001.o"'
+### List of Objects: adding '"ren002.o"'
+### List of Objects: adding '"ren003.o"'
+### List of Objects: adding '"ren004.o"'
+### List of Objects: adding '"ren005.o"'
+### List of Objects: adding '"ren006.o"'
+### List of Objects: adding '"ren007.o"'
+### List of Objects: adding '"ren008.o"'
+### List of Objects: adding '"ren009.o"'
+### List of Objects: adding '"ren010.o"'
+### List of Objects: adding '"ren011.o"'
+### List of Objects: adding '"ren012.o"'
+### List of Objects: adding '"ren013.o"'
+### List of Objects: adding '"ren014.o"'
+### List of Objects: adding '"ren015.o"'
+### List of Objects: adding '"ren016.o"'
+### List of Objects: adding '"ren017.o"'
+### List of Objects: adding '"ren018.o"'
+### ADS-LD Command completed:
+--device DARMP "w90p710.o" "glcd.o" "lcd.o" "background.o" "arm_ani.o" "irq.o" "ren001.o" "ren002.o" "ren003.o" "ren004.o" "ren005.o" "ren006.o" "ren007.o" "ren008.o" "ren009.o" "ren010.o" "ren011.o" "ren012.o" "ren013.o" "ren014.o" "ren015.o" "ren016.o" "ren017.o" "ren018.o" --strict --scatter "lcd.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\lcd.map" -o "lcd.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'lcd.axf'
+### ADS-LD Command File: 'lcd.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'lcd.lnp', Handle=0x000006AC
+### Writing '.lnp' file
+### ADS-LD Command file 'lcd.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

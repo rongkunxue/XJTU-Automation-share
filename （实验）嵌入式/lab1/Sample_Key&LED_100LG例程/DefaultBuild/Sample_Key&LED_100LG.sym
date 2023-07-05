@@ -1,0 +1,100 @@
+#05
+;FF     PUBLIC
+02FFED8@@CPR1
+02FFEDE@@FPRF1
+02FFEDF@@FPRF2
+02FFEDE@@FPRFP
+02FFED8@@FPRS
+02FFEDC@@FPRXD
+02FFEDC@@FPRXP
+02FFEDD@@FPRXS
+0100185@@cudiv
+02FCFC6_?DATA
+02FCFCC_?DATAL
+02FCFCC_?DATS
+02FCFCC_?INIS
+02FCFCC_?INIT
+02FCFCC_?INITL
+0100002_?RLINIT
+0100002_?R_INIS
+010000C_?R_INIT
+02FCF98_@BRKADR
+02FCF86_@DIVR
+02FCF80_@FNCENT
+02FCF00_@FNCTBL
+02FCF8A_@LDIVR
+0000000_@MAA
+02FCFBA_@MEMBTM
+02FCF9A_@MEMTOP
+02FFED8_@RTARG0
+02FFED9_@RTARG1
+02FFEDA_@RTARG2
+02FFEDB_@RTARG3
+02FFEDC_@RTARG4
+02FFEDD_@RTARG5
+02FFEDE_@RTARG6
+02FFEDF_@RTARG7
+01FFE20_@SADBEG
+00000C0_@SADSIZ
+02FCF82_@SEED
+00FFE20_@STBEG
+00FCFCC_@STEND
+02FCF92_@TOKPTR
+0100185_@cend
+01000D8_@cstart
+0100004_@vect04
+010002C_@vect2c
+010035A_Getcode
+0100416_Keyboard_scan
+010028D_R_CGC_Create
+01002B6_R_CGC_Get_ResetSource
+01001E8_R_MAIN_UserInit
+01002BB_R_PORT_Create
+010026E_R_Systeminit
+0100324_R_TAU0_Channel0_Start
+0100335_R_TAU0_Channel0_Stop
+01002CF_R_TAU0_Create
+0100346_R_WDT_Create
+0100356_R_WDT_Restart
+02FCFBE_a
+02FCFBA_array_key
+0300100_bit_control
+02FCFC6_count
+0100404_delay
+01001EC_dispaly
+02FCF96_errno
+01005EF_exit
+02FCFC0_flag_digital_led
+0100285_hdwinit
+02FCFBF_i
+01001C0_main
+02FCFC2_num_keyboard
+02FCFC3_num_keyboard2
+02FCFC9_rate
+02FCFC8_resultt
+01005AB_stkinit
+02FCFCA_temp
+02FCFC4_testvalue
+02FCFBD_testvalue1
+;FF     @cstart
+;FF     r_main
+;FF     r_systeminit
+;FF     r_cg_cgc
+;FF     r_cg_cgc_user
+;FF     r_cg_port
+;FF     r_cg_port_user
+;FF     r_cg_timer
+;FF     r_cg_timer_user
+<01001B9_r_tau0_channel0_interrupt
+;FF     r_cg_wdt
+;FF     r_cg_wdt_user
+<01001BE_r_wdt_interrupt
+;FF     r_cg_digtalLED
+;FF     r_cg_KeyScan
+;FF     @cudiv
+;FF     @stkinit
+;FF     @RTARG0
+;FF     exit
+;FF     @rom
+=
+
