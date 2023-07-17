@@ -1,0 +1,3 @@
+matlab中enframe()的用法 https://blog.csdn.net/qq_27318693/article/details/83902741
+语音信号预处理及特征参数提取 https://blog.csdn.net/cwfjimogudan/article/details/71112171
+MATLAB filter 函数用法https://blog.csdn.net/cwfjimogudan/article/details/71112171
