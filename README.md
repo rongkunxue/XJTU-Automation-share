@@ -35,7 +35,8 @@
 [(Creative Commons BY-SA 4.0) 知识共享署名 - 相同方式共享 4.0 国际许可协议](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh)
 
 - 资料仅供参考，请自己判断其适用性。
-- 本项目的大部分实验内容和作业报告来自于\href{https://renzehua1998.github.io}{Ren Zehua}的贡献，感谢学长的付出与分享。
+  
+- 本文档的大部分实验内容和作业报告来自于[Ren Zehua](https://renzehua1998.github.io)的贡献，感谢学长的付出与分享。
 
 ## 相关工作
 
